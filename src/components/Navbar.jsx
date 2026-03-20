@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, ShoppingCart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext.jsx';
+import logoImg from '../shoplogo.png';
 
 export default function Navbar() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,36 +16,18 @@ export default function Navbar() {
     return (
         <>
             {/* グローバルヘッダー */}
-            <header className="sticky top-0 z-50 w-full bg-[#fdfbf6]/90 backdrop-blur-md border-b border-[#ebdcd0] soft-shadow-header elegant-font">
-                <div className="max-w-6xl mx-auto px-4 md:px-6 h-[72px] flex justify-between items-center">
+            <header className="sticky top-0 z-50 w-full bg-[#fdfbf6]/95 backdrop-blur-md border-b border-[#ebdcd0] soft-shadow-header elegant-font">
+                <div className="max-w-6xl mx-auto px-4 md:px-6 h-[80px] md:h-[100px] grid grid-cols-3 items-center">
 
-                    {/* 左側：ロゴ */}
-                    <Link to="/" className="flex flex-col hover:text-[#8e3a3a] transition-colors cursor-pointer group" onClick={closeMenu}>
-                        <span className="text-[0.6rem] md:text-[0.7rem] text-[#8a7a6c] font-bold tracking-[0.2em] md:tracking-[0.25em] mb-[2px] md:mb-1 group-hover:text-[#8e3a3a] transition-colors">想いを花に 小樽で百年</span>
-                        <span className="text-[1.25rem] md:text-[1.6rem] text-[#4a3f35] brush-font font-bold leading-none group-hover:text-[#8e3a3a] transition-colors drop-shadow-sm">花の山城屋</span>
-                    </Link>
-
-                    {/* 右側：PCメニュー＆アイコン */}
-                    <div className="flex items-center gap-6 md:gap-8">
-
+                    {/* 左側：ハンバーガーメニュー（モバイルのみ） */}
+                    <div className="flex justify-start items-center">
                         {/* PC表示用テキストリンク (スマホでは非表示) */}
-                        <nav className="hidden md:flex items-center gap-8 text-[#4a3f35] font-bold tracking-widest text-[0.95rem]">
+                        <nav className="hidden md:flex items-center gap-6 text-[#4a3f35] font-bold tracking-widest text-[0.9rem]">
                             <Link to="/" className="hover:text-[#8e3a3a] transition-colors cursor-pointer">トップ</Link>
                             <Link to="/products" className="hover:text-[#8e3a3a] transition-colors cursor-pointer">お花を探す</Link>
                             <Link to="/about" className="hover:text-[#8e3a3a] transition-colors cursor-pointer">山城屋について</Link>
                         </nav>
 
-                        {/* カートアイコン (全サイズ共通表示) */}
-                        <Link to="/cart" aria-label="Cart" className="relative text-[#4a3f35] hover:text-[#8e3a3a] active:scale-95 transition-transform cursor-pointer" onClick={closeMenu}>
-                            <ShoppingCart className="w-[24px] h-[24px]" strokeWidth={2} />
-                            {cartCount > 0 && (
-                                <span className="absolute -top-1.5 -right-2 bg-[#8e3a3a] text-white text-[10px] font-bold w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center shadow-sm">
-                                    {cartCount}
-                                </span>
-                            )}
-                        </Link>
-
-                        {/* ハンバーガーアイコン (スマホ・タブレット用、PCで非表示) */}
                         <button
                             className="md:hidden text-[#4a3f35] hover:text-[#8e3a3a] active:scale-95 transition-transform cursor-pointer"
                             onClick={toggleMenu}
@@ -52,6 +35,29 @@ export default function Navbar() {
                         >
                             <Menu className="w-[26px] h-[26px]" strokeWidth={2} />
                         </button>
+                    </div>
+
+                    {/* 中央：新ロゴ画像 */}
+                    <div className="flex justify-center items-center">
+                        <Link to="/" className="hover:opacity-80 transition-opacity cursor-pointer" onClick={closeMenu}>
+                            <img 
+                                src={logoImg} 
+                                alt="花の山城屋 ロゴ" 
+                                className="h-16 md:h-20 w-auto object-contain"
+                            />
+                        </Link>
+                    </div>
+
+                    {/* 右側：カートアイコン */}
+                    <div className="flex justify-end items-center gap-4">
+                        <Link to="/cart" aria-label="Cart" className="relative text-[#4a3f35] hover:text-[#8e3a3a] active:scale-95 transition-transform cursor-pointer p-2" onClick={closeMenu}>
+                            <ShoppingCart className="w-[24px] h-[24px] md:w-[28px] md:h-[28px]" strokeWidth={2} />
+                            {cartCount > 0 && (
+                                <span className="absolute top-0 right-0 bg-[#8e3a3a] text-white text-[10px] font-bold w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center shadow-sm">
+                                    {cartCount}
+                                </span>
+                            )}
+                        </Link>
                     </div>
                 </div>
             </header>
@@ -96,10 +102,14 @@ export default function Navbar() {
                                 </Link>
                             </div>
 
-                            {/* ドロワー下部のあしらいや連絡先なども追加可能 */}
-                            <div className="mt-auto pb-12 text-center text-[#a38f7d] text-sm tracking-widest">
-                                <p className="brush-font text-xl mb-4 text-[#8a7a6c]">花の山城屋</p>
-                                <p>© 1920 Yamashiroya</p>
+                            {/* ドロワー下部のロゴデザイン */}
+                            <div className="mt-auto pb-12 text-center border-t border-[#ebdcd0]/30 pt-8">
+                                <img 
+                                    src={logoImg} 
+                                    alt="花の山城屋 ロゴ" 
+                                    className="h-16 w-auto mx-auto mb-4 object-contain"
+                                />
+                                <p className="text-[#a38f7d] text-sm tracking-widest">© 1920 Yamashiroya</p>
                             </div>
                         </motion.nav>
                     </>

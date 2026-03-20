@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Search, ShoppingCart, Award, HeartHandshake, Truck, Gift, Heart, Store, CalendarHeart, Leaf } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from './context/CartContext.jsx';
+import logoImg from './shoplogo.png';
 
 export default function Home() {
     const [isReady, setIsReady] = useState(false);
@@ -107,8 +108,11 @@ export default function Home() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 1.5, delay: 0.8 }}
                             >
-                                <p className="text-[0.8rem] md:text-[1rem] text-[#6e5e54] tracking-[0.3em] mb-1 font-bold">想いを花に　小樽で百年</p>
-                                <h1 className="text-4xl md:text-5xl text-[#3E2723] brush-font drop-shadow-sm font-bold">花の山城屋</h1>
+                                <img 
+                                    src={logoImg} 
+                                    alt="花の山城屋 ロゴ" 
+                                    className="h-24 md:h-32 lg:h-40 w-auto object-contain"
+                                />
                             </motion.div>
                         </div>
                     </motion.div>
