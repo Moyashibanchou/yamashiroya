@@ -107,7 +107,7 @@ export default function Home() {
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 1.5, delay: 0.8 }}
                             >
-                                <p className="text-[0.8rem] md:text-[1rem] text-[#6e5e54] tracking-[0.3em] mb-1 font-bold">創業大正9年</p>
+                                <p className="text-[0.8rem] md:text-[1rem] text-[#6e5e54] tracking-[0.3em] mb-1 font-bold">想いを花に　小樽で百年</p>
                                 <h1 className="text-4xl md:text-5xl text-[#3E2723] brush-font drop-shadow-sm font-bold">花の山城屋</h1>
                             </motion.div>
                         </div>
@@ -118,26 +118,6 @@ export default function Home() {
             {isReady && (
                 <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2 }}>
 
-                    {/* 2. ヘッダー（固定） */}
-                    <header className="sticky top-0 z-50 bg-[#fdfbf6]/90 backdrop-blur-md border-b border-[#ebdcd0] soft-shadow-header">
-                        <div className="max-w-6xl mx-auto px-5 py-3 flex justify-between items-center">
-                            <div className="flex flex-col">
-                                <span className="text-[0.65rem] md:text-[0.75rem] text-[#6e5e54] font-bold tracking-widest mb-0.5">創業大正9年</span>
-                                <h1 className="text-xl md:text-2xl text-[#3E2723] brush-font font-bold">花の山城屋</h1>
-                            </div>
-                            <div className="flex gap-4 md:gap-6 text-[#4a3f35]">
-                                <button aria-label="Search" onClick={() => navigate('/products')} className="active:scale-90 transition-transform hover:text-[#8e3a3a]"><Search className="w-[22px] md:w-[26px]" strokeWidth={2} /></button>
-                                <Link to="/cart" aria-label="Cart" className="relative active:scale-90 transition-transform hover:text-[#8e3a3a]">
-                                    <ShoppingCart className="w-[22px] md:w-[26px]" strokeWidth={2} />
-                                    {cartCount > 0 && (
-                                        <span className="absolute -top-1.5 -right-2 bg-[#9e4646] text-[#fdfbf6] text-[0.6rem] md:text-[0.7rem] font-bold w-[1.1rem] md:w-[1.3rem] h-[1.1rem] md:h-[1.3rem] flex items-center justify-center rounded-full shadow-sm">
-                                            {cartCount}
-                                        </span>
-                                    )}
-                                </Link>
-                            </div>
-                        </div>
-                    </header>
 
                     {/* 3. ヒーローセクション */}
                     <section className="relative w-full h-[60vh] md:h-[75vh] min-h-[420px]">
@@ -147,15 +127,31 @@ export default function Home() {
                             className="w-full h-full object-cover"
                         />
                         <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/20 to-[#4a3f35]/90 flex flex-col items-center justify-end pb-12 md:pb-20 px-6 text-center">
-                            <h2 className="text-[#fdfbf6] text-[2rem] md:text-[3.5rem] font-bold leading-relaxed mb-4 md:mb-8 drop-shadow-2xl tracking-widest">
+                            <motion.h2
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+                                className="text-[#fdfbf6] text-[2rem] md:text-[3.5rem] font-bold leading-relaxed mb-4 md:mb-8 drop-shadow-2xl tracking-widest"
+                            >
                                 想いを束ねて、百年。
-                            </h2>
-                            <p className="text-[#fdfbf6] text-[0.9rem] md:text-[1.1rem] leading-[2.2] md:leading-[2.4] font-bold mb-10 md:mb-14 drop-shadow-md px-2 max-w-[340px] md:max-w-2xl text-justify tracking-widest opacity-95">
+                            </motion.h2>
+                            <motion.p
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
+                                className="text-[#fdfbf6] text-[0.9rem] md:text-[1.1rem] leading-[2.2] md:leading-[2.4] font-bold mb-10 md:mb-14 drop-shadow-md px-2 max-w-[340px] md:max-w-2xl text-justify tracking-widest opacity-95"
+                            >
                                 大正九年創業。小樽の街で愛され続ける老舗『花の山城屋』。熟練のフローリストが、あなたの特別な日を彩るお花を心を込めてお仕立てします。
-                            </p>
-                            <button onClick={() => navigate('/products')} className="w-full max-w-[280px] md:max-w-[340px] bg-[#bc8a7e] text-white font-bold py-4 md:py-5 rounded-xl shadow-[0_8px_24px_rgba(74,63,53,0.3)] active:scale-95 transition-transform text-lg md:text-xl tracking-widest hover:bg-[#a67468] border border-white/20 cursor-pointer">
-                                お花を探す
-                            </button>
+                            </motion.p>
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 1.0, ease: "easeOut", delay: 0.7 }}
+                            >
+                                <button onClick={() => navigate('/products')} className="w-full max-w-[280px] md:max-w-[340px] bg-[#bc8a7e] text-white font-bold py-4 md:py-5 rounded-xl shadow-[0_8px_24px_rgba(74,63,53,0.3)] active:scale-95 transition-transform text-lg md:text-xl tracking-widest hover:bg-[#a67468] border border-white/20 cursor-pointer">
+                                    お花を探す
+                                </button>
+                            </motion.div>
                         </div>
                     </section>
 
@@ -175,7 +171,13 @@ export default function Home() {
 
                     <div className="max-w-6xl mx-auto">
                         {/* 5. 高度な商品検索・絞り込みエリア（日比谷花壇風） */}
-                        <section className="pt-16 md:pt-24 pb-8 md:pb-16 px-5 md:px-0 relative z-10">
+                        <motion.section
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 1.2, ease: "easeOut" }}
+                            className="pt-16 md:pt-24 pb-8 md:pb-16 px-5 md:px-0 relative z-10"
+                        >
                             <h2 className="text-xl md:text-2xl font-bold text-[#4a3f35] tracking-widest mb-10 text-center border-b-2 border-[#bc8a7e] pb-4 inline-block relative left-1/2 -translate-x-1/2">
                                 お花を探す
                             </h2>
@@ -300,10 +302,16 @@ export default function Home() {
                                 </div>
 
                             </div>
-                        </section>
+                        </motion.section>
 
                         {/* 6. 商品一覧グリッド */}
-                        <section className="px-5 md:px-6 pt-12 md:pt-16 pb-20 md:pb-28">
+                        <motion.section
+                            initial={{ opacity: 0, y: 40 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-50px" }}
+                            transition={{ duration: 1.2, ease: "easeOut" }}
+                            className="px-5 md:px-6 pt-12 md:pt-16 pb-20 md:pb-28"
+                        >
                             <h2 className="text-xl md:text-3xl font-bold text-[#4a3f35] tracking-widest mb-8 md:mb-12 text-center md:text-left border-b-2 border-[#bc8a7e] pb-4 inline-block md:block">おすすめの品</h2>
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 flex-1">
                                 {dummyProducts.map((product) => (
@@ -330,11 +338,17 @@ export default function Home() {
                                     </Link>
                                 ))}
                             </div>
-                        </section>
+                        </motion.section>
                     </div>
 
                     {/* About Us セクション */}
-                    <section className="bg-[#f5efe9] px-6 pt-16 md:pt-28 pb-20 md:pb-28 border-y border-[#ebdcd0]">
+                    <motion.section
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        transition={{ duration: 1.2, ease: "easeOut" }}
+                        className="bg-[#f5efe9] px-6 pt-16 md:pt-28 pb-20 md:pb-28 border-y border-[#ebdcd0]"
+                    >
                         <div className="max-w-6xl mx-auto">
                             <h2 className="text-[1.3rem] md:text-[2.2rem] font-bold text-[#4a3f35] text-center tracking-[0.2em] mb-10 md:mb-16">
                                 百年の歩み、小樽と共に。
@@ -379,50 +393,80 @@ export default function Home() {
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </motion.section>
 
                     {/* 7. 年表・歴史セクション */}
-                    <section className="bg-[#f0e9df] px-6 pt-20 md:pt-32 pb-24 md:pb-32 border-t border-[#d8c8b6] shadow-inner relative">
+                    <motion.section
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        className="bg-[#f0e9df] px-6 pt-20 md:pt-32 pb-24 md:pb-32 border-t border-[#d8c8b6] shadow-inner relative"
+                    >
                         <div className="max-w-4xl mx-auto">
                             <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/rice-paper-2.png')]" />
 
-                            <div className="text-center mb-16 md:mb-24 relative z-10">
+                            <motion.div
+                                initial={{ opacity: 0, y: 30 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true, margin: "-50px" }}
+                                transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
+                                className="text-center mb-16 md:mb-24 relative z-10"
+                            >
                                 <h2 className="text-[1.4rem] md:text-[2.4rem] font-bold text-[#4a3f35] leading-loose tracking-widest drop-shadow-sm">
                                     大正から令和へ。<br />小樽の街と生きてきた<br />100年の軌跡。
                                 </h2>
-                            </div>
+                            </motion.div>
 
                             <div className="relative max-w-sm md:max-w-2xl mx-auto pl-10 md:pl-16 border-l-2 border-[#b5a392] space-y-16 md:space-y-20 pb-4 z-10">
-                                <div className="relative">
+                                <motion.div
+                                    className="relative"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    transition={{ duration: 1.0, ease: "easeOut", delay: 0.1 }}
+                                >
                                     <span className="absolute -left-[46px] md:-left-[71px] bg-[#6e5e54] w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-full border-2 border-[#f0e9df] top-2 soft-shadow-sm ring-4 ring-[#f0e9df]"></span>
                                     <h4 className="text-xl md:text-2xl font-bold text-[#4a3f35] mb-3 md:mb-5 tracking-wider">1920年：誕生</h4>
                                     <p className="text-[0.95rem] md:text-[1.1rem] text-[#6e5e54] leading-[2.2]">
                                         大正9年、小樽で産声を上げる。
                                     </p>
-                                </div>
+                                </motion.div>
 
-                                <div className="relative">
+                                <motion.div
+                                    className="relative"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    transition={{ duration: 1.0, ease: "easeOut", delay: 0.1 }}
+                                >
                                     <span className="absolute -left-[46px] md:-left-[71px] bg-[#6e5e54] w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-full border-2 border-[#f0e9df] top-2 soft-shadow-sm ring-4 ring-[#f0e9df]"></span>
                                     <h4 className="text-xl md:text-2xl font-bold text-[#4a3f35] mb-3 md:mb-5 tracking-wider">寄り添う</h4>
                                     <p className="text-[0.95rem] md:text-[1.1rem] text-[#6e5e54] leading-[2.2]">
                                         嬉しい日も悲しい日も、街の暮らしに花を添える。
                                     </p>
-                                </div>
+                                </motion.div>
 
-                                <div className="relative">
+                                <motion.div
+                                    className="relative"
+                                    initial={{ opacity: 0, x: -20 }}
+                                    whileInView={{ opacity: 1, x: 0 }}
+                                    viewport={{ once: true, margin: "-50px" }}
+                                    transition={{ duration: 1.0, ease: "easeOut", delay: 0.1 }}
+                                >
                                     <span className="absolute -left-[46px] md:-left-[71px] bg-[#6e5e54] w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-full border-2 border-[#f0e9df] top-2 soft-shadow-sm ring-4 ring-[#f0e9df]"></span>
                                     <h4 className="text-xl md:text-2xl font-bold text-[#4a3f35] mb-3 md:mb-5 tracking-wider">これから</h4>
                                     <p className="text-[0.95rem] md:text-[1.1rem] text-[#6e5e54] leading-[2.2]">
-                                        品質へのこだわりと、次の100年への想い。
+                                        品質へのこだわりと、次の100年への想。
                                     </p>
-                                </div>
+                                </motion.div>
                             </div>
 
                             <Link to="/about" className="relative z-10 mt-20 md:mt-28 w-full max-w-[320px] md:max-w-[400px] py-4 md:py-5 border-[1.5px] border-[#6e5e54] text-[#6e5e54] rounded-full font-bold mx-auto block hover:bg-[#6e5e54] hover:text-[#fdfbf6] active:scale-95 transition-all text-sm md:text-[1.05rem] tracking-widest bg-transparent text-center shadow-sm">
                                 歴史とこだわりを詳しく見る
                             </Link>
                         </div>
-                    </section>
+                    </motion.section>
                 </motion.div>
             )}
         </div>

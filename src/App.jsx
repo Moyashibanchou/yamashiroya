@@ -7,6 +7,7 @@ import Checkout from './Checkout.jsx';
 import Success from './Success.jsx';
 import About from './About.jsx';
 import ProductList from './ProductList.jsx';
+import Navbar from './components/Navbar.jsx';
 import { CartProvider } from './context/CartContext.jsx';
 
 export default function App() {
@@ -47,6 +48,7 @@ export default function App() {
 
       <CartProvider>
         <Router>
+          <Navbar />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/product/:id" element={<ProductDetail />} />

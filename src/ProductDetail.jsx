@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ChevronDown, ShoppingCart } from 'lucide-react';
+import { ArrowLeft, ChevronDown } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useCart } from './context/CartContext.jsx';
 
@@ -26,27 +26,13 @@ export default function ProductDetail() {
     return (
         <div className="w-full min-h-screen washi-pattern text-[#4a3f35] relative shadow-2xl elegant-font overflow-x-hidden md:pb-20">
 
-            {/* 1. ヘッダー（固定） */}
-            <header className="sticky top-0 z-50 bg-[#fdfbf6]/90 backdrop-blur-md border-b border-[#ebdcd0] soft-shadow-header">
-                <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
-                    <Link to="/" className="flex items-center gap-1.5 md:gap-2.5 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#3E2723] active:scale-95 transition-all w-[80px] md:w-[100px]">
-                        <ArrowLeft className="w-[18px] md:w-[22px]" strokeWidth={2.5} />
-                        戻る
-                    </Link>
-                    <h1 className="text-[1.1rem] md:text-[1.4rem] text-[#3E2723] brush-font font-bold absolute left-1/2 -translate-x-1/2 drop-shadow-sm">花の山城屋</h1>
-
-                    <div className="w-[80px] md:w-[100px] flex justify-end">
-                        <Link to="/cart" aria-label="Cart" className="relative active:scale-90 transition-transform text-[#4a3f35] hover:text-[#8e3a3a]">
-                            <ShoppingCart className="w-[22px] md:w-[26px]" strokeWidth={2} />
-                            {cartCount > 0 && (
-                                <span className="absolute -top-1.5 -right-2 bg-[#9e4646] text-[#fdfbf6] text-[0.6rem] md:text-[0.7rem] font-bold w-[1.1rem] md:w-[1.3rem] h-[1.1rem] md:h-[1.3rem] flex items-center justify-center rounded-full shadow-sm">
-                                    {cartCount}
-                                </span>
-                            )}
-                        </Link>
-                    </div>
-                </div>
-            </header>
+            {/* 1. 戻るボタン */}
+            <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-8 pb-2">
+                <Link to="/" className="inline-flex items-center gap-1.5 md:gap-2.5 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#3E2723] active:scale-95 transition-all w-fit">
+                    <ArrowLeft className="w-[18px] md:w-[22px]" strokeWidth={2.5} />
+                    一覧へ戻る
+                </Link>
+            </div>
 
             <div className="max-w-6xl mx-auto md:px-6 md:py-16 md:flex md:gap-16 lg:gap-24 md:items-start">
                 {/* 2. 商品画像＆基本情報（左側） */}
@@ -117,8 +103,8 @@ export default function ProductDetail() {
                                         key={item}
                                         onClick={() => setActivePurpose(item)}
                                         className={`py-3.5 md:py-4 px-2 rounded-xl md:rounded-2xl text-[0.85rem] md:text-[0.95rem] font-bold border transition-all duration-200 tracking-wider ${activePurpose === item
-                                                ? 'bg-[#405342] text-[#fdfbf6] border-[#405342] shadow-[0_4px_12px_rgba(64,83,66,0.2)]'
-                                                : 'bg-[#fdfbf6] text-[#6e5e54] border-[#d8c8b6] hover:bg-[#f5efe9]'
+                                            ? 'bg-[#405342] text-[#fdfbf6] border-[#405342] shadow-[0_4px_12px_rgba(64,83,66,0.2)]'
+                                            : 'bg-[#fdfbf6] text-[#6e5e54] border-[#d8c8b6] hover:bg-[#f5efe9]'
                                             }`}
                                     >
                                         {item}

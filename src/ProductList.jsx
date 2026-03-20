@@ -67,21 +67,13 @@ export default function ProductList() {
     return (
         <div className="w-full min-h-screen washi-pattern text-[#4a3f35] relative shadow-2xl elegant-font overflow-x-hidden md:pb-20">
 
-            {/* 1. ヘッダー（固定） */}
-            <header className="sticky top-0 z-50 bg-[#fdfbf6]/90 backdrop-blur-md border-b border-[#ebdcd0] soft-shadow-header">
-                <div className="max-w-6xl mx-auto px-4 md:px-6 py-3 md:py-4 flex justify-between items-center">
-                    <button onClick={() => navigate(-1)} className="flex items-center gap-1.5 md:gap-2.5 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#3E2723] active:scale-95 transition-all w-[70px] md:w-[100px]">
-                        <ArrowLeft className="w-[18px] md:w-[22px]" strokeWidth={2.5} />
-                        戻る
-                    </button>
-                    <h1 className="text-[1.1rem] md:text-[1.4rem] text-[#3E2723] brush-font font-bold absolute left-1/2 -translate-x-1/2 drop-shadow-sm">商品一覧</h1>
-                    <div className="w-[70px] md:w-[100px] flex justify-end">
-                        <button aria-label="Search" className="active:scale-90 transition-transform hover:text-[#8e3a3a]">
-                            <Search className="w-[20px] md:w-[24px]" strokeWidth={2.5} />
-                        </button>
-                    </div>
-                </div>
-            </header>
+            {/* 1. 戻るボタン */}
+            <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-8 pb-2">
+                <button onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 md:gap-2.5 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#3E2723] active:scale-95 transition-all w-fit cursor-pointer">
+                    <ArrowLeft className="w-[18px] md:w-[22px]" strokeWidth={2.5} />
+                    戻る
+                </button>
+            </div>
 
             {/* 2. 検索条件・絞り込みサマリー */}
             <div className="bg-[#f5efe9] border-b border-[#ebdcd0]">
