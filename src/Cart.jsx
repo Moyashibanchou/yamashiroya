@@ -12,7 +12,7 @@ export default function Cart() {
 
             {/* 1. 戻るボタン */}
             <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-8 pb-2">
-                <button onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 md:gap-2.5 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#3E2723] active:scale-95 transition-all w-fit cursor-pointer">
+                <button onClick={() => navigate('/products')} className="inline-flex items-center gap-1.5 md:gap-2.5 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#3E2723] active:scale-95 transition-all w-fit cursor-pointer">
                     <ArrowLeft className="w-[18px] md:w-[22px]" strokeWidth={2.5} />
                     戻る
                 </button>
@@ -28,7 +28,7 @@ export default function Cart() {
                     </h2>
 
                     {items.length === 0 ? (
-                        <div className="text-center py-20 bg-[#fdfbf6] rounded-3xl border border-[#ebdcd0] soft-shadow-sm">
+                        <div className="text-center py-20 bg-[#fffdf7] rounded-3xl border border-[#ebdcd0] soft-shadow-sm">
                             <p className="text-[#6e5e54] mb-10 text-[1rem] md:text-[1.1rem] font-medium leading-[2.2]">
                                 カートに商品がありません。<br />
                                 山城屋の心温まるお花をぜひご覧ください。
@@ -40,7 +40,7 @@ export default function Cart() {
                     ) : (
                         <div className="space-y-6 md:space-y-8">
                             {items.map((item) => (
-                                <div key={item.id} className="flex gap-4 md:gap-8 p-4 md:p-6 bg-[#fdfbf6] rounded-2xl md:rounded-3xl border border-[#ebdcd0] soft-shadow-sm relative transition-shadow hover:shadow-md group">
+                                <div key={item.id} className="flex gap-4 md:gap-8 p-4 md:p-6 bg-[#fffdf7] rounded-2xl md:rounded-3xl border border-[#ebdcd0] soft-shadow-sm relative transition-shadow hover:shadow-md group">
                                     <div className="w-24 h-24 md:w-36 md:h-36 bg-[#f5efe9] rounded-xl md:rounded-2xl overflow-hidden shrink-0">
                                         <img src={item.image} alt="商品" className="w-full h-full object-cover mix-blend-multiply opacity-95 group-hover:scale-105 transition-transform duration-500" />
                                     </div>
@@ -51,13 +51,13 @@ export default function Cart() {
                                             </h3>
                                             <p className="text-[0.8rem] md:text-[0.95rem] font-bold text-[#8a7a6c]">数量: {item.quantity}</p>
                                         </div>
-                                        <p className="text-[1.1rem] md:text-[1.4rem] font-bold text-[#9e4646] tracking-widest self-end">
+                                        <p className="text-[1.1rem] md:text-[1.4rem] font-bold text-[#2B5740] tracking-widest self-end">
                                             ¥{item.price.toLocaleString()} <span className="text-[0.65rem] md:text-[0.8rem] text-[#8a7a6c] font-normal">税込</span>
                                         </p>
                                     </div>
                                     <button
                                         onClick={() => removeFromCart(item.id)}
-                                        className="absolute top-4 md:top-6 right-4 md:right-6 text-[#bc8a7e] hover:text-[#9e4646] p-2 hover:bg-[#f5efe9] rounded-full active:scale-90 transition-all"
+                                        className="absolute top-4 md:top-6 right-4 md:right-6 text-[#bc8a7e] hover:text-[#2B5740] p-2 hover:bg-[#f5efe9] rounded-full active:scale-90 transition-all"
                                         aria-label="削除"
                                     >
                                         <Trash2 className="w-[18px] md:w-[22px]" />
@@ -75,7 +75,7 @@ export default function Cart() {
                 {/* 右側：合計金額・レジへ進む（PCのみsticky） */}
                 {items.length > 0 && (
                     <section className="md:w-[40%] lg:w-[35%] md:sticky md:top-32 mt-12 md:mt-0">
-                        <div className="p-6 md:p-8 md:bg-[#fdfbf6]/80 md:backdrop-blur-xl bg-[#f5efe9] md:shadow-[0_8px_32px_rgba(74,63,53,0.06)] rounded-2xl md:rounded-3xl border border-[#ebdcd0] md:border-t-4 md:border-t-[#8e3a3a]">
+                        <div className="p-6 md:p-8 md:bg-[#fffdf7]/80 md:backdrop-blur-xl bg-[#f5efe9] md:shadow-[0_8px_32px_rgba(74,63,53,0.06)] rounded-2xl md:rounded-3xl border border-[#ebdcd0] md:border-t-4 md:border-t-[#2B5740]">
                             <h3 className="hidden md:block text-[1.2rem] font-bold text-[#4a3f35] tracking-widest mb-6 border-b border-[#ebdcd0] pb-4">
                                 ご注文内容
                             </h3>
@@ -89,14 +89,14 @@ export default function Cart() {
                             </div>
                             <div className="flex justify-between items-end mb-8">
                                 <span className="text-lg md:text-xl font-bold text-[#4a3f35] tracking-widest">合計 <span className="text-[0.7rem] md:text-[0.8rem] font-normal text-[#6e5e54]">（税込）</span></span>
-                                <span className="text-2xl md:text-3xl font-bold text-[#9e4646] tracking-widest">¥{cartTotal.toLocaleString()}</span>
+                                <span className="text-2xl md:text-3xl font-bold text-[#2B5740] tracking-widest">¥{cartTotal.toLocaleString()}</span>
                             </div>
 
                             {/* PC用のCTAボタン（モバイルでは非表示） */}
                             <div className="hidden md:block">
                                 <button
                                     onClick={() => navigate('/checkout')}
-                                    className="w-full py-5 rounded-xl text-[1.1rem] font-bold shadow-md active:scale-95 transition-all duration-200 tracking-[0.15em] bg-[#8e3a3a] text-white hover:bg-[#7a3131]"
+                                    className="w-full py-5 rounded-xl text-[1.1rem] font-bold shadow-md active:scale-95 transition-all duration-200 tracking-[0.15em] bg-[#2B5740] text-white hover:bg-[#234836]"
                                 >
                                     レジへ進む
                                 </button>
@@ -112,10 +112,10 @@ export default function Cart() {
 
             {/* モバイル用固定フッター（PCでは非表示） */}
             {items.length > 0 && (
-                <div className="md:hidden fixed bottom-0 w-full bg-[#fdfbf6]/95 backdrop-blur-md border-t border-[#ebdcd0] px-5 py-5 soft-shadow-sm pb-[env(safe-area-inset-bottom,1.25rem)] z-50">
+                <div className="md:hidden fixed bottom-0 w-full bg-[#fffdf7]/95 backdrop-blur-md border-t border-[#ebdcd0] px-5 py-5 soft-shadow-sm pb-[env(safe-area-inset-bottom,1.25rem)] z-50">
                     <button
                         onClick={() => navigate('/checkout')}
-                        className="w-full py-4 bg-[#8e3a3a] text-white rounded-xl text-[1.1rem] font-bold shadow-[0_8px_24px_rgba(142,58,58,0.2)] hover:bg-[#7a3131] active:scale-95 transition-all duration-200 tracking-widest border border-white/10"
+                        className="w-full py-4 bg-[#2B5740] text-white rounded-xl text-[1.1rem] font-bold shadow-[0_8px_24px_rgba(43,87,64,0.18)] hover:bg-[#234836] active:scale-95 transition-all duration-200 tracking-widest border border-white/10"
                     >
                         レジへ進む
                     </button>

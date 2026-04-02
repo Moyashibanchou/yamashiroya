@@ -1,9 +1,18 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
 export const CartContext = createContext();
 
 export function CartProvider({ children }) {
-    const [items, setItems] = useState([]);
+    // 1. 初期化時に localStorage からデータを読み込む
+    const [items, setItems] = useState(() => {
+        const savedCart = localStorage.getItem('yamashiroya_cart');
+        return savedCart ? JSON.parse(savedCart) : [];
+    });
+
+    // 2. カートの中身が更新されるたびに localStorage に保存する
+    useEffect(() => {
+        localStorage.setItem('yamashiroya_cart', JSON.stringify(items));
+    }, [items]);
 
     const addToCart = (product) => {
         setItems((prevItems) => {

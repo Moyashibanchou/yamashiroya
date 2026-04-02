@@ -1,16 +1,162 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CheckCircle } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useCart } from './context/CartContext.jsx';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export default function Success() {
+    const { clearCart } = useCart();
+    const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+    const [isVerified, setIsVerified] = useState(false);
+    const [checking, setChecking] = useState(true);
+
+    const [petals, setPetals] = useState([]);
+
+    const CHECKOUT_FORM_STORAGE_KEY = 'checkoutFormData';
 
     useEffect(() => {
-        // 画面の一番上へスクロールさせる
         window.scrollTo(0, 0);
+
+        let canceled = false;
+        const verify = async () => {
+            setChecking(true);
+            try {
+                const sessionId = searchParams.get('session_id') || searchParams.get('sessionId') || '';
+                if (!sessionId) {
+                    if (!canceled) {
+                        setIsVerified(false);
+                        navigate('/cart', { replace: true });
+                    }
+                    return;
+                }
+
+                const res = await fetch(`http://localhost:8080/api/payments/verify-session?sessionId=${encodeURIComponent(sessionId)}`);
+                if (!res.ok) {
+                    throw new Error('verify failed');
+                }
+                const data = await res.json();
+                const ok = Boolean(data && data.verified === true);
+
+                if (!canceled) {
+                    if (ok) {
+                        setIsVerified(true);
+                        clearCart();
+                        try {
+                            sessionStorage.removeItem(CHECKOUT_FORM_STORAGE_KEY);
+                        } catch {
+                            // ignore
+                        }
+                    } else {
+                        setIsVerified(false);
+                        navigate('/cart', { replace: true });
+                    }
+                }
+            } catch (e) {
+                if (!canceled) {
+                    setIsVerified(false);
+                    navigate('/cart', { replace: true });
+                }
+            } finally {
+                if (!canceled) setChecking(false);
+            }
+        };
+
+        verify();
+        return () => {
+            canceled = true;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    useEffect(() => {
+        if (!isVerified) return;
+
+        let canceled = false;
+        const startAt = Date.now();
+        const createForMs = 4200;
+
+        const spawn = () => {
+            const id = `${Date.now()}_${Math.random().toString(16).slice(2)}`;
+            const width = typeof window !== 'undefined' ? window.innerWidth : 1024;
+            const x = Math.random() * width;
+            const duration = 7 + Math.random() * 4;
+            const rotate = (Math.random() - 0.5) * 260;
+            const scale = 0.75 + Math.random() * 0.6;
+            const emoji = Math.random() > 0.25 ? '🌸' : '❀';
+
+            setPetals((prev) => [
+                ...prev,
+                {
+                    key: id,
+                    x,
+                    duration,
+                    rotate,
+                    scale,
+                    emoji,
+                    drift: (Math.random() - 0.5) * 90,
+                },
+            ]);
+        };
+
+        const tick = () => {
+            if (canceled) return;
+            const elapsed = Date.now() - startAt;
+            if (elapsed <= createForMs) {
+                spawn();
+                if (Math.random() > 0.55) spawn();
+                setTimeout(tick, 120 + Math.random() * 120);
+            }
+        };
+
+        tick();
+        return () => {
+            canceled = true;
+        };
+    }, [isVerified]);
+
+    if (checking) {
+        return (
+            <div className="w-full min-h-screen washi-pattern text-[#4a3f35] relative shadow-2xl elegant-font overflow-hidden flex flex-col items-center justify-center -mt-[3rem] md:-mt-[4rem]">
+                <div className="bg-[#f0e9df] p-6 md:p-10 rounded-2xl md:rounded-3xl border border-[#d8c8b6] soft-shadow-sm w-full max-w-xl mx-auto text-center">
+                    <p className="text-[0.95rem] md:text-[1.1rem] text-[#4a3f35] leading-loose tracking-wide font-medium">
+                        決済状況を確認しています...
+                    </p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!isVerified) {
+        return null;
+    }
 
     return (
         <div className="w-full min-h-screen washi-pattern text-[#4a3f35] relative shadow-2xl elegant-font overflow-hidden flex flex-col items-center justify-center -mt-[3rem] md:-mt-[4rem]">
+
+            <div className="fixed inset-0 pointer-events-none z-[9999]">
+                <AnimatePresence>
+                    {petals.map((p) => (
+                        <motion.span
+                            key={p.key}
+                            initial={{ opacity: 0, x: p.x, y: -30, rotate: 0, scale: p.scale }}
+                            animate={{
+                                opacity: [0, 0.9, 0.9, 0],
+                                x: [p.x, p.x + p.drift, p.x - p.drift, p.x],
+                                y: ['-30px', '110vh'],
+                                rotate: [0, p.rotate],
+                            }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: p.duration, ease: 'easeOut' }}
+                            onAnimationComplete={() => setPetals((prev) => prev.filter((x) => x.key !== p.key))}
+                            style={{ position: 'absolute', left: 0, top: 0, willChange: 'transform' }}
+                            className="select-none drop-shadow-[0_6px_10px_rgba(74,63,53,0.08)]"
+                        >
+                            {p.emoji}
+                        </motion.span>
+                    ))}
+                </AnimatePresence>
+            </div>
 
             {/* 1. 薄い背景の装飾（老舗の透かし文字のようなデザイン） */}
             <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none z-0">
@@ -38,7 +184,7 @@ export default function Success() {
                     </p>
 
                     <div className="mt-8 md:mt-10 pt-6 md:pt-8 border-t border-[#d8c8b6]/70">
-                        <p className="text-[0.8rem] md:text-[0.95rem] text-[#6e5e54] tracking-widest font-bold">注文番号：<span className="text-[#8e3a3a] font-normal text-[1rem] md:text-[1.1rem]">#1092-A</span></p>
+                        <p className="text-[0.8rem] md:text-[0.95rem] text-[#6e5e54] tracking-widest font-bold">注文番号：<span className="text-[#2B5740] font-normal text-[1rem] md:text-[1.1rem]">#1092-A</span></p>
                     </div>
                 </div>
 

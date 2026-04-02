@@ -18,6 +18,8 @@ export default {
             },
             fontFamily: {
                 sans: ['Noto Sans JP', 'sans-serif'],
+                serif: ['Noto Serif JP', 'serif'],
+                hand: ['Yuji Syuku', 'Yuji Mai', 'Noto Serif JP', 'serif'],
             }
         },
     },

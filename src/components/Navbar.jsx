@@ -16,20 +16,20 @@ export default function Navbar() {
     return (
         <>
             {/* グローバルヘッダー */}
-            <header className="sticky top-0 z-50 w-full bg-[#fdfbf6]/95 backdrop-blur-md border-b border-[#ebdcd0] soft-shadow-header elegant-font">
+            <header className="sticky top-0 z-50 w-full bg-[#faf8f1]/95 backdrop-blur-md border-b border-[#ebdcd0] soft-shadow-header elegant-font">
                 <div className="max-w-6xl mx-auto px-4 md:px-6 h-[80px] md:h-[100px] grid grid-cols-3 items-center">
 
                     {/* 左側：ハンバーガーメニュー（モバイルのみ） */}
                     <div className="flex justify-start items-center">
                         {/* PC表示用テキストリンク (スマホでは非表示) */}
                         <nav className="hidden md:flex items-center gap-6 text-[#4a3f35] font-bold tracking-widest text-[0.9rem]">
-                            <Link to="/" className="hover:text-[#8e3a3a] transition-colors cursor-pointer">トップ</Link>
-                            <Link to="/products" className="hover:text-[#8e3a3a] transition-colors cursor-pointer">お花を探す</Link>
-                            <Link to="/about" className="hover:text-[#8e3a3a] transition-colors cursor-pointer">山城屋について</Link>
+                            <Link to="/" className="hover:text-[#2B5740] transition-colors cursor-pointer">トップ</Link>
+                            <Link to="/products" className="hover:text-[#2B5740] transition-colors cursor-pointer">お花を探す</Link>
+                            <Link to="/about" className="hover:text-[#2B5740] transition-colors cursor-pointer">山城屋について</Link>
                         </nav>
 
                         <button
-                            className="md:hidden text-[#4a3f35] hover:text-[#8e3a3a] active:scale-95 transition-transform cursor-pointer"
+                            className="md:hidden text-[#4a3f35] hover:text-[#2B5740] active:scale-95 transition-transform cursor-pointer"
                             onClick={toggleMenu}
                             aria-label="Menu"
                         >
@@ -50,10 +50,10 @@ export default function Navbar() {
 
                     {/* 右側：カートアイコン */}
                     <div className="flex justify-end items-center gap-4">
-                        <Link to="/cart" aria-label="Cart" className="relative text-[#4a3f35] hover:text-[#8e3a3a] active:scale-95 transition-transform cursor-pointer p-2" onClick={closeMenu}>
+                        <Link to="/cart" aria-label="Cart" className="relative text-[#4a3f35] hover:text-[#2B5740] active:scale-95 transition-transform cursor-pointer p-2" onClick={closeMenu}>
                             <ShoppingCart className="w-[24px] h-[24px] md:w-[28px] md:h-[28px]" strokeWidth={2} />
                             {cartCount > 0 && (
-                                <span className="absolute top-0 right-0 bg-[#8e3a3a] text-white text-[10px] font-bold w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center shadow-sm">
+                                <span className="absolute top-0 right-0 bg-[#2B5740] text-white text-[10px] font-bold w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center shadow-sm">
                                     {cartCount}
                                 </span>
                             )}
@@ -91,13 +91,13 @@ export default function Navbar() {
                             </div>
 
                             <div className="flex flex-col gap-8 text-[1.1rem] font-bold text-[#4a3f35] tracking-widest text-center mt-4">
-                                <Link to="/" onClick={closeMenu} className="py-4 border-b border-[#ebdcd0]/50 hover:text-[#8e3a3a] transition-colors">
+                                <Link to="/" onClick={closeMenu} className="py-4 border-b border-[#ebdcd0]/50 hover:text-[#2B5740] transition-colors">
                                     トップ
                                 </Link>
-                                <Link to="/products" onClick={closeMenu} className="py-4 border-b border-[#ebdcd0]/50 hover:text-[#8e3a3a] transition-colors">
+                                <Link to="/products" onClick={closeMenu} className="py-4 border-b border-[#ebdcd0]/50 hover:text-[#2B5740] transition-colors">
                                     お花を探す
                                 </Link>
-                                <Link to="/about" onClick={closeMenu} className="py-4 border-b border-[#ebdcd0]/50 hover:text-[#8e3a3a] transition-colors">
+                                <Link to="/about" onClick={closeMenu} className="py-4 border-b border-[#ebdcd0]/50 hover:text-[#2B5740] transition-colors">
                                     山城屋について
                                 </Link>
                             </div>

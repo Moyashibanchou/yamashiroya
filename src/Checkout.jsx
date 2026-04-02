@@ -1,146 +1,601 @@
-import React from 'react';
-import { ArrowLeft, Lock, Phone } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import { ArrowLeft, Lock, ShieldCheck, CreditCard, User, MapPin, Mail, Phone, Smartphone, Store, Apple, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from './context/CartContext.jsx';
 
 export default function Checkout() {
     const navigate = useNavigate();
-    const { cartTotal, clearCart } = useCart();
+    const { items, cartTotal, clearCart } = useCart();
+    const [isProcessing, setIsProcessing] = useState(false);
+    const [paymentMethod, setPaymentMethod] = useState('credit'); // 'credit', 'paypay', 'applepay', 'convenience'
 
-    const handleConfirmOrder = () => {
-        // 注文処理を想定したモック
-        clearCart(); // カートを空にする
-        navigate('/success'); // 注文完了ページへ
+    const CHECKOUT_FORM_STORAGE_KEY = 'checkoutFormData';
+
+    const [form, setForm] = useState(() => {
+        try {
+            const raw = sessionStorage.getItem(CHECKOUT_FORM_STORAGE_KEY);
+            if (!raw) {
+                return {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    zipcode: '',
+                    prefectureCity: '',
+                    addressLine: '',
+                };
+            }
+
+            const parsed = JSON.parse(raw);
+            if (!parsed || typeof parsed !== 'object') {
+                return {
+                    name: '',
+                    email: '',
+                    phone: '',
+                    zipcode: '',
+                    prefectureCity: '',
+                    addressLine: '',
+                };
+            }
+
+            return {
+                name: String(parsed.name || ''),
+                email: String(parsed.email || ''),
+                phone: String(parsed.phone || ''),
+                zipcode: String(parsed.zipcode || ''),
+                prefectureCity: String(parsed.prefectureCity || ''),
+                addressLine: String(parsed.addressLine || ''),
+            };
+        } catch {
+            return {
+                name: '',
+                email: '',
+                phone: '',
+                zipcode: '',
+                prefectureCity: '',
+                addressLine: '',
+            };
+        }
+    });
+
+    useEffect(() => {
+        try {
+            sessionStorage.setItem(CHECKOUT_FORM_STORAGE_KEY, JSON.stringify(form));
+        } catch {
+            // ignore
+        }
+    }, [form]);
+
+    const [errors, setErrors] = useState({
+        email: '',
+        phone: '',
+        zipcode: '',
+        address: '',
+    });
+
+    const [isLookingUpZip, setIsLookingUpZip] = useState(false);
+
+    const API_URL_CREATE_SESSION = 'http://localhost:8080/api/payments/create-session';
+
+    // 送料（ダミー）
+    const shippingFee = 1100;
+    const totalAmount = cartTotal + (items.length > 0 ? shippingFee : 0);
+
+    const emailIsValid = useMemo(() => {
+        const v = String(form.email || '').trim();
+        if (!v) return false;
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    }, [form.email]);
+
+    const phoneIsValid = useMemo(() => {
+        const v = String(form.phone || '').trim();
+        if (!v) return false;
+        if (/^\d{10,11}$/.test(v)) return true;
+        return /^0\d{1,4}-\d{1,4}-\d{4}$/.test(v);
+    }, [form.phone]);
+
+    const zipcodeNormalized = useMemo(() => String(form.zipcode || '').replace(/-/g, ''), [form.zipcode]);
+
+    const validateBeforeSubmit = () => {
+        const next = {
+            email: '',
+            phone: '',
+            zipcode: '',
+            address: '',
+        };
+
+        if (!emailIsValid) {
+            next.email = 'メールアドレスを正しい形式で入力してください。';
+        }
+        if (!phoneIsValid) {
+            next.phone = '電話番号を正しい形式で入力してください。（例：09012345678 / 0134-00-0000）';
+        }
+        if (!zipcodeNormalized || !/^\d{7}$/.test(zipcodeNormalized)) {
+            next.zipcode = '郵便番号は7桁で入力してください。';
+        }
+        if (!String(form.prefectureCity || '').trim() || !String(form.addressLine || '').trim()) {
+            next.address = '住所を入力してください。';
+        }
+
+        setErrors(next);
+        return !next.email && !next.phone && !next.zipcode && !next.address;
+    };
+
+    const lookupAddressByZipcode = async () => {
+        const zip = zipcodeNormalized;
+        if (!/^\d{7}$/.test(zip)) {
+            setErrors((prev) => ({ ...prev, zipcode: '郵便番号は7桁で入力してください。' }));
+            return;
+        }
+
+        setIsLookingUpZip(true);
+        try {
+            const res = await fetch(`https://zipcloud.ibsnet.co.jp/api/search?zipcode=${encodeURIComponent(zip)}`);
+            if (!res.ok) throw new Error('郵便番号検索に失敗しました');
+            const data = await res.json();
+
+            if (data && data.status === 200 && Array.isArray(data.results) && data.results[0]) {
+                const r = data.results[0];
+                const prefecture = r.address1 || '';
+                const city = r.address2 || '';
+                const town = r.address3 || '';
+                setForm((prev) => ({
+                    ...prev,
+                    prefectureCity: `${prefecture}${city}${town}`,
+                }));
+                setErrors((prev) => ({ ...prev, zipcode: '', address: '' }));
+            } else {
+                setErrors((prev) => ({ ...prev, zipcode: '該当する住所が見つかりませんでした。' }));
+            }
+        } catch (e) {
+            setErrors((prev) => ({ ...prev, zipcode: '郵便番号検索に失敗しました。時間をおいてお試しください。' }));
+        } finally {
+            setIsLookingUpZip(false);
+        }
+    };
+
+    // Spring Boot API との本番連携
+    const handleConfirmOrder = async () => {
+        if (!validateBeforeSubmit()) {
+            return;
+        }
+
+        setIsProcessing(true);
+
+        try {
+            sessionStorage.setItem(CHECKOUT_FORM_STORAGE_KEY, JSON.stringify(form));
+        } catch {
+            // ignore
+        }
+
+        // KOMOJU への直行型決済用マッピング処理（厳密な文字列変換）
+        let komojuPaymentType = "credit_card"; // デフォルト
+        if (paymentMethod === "credit") {
+            komojuPaymentType = "credit_card";
+        } else if (paymentMethod === "paypay") {
+            komojuPaymentType = "paypay";
+        } else if (paymentMethod === "applepay") {
+            komojuPaymentType = "apple_pay";
+        } else if (paymentMethod === "convenience") {
+            komojuPaymentType = "konbini";
+        }
+
+        try {
+            // Spring Boot バックエンドに対して決済セッションの作成をリクエスト
+            const response = await fetch(API_URL_CREATE_SESSION, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ 
+                    amount: totalAmount,
+                    paymentMethod: komojuPaymentType
+                }),
+            });
+
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+
+            const data = await response.json();
+            
+            if (data.checkoutUrl) {
+                window.location.href = data.checkoutUrl;
+            } else {
+                throw new Error('Checkout URL not found in response');
+            }
+        } catch (error) {
+            console.error('Payment Error:', error);
+            alert('決済処理に失敗しました。サーバーが起動しているか確認し、時間をおいて再度お試しください。');
+            setIsProcessing(false);
+        }
     };
 
     return (
-        <div className="w-full min-h-screen washi-pattern text-[#4a3f35] relative shadow-2xl elegant-font overflow-x-hidden md:pb-20">
-
+        <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="w-full min-h-screen washi-pattern text-[#4a3f35] relative shadow-2xl elegant-font overflow-x-hidden pb-20 md:pb-32"
+        >
             {/* 1. 戻るボタン */}
-            <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-8 pb-2">
-                <button onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 md:gap-2.5 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#3E2723] active:scale-95 transition-all w-fit cursor-pointer">
-                    <ArrowLeft className="w-[18px] md:w-[22px]" strokeWidth={2.5} />
-                    戻る
+            <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-12 pb-4">
+                <button 
+                    onClick={() => navigate('/cart')} 
+                    className="inline-flex items-center gap-2 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#4a3f35] active:scale-95 transition-all w-fit cursor-pointer group"
+                    disabled={isProcessing}
+                >
+                    <ArrowLeft className="w-[18px] md:w-[22px] group-hover:-translate-x-1 transition-transform" strokeWidth={2.5} />
+                    お買い物に戻る
                 </button>
             </div>
 
-            {/* 2. メインコンテンツ（PCは2カラム） */}
-            <div className="max-w-6xl mx-auto px-6 py-8 md:py-16 md:flex md:gap-14 lg:gap-20 md:items-start">
+            <div className="max-w-6xl mx-auto px-6 py-6 md:py-8">
+                <header className="text-center mb-12 md:mb-20">
+                    <h1 className="text-2xl md:text-4xl font-bold tracking-[0.3em] mb-4">お支払い</h1>
+                    <p className="text-[#8a7a6c] text-sm md:text-base tracking-widest font-medium">ご注文を確定してください</p>
+                </header>
 
-                {/* 左側：入力フォーム */}
-                <section className="md:w-[60%] lg:w-[65%]">
-                    {/* お届け先情報 */}
-                    <div className="mb-12">
-                        <h2 className="text-[1.1rem] md:text-[1.3rem] font-bold text-[#4a3f35] tracking-widest mb-6 md:mb-8 border-b-2 border-[#bc8a7e] pb-3 inline-block">
-                            1. お届け先情報
-                        </h2>
-                        <div className="space-y-5 md:space-y-6">
-                            <div>
-                                <label className="block text-[0.85rem] md:text-[0.95rem] font-bold text-[#8a7a6c] mb-2 tracking-wider">お名前（必須）</label>
-                                <input type="text" placeholder="例：山田 太郎" className="w-full bg-[#fdfbf6] border border-[#d8c8b6] text-[#4a3f35] py-3.5 md:py-4 px-4 md:px-5 rounded-xl text-[0.95rem] md:text-[1.05rem] focus:outline-none focus:border-[#a38f7d] shadow-[0_2px_8px_rgba(74,63,53,0.03)]" />
+                {/* 2. メインコンテンツ（PCは2カラム） */}
+                <div className="md:flex md:gap-16 lg:gap-24 md:items-start">
+
+                    {/* 左側：入力フォーム & 決済選択 */}
+                    <div className="md:w-[55%] lg:w-[60%] space-y-12 md:space-y-20">
+                        
+                        {/* セクション：お客様情報 */}
+                        <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
+                            <div className="flex items-center gap-4 mb-10">
+                                <div className="w-10 h-10 bg-[#4a3f35] rounded-full flex items-center justify-center text-white">
+                                    <User size={20} />
+                                </div>
+                                <h2 className="text-xl font-bold tracking-widest">お届け先 ＆ ご連絡先</h2>
                             </div>
-                            <div className="flex gap-4">
-                                <div className="w-1/2">
-                                    <label className="block text-[0.85rem] md:text-[0.95rem] font-bold text-[#8a7a6c] mb-2 tracking-wider">郵便番号（必須）</label>
-                                    <input type="text" placeholder="例：047-0000" className="w-full bg-[#fdfbf6] border border-[#d8c8b6] text-[#4a3f35] py-3.5 md:py-4 px-4 md:px-5 rounded-xl text-[0.95rem] md:text-[1.05rem] focus:outline-none focus:border-[#a38f7d] shadow-[0_2px_8px_rgba(74,63,53,0.03)]" />
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                                <div className="md:col-span-2">
+                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">お名前（姓名）</label>
+                                    <input
+                                        type="text"
+                                        value={form.name}
+                                        onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
+                                        placeholder="例：山城 太郎"
+                                        className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">メールアドレス</label>
+                                    <input
+                                        type="email"
+                                        value={form.email}
+                                        onChange={(e) => {
+                                            const v = e.target.value;
+                                            setForm((prev) => ({ ...prev, email: v }));
+                                            if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
+                                        }}
+                                        placeholder="example@mail.com"
+                                        className={`w-full bg-white/60 border ${errors.email ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40`}
+                                    />
+                                    {errors.email ? (
+                                        <p className="mt-2 text-xs font-bold tracking-widest text-red-600">{errors.email}</p>
+                                    ) : null}
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">電話番号</label>
+                                    <input
+                                        type="tel"
+                                        value={form.phone}
+                                        onChange={(e) => {
+                                            const v = e.target.value;
+                                            setForm((prev) => ({ ...prev, phone: v }));
+                                            if (errors.phone) setErrors((prev) => ({ ...prev, phone: '' }));
+                                        }}
+                                        placeholder="0134-00-0000 / 09012345678"
+                                        className={`w-full bg-white/60 border ${errors.phone ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40`}
+                                    />
+                                    {errors.phone ? (
+                                        <p className="mt-2 text-xs font-bold tracking-widest text-red-600">{errors.phone}</p>
+                                    ) : null}
                                 </div>
                             </div>
-                            <div>
-                                <label className="block text-[0.85rem] md:text-[0.95rem] font-bold text-[#8a7a6c] mb-2 tracking-wider">ご住所（必須）</label>
-                                <input type="text" placeholder="例：北海道小樽市〇〇" className="w-full bg-[#fdfbf6] border border-[#d8c8b6] text-[#4a3f35] py-3.5 md:py-4 px-4 md:px-5 rounded-xl text-[0.95rem] md:text-[1.05rem] focus:outline-none focus:border-[#a38f7d] shadow-[0_2px_8px_rgba(74,63,53,0.03)]" />
+
+                            <div className="space-y-8 pt-8 border-t border-[#ebdcd0]/50">
+                                <div className="flex gap-4 items-end">
+                                    <div className="w-full">
+                                        <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">郵便番号</label>
+                                        <div className="relative">
+                                            <input
+                                                type="text"
+                                                value={form.zipcode}
+                                                onChange={(e) => {
+                                                    const v = e.target.value;
+                                                    setForm((prev) => ({ ...prev, zipcode: v }));
+                                                    if (errors.zipcode) setErrors((prev) => ({ ...prev, zipcode: '' }));
+                                                }}
+                                                onBlur={() => {
+                                                    if (/^\d{7}$/.test(zipcodeNormalized)) {
+                                                        lookupAddressByZipcode();
+                                                    }
+                                                }}
+                                                placeholder="0470000"
+                                                className={`w-full bg-white/60 border ${errors.zipcode ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300`}
+                                            />
+                                            <MapPin className="absolute right-6 top-1/2 -translate-y-1/2 text-[#a38f7d]/40" size={18} />
+                                        </div>
+                                        {errors.zipcode ? (
+                                            <p className="mt-2 text-xs font-bold tracking-widest text-red-600">{errors.zipcode}</p>
+                                        ) : null}
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={lookupAddressByZipcode}
+                                        disabled={isLookingUpZip || isProcessing}
+                                        className="bg-[#4a3f35] text-white px-8 py-4 rounded-2xl text-sm font-bold hover:bg-[#322a23] transition-all cursor-pointer whitespace-nowrap shadow-md active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+                                    >
+                                        {isLookingUpZip ? '検索中...' : '住所検索'}
+                                    </button>
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">都道府県・市区町村</label>
+                                    <input
+                                        type="text"
+                                        value={form.prefectureCity}
+                                        onChange={(e) => {
+                                            const v = e.target.value;
+                                            setForm((prev) => ({ ...prev, prefectureCity: v }));
+                                            if (errors.address) setErrors((prev) => ({ ...prev, address: '' }));
+                                        }}
+                                        placeholder="北海道小樽市..."
+                                        className={`w-full bg-white/60 border ${errors.address ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300`}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">番地・建物名</label>
+                                    <input
+                                        type="text"
+                                        value={form.addressLine}
+                                        onChange={(e) => {
+                                            const v = e.target.value;
+                                            setForm((prev) => ({ ...prev, addressLine: v }));
+                                            if (errors.address) setErrors((prev) => ({ ...prev, address: '' }));
+                                        }}
+                                        placeholder="1-2-3 山城ビル 101"
+                                        className={`w-full bg-white/60 border ${errors.address ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300`}
+                                    />
+                                    {errors.address ? (
+                                        <p className="mt-2 text-xs font-bold tracking-widest text-red-600">{errors.address}</p>
+                                    ) : null}
+                                </div>
                             </div>
-                        </div>
+                        </section>
+
+                        {/* セクション：決済方法 */}
+                        <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
+                            <div className="flex items-center gap-4 mb-10">
+                                <div className="w-10 h-10 bg-[#bc8a7e] rounded-full flex items-center justify-center text-white">
+                                    <Lock size={20} />
+                                </div>
+                                <h2 className="text-xl font-bold tracking-widest">お支払い方法</h2>
+                            </div>
+
+                            {/* 決済方法選択カード */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
+                                {[
+                                    { id: 'credit', label: 'クレジットカード', icon: <CreditCard size={20} /> },
+                                    { id: 'paypay', label: 'PayPay（スマホ決済）', icon: <Smartphone size={20} /> },
+                                    { id: 'applepay', label: 'Apple Pay / Google Pay', icon: <Apple size={20} /> },
+                                    { id: 'convenience', label: 'コンビニ決済', icon: <Store size={20} /> },
+                                ].map((method) => (
+                                    <button
+                                        key={method.id}
+                                        onClick={() => setPaymentMethod(method.id)}
+                                        className={`flex items-center gap-4 p-5 rounded-2xl border-2 transition-all duration-500 text-left
+                                            ${paymentMethod === method.id 
+                                                ? 'bg-[#4a3f35] text-white border-[#4a3f35] shadow-xl' 
+                                                : 'bg-white/60 text-[#4a3f35] border-[#ebdcd0] hover:border-[#bc8a7e] hover:bg-white'
+                                            }`}
+                                    >
+                                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors
+                                            ${paymentMethod === method.id ? 'bg-white/20' : 'bg-[#f5efe9]'}`}>
+                                            {method.icon}
+                                        </div>
+                                        <span className="text-sm font-bold tracking-widest">{method.label}</span>
+                                        {paymentMethod === method.id && (
+                                            <motion.div layoutId="activeCheck" className="ml-auto">
+                                                <ShieldCheck size={20} className="text-white" />
+                                            </motion.div>
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* 決済方法に応じた案内表示 */}
+                            <AnimatePresence mode="wait">
+                                {paymentMethod === 'credit' && (
+                                    <motion.div
+                                        key="credit"
+                                        initial={{ opacity: 0, scale: 0.98 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.98 }}
+                                        className="bg-white/60 p-10 rounded-[2rem] border border-[#ebdcd0] flex flex-col items-center text-center space-y-6"
+                                    >
+                                        <div className="w-16 h-16 bg-[#f5efe9] rounded-2xl flex items-center justify-center text-[#4a3f35]">
+                                            <CreditCard size={32} />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <h3 className="text-xl font-bold tracking-widest">クレジットカード決済</h3>
+                                            <p className="text-sm text-[#6e5e54] leading-relaxed max-w-sm mx-auto font-medium">
+                                                KOMOJUの安全な決済画面に移動して、お支払いを完了します。<br />
+                                                高度な暗号化技術により、お客様のカード情報は安全に保護されます。
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                {paymentMethod === 'paypay' && (
+                                    <motion.div
+                                        key="paypay"
+                                        initial={{ opacity: 0, scale: 0.98 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.98 }}
+                                        className="bg-white/60 p-10 rounded-[2rem] border border-[#ebdcd0] flex flex-col items-center text-center space-y-6"
+                                    >
+                                        <div className="w-16 h-16 bg-[#ff0033] rounded-2xl flex items-center justify-center text-white font-black text-2xl italic shadow-xl shadow-[#ff0033]/20">
+                                            P
+                                        </div>
+                                        <div className="space-y-3">
+                                            <h3 className="text-xl font-bold tracking-widest">PayPayでお支払い</h3>
+                                            <p className="text-sm text-[#6e5e54] leading-relaxed max-w-sm mx-auto font-medium">
+                                                KOMOJUの決済画面へ移動後、PayPayアプリまたはブラウザが起動します。内容を確認の上、お支払いください。
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                {paymentMethod === 'applepay' && (
+                                    <motion.div
+                                        key="applepay"
+                                        initial={{ opacity: 0, scale: 0.98 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.98 }}
+                                        className="bg-white/60 p-10 rounded-[2rem] border border-[#ebdcd0] flex flex-col items-center text-center space-y-6"
+                                    >
+                                        <div className="flex items-center gap-4">
+                                            <Apple size={40} />
+                                            <div className="w-px h-8 bg-[#ebdcd0]"></div>
+                                            <div className="w-10 h-10 flex items-center justify-center">
+                                                <svg viewBox="0 0 24 24" className="w-full h-full text-[#4a3f35]"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-3">
+                                            <h3 className="text-xl font-bold tracking-widest">Apple Pay / Google Pay</h3>
+                                            <p className="text-sm text-[#6e5e54] leading-relaxed max-w-sm mx-auto font-medium">
+                                                KOMOJUの安全な決済画面に移動します。デバイスに設定された支払い情報で、素早く安全にお支払いが可能です。
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                {paymentMethod === 'convenience' && (
+                                    <motion.div
+                                        key="convenience"
+                                        initial={{ opacity: 0, scale: 0.98 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.98 }}
+                                        className="bg-white/60 p-10 rounded-[2rem] border border-[#ebdcd0] flex flex-col items-center text-center space-y-6"
+                                    >
+                                        <div className="w-16 h-16 bg-[#f5efe9] rounded-2xl flex items-center justify-center text-[#a38f7d]">
+                                            <Store size={32} />
+                                        </div>
+                                        <div className="space-y-3">
+                                            <h3 className="text-xl font-bold tracking-widest">コンビニ決済</h3>
+                                            <p className="text-sm text-[#6e5e54] leading-relaxed max-w-sm mx-auto font-medium">
+                                                KOMOJUの画面にてお支払い予定のコンビニを選択してください。完了後に発行される番号を控えて、店頭でお支払いいただけます。
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </section>
                     </div>
 
-                    {/* ご依頼主情報 */}
-                    <div className="mb-12">
-                        <h2 className="text-[1.1rem] md:text-[1.3rem] font-bold text-[#4a3f35] tracking-widest mb-6 md:mb-8 border-b-2 border-[#bc8a7e] pb-3 inline-block">
-                            2. ご依頼主情報
-                        </h2>
-                        <p className="text-[0.85rem] md:text-[0.95rem] text-[#6e5e54] mb-4 bg-[#f5efe9] p-4 rounded-xl border border-[#ebdcd0]">
-                            お届け先と同じ場合は入力を省略できます。
-                        </p>
+                    {/* 右側：注文確認（Sticky） */}
+                    <div className="md:w-[45%] lg:w-[40%] mt-16 md:mt-0">
+                        <aside className="sticky top-32 bg-[#f5efe9] rounded-[3rem] border border-[#ebdcd0] overflow-hidden soft-shadow-header">
+                            <div className="p-8 lg:p-12">
+                                <h3 className="text-xl font-bold tracking-[0.2em] mb-10 border-b border-[#d8c8b6] pb-6">ご注文内容</h3>
+                                
+                                {/* 商品リスト */}
+                                <div className="space-y-8 max-h-[350px] overflow-y-auto pr-2 mb-10 hide-scroll">
+                                    {items.map((item) => (
+                                        <div key={item.id} className="flex gap-6">
+                                            <div className="w-20 h-20 bg-white rounded-2xl overflow-hidden shrink-0 border border-[#ebdcd0] shadow-sm">
+                                                <img src={item.image} alt={item.name} className="w-full h-full object-cover mix-blend-multiply p-1" />
+                                            </div>
+                                            <div className="flex flex-col justify-center flex-1 min-w-0">
+                                                <p className="text-sm font-bold leading-relaxed mb-1 truncate">{item.name}</p>
+                                                <div className="flex justify-between items-center">
+                                                    <span className="text-xs text-[#8a7a6c] font-bold">数量: {item.quantity}</span>
+                                                    <span className="text-sm font-bold tracking-wider">¥{(item.price * item.quantity).toLocaleString()}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                    {items.length === 0 && (
+                                        <div className="py-12 text-center space-y-4">
+                                            <div className="w-16 h-16 bg-[#fdfbf6] rounded-full flex items-center justify-center mx-auto">
+                                                <Smartphone size={24} className="text-[#ebdcd0]" />
+                                            </div>
+                                            <p className="text-sm text-[#8a7a6c] font-medium tracking-widest">カートが空です</p>
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* お会計明細 */}
+                                <div className="space-y-5 pt-8 border-t border-[#d8c8b6] mb-12">
+                                    <div className="flex justify-between text-sm text-[#6e5e54] font-medium tracking-widest">
+                                        <span>商品小計</span>
+                                        <span>¥{cartTotal.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm text-[#6e5e54] font-medium tracking-widest">
+                                        <span>配送手数料</span>
+                                        <span>¥{shippingFee.toLocaleString()}</span>
+                                    </div>
+                                    <div className="flex justify-between items-end pt-6 border-t border-[#d8c8b6]/30">
+                                        <span className="text-lg font-bold tracking-[0.2em]">お支払い合計</span>
+                                        <div className="text-right">
+                                            <span className="text-[10px] block text-[#8a7a6c] font-bold mb-1">税込価格</span>
+                                            <span className="text-4xl font-bold text-[#2B5740] tracking-tighter">
+                                                <span className="text-xl mr-1 font-serif">¥</span>
+                                                {totalAmount.toLocaleString()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* 決済ボタン（KOMOJU等の統合決済をイメージ） */}
+                                <div className="space-y-6">
+                                    <button
+                                        onClick={handleConfirmOrder}
+                                        disabled={isProcessing || items.length === 0}
+                                        className={`w-full py-6 rounded-[2rem] text-lg font-bold tracking-[0.3em] shadow-2xl transition-all duration-500 flex items-center justify-center gap-4 group
+                                            ${isProcessing 
+                                                ? 'bg-[#a38f7d] text-white cursor-not-allowed opacity-80' 
+                                                : 'bg-[#4a3f35] text-white hover:bg-[#322a23] active:scale-[0.97] cursor-pointer'
+                                            }`}
+                                    >
+                                        {isProcessing ? (
+                                            <>
+                                                <motion.div
+                                                    animate={{ rotate: 360 }}
+                                                    transition={{ repeat: Infinity, duration: 1.2, ease: "linear" }}
+                                                    className="w-6 h-6 border-[3px] border-white/30 border-t-white rounded-full"
+                                                />
+                                                <span>処理中</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <span>注文を確定する</span>
+                                                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                            </>
+                                        )}
+                                    </button>
+                                    
+                                    <div className="flex flex-col items-center gap-4 pt-4">
+                                        <div className="flex items-center gap-2 px-4 py-2 bg-white/50 rounded-full border border-[#ebdcd0]">
+                                            <ShieldCheck size={14} className="text-[#2B5740]" />
+                                            <span className="text-[10px] font-bold tracking-widest text-[#2B5740]">セキュア決済システム保護済み</span>
+                                        </div>
+                                        <p className="text-[9px] text-[#8a7a6c] text-center leading-loose tracking-widest font-medium uppercase">
+                                            Trusted by customers for over 100 years. <br />
+                                            Yamashiroya Otaru since 1920.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </aside>
                     </div>
-
-                    {/* お支払い方法 */}
-                    <div className="mb-12">
-                        <h2 className="text-[1.1rem] md:text-[1.3rem] font-bold text-[#4a3f35] tracking-widest mb-6 md:mb-8 border-b-2 border-[#bc8a7e] pb-3 inline-block">
-                            3. お支払い方法
-                        </h2>
-                        <div className="space-y-4">
-                            <label className="flex items-center gap-3 p-4 border border-[#ebdcd0] rounded-xl bg-[#fdfbf6] cursor-pointer hover:bg-[#f5efe9] transition-colors">
-                                <input type="radio" name="payment" defaultChecked className="w-5 h-5 accent-[#8e3a3a]" />
-                                <span className="font-bold text-[#4a3f35] text-[0.95rem] md:text-[1.05rem]">クレジットカード</span>
-                            </label>
-                            <label className="flex items-center gap-3 p-4 border border-[#ebdcd0] rounded-xl bg-[#fdfbf6] cursor-pointer hover:bg-[#f5efe9] transition-colors">
-                                <input type="radio" name="payment" className="w-5 h-5 accent-[#8e3a3a]" />
-                                <span className="font-bold text-[#4a3f35] text-[0.95rem] md:text-[1.05rem]">銀行振込（前払い）</span>
-                            </label>
-                        </div>
-
-                        <div className="mt-8 flex items-center gap-2 text-[0.8rem] md:text-[0.9rem] text-[#8a7a6c] justify-center bg-[#fdfbf6] py-3 border border-[#ebdcd0] rounded-xl soft-shadow-sm">
-                            <Lock size={16} className="text-[#bc8a7e]" />
-                            SSL暗号化通信によりお客様の情報は安全に保護されます。
-                        </div>
-                    </div>
-
-                    <div className="md:hidden pb-32"></div>
-
-                </section>
-
-                {/* 右側：合計金額・注文を確定する（PCのみsticky） */}
-                <section className="md:w-[40%] lg:w-[35%] md:sticky md:top-32">
-                    <div className="p-6 md:p-8 bg-[#f5efe9] rounded-2xl md:rounded-3xl border border-[#ebdcd0] md:border-t-4 md:border-t-[#8e3a3a] mb-8">
-                        <h3 className="hidden md:block text-[1.2rem] font-bold text-[#4a3f35] tracking-widest mb-6 border-b border-[#ebdcd0] pb-4">
-                            最終確認
-                        </h3>
-                        <div className="flex justify-between items-center mb-4 md:mb-5">
-                            <span className="text-[0.9rem] md:text-[1.05rem] font-bold text-[#6e5e54] tracking-widest">小計</span>
-                            <span className="text-[1.1rem] md:text-[1.2rem] font-bold text-[#4a3f35] tracking-widest">¥{cartTotal.toLocaleString()}</span>
-                        </div>
-                        <div className="flex justify-between items-center mb-5 md:mb-6 pb-5 md:pb-6 border-b border-[#d8c8b6]">
-                            <span className="text-[0.9rem] md:text-[1.05rem] font-bold text-[#6e5e54] tracking-widest">送料</span>
-                            <span className="text-[0.9rem] md:text-[1.05rem] font-bold text-[#6e5e54] tracking-widest">¥1,100</span>
-                        </div>
-                        <div className="flex justify-between items-end mb-8 md:mb-10">
-                            <span className="text-lg md:text-xl font-bold text-[#4a3f35] tracking-widest">合計 <span className="text-[0.7rem] md:text-[0.8rem] font-normal text-[#6e5e54]">（税込）</span></span>
-                            <span className="text-3xl md:text-4xl font-bold text-[#9e4646] tracking-widest">¥{(cartTotal + 1100).toLocaleString()}</span>
-                        </div>
-
-                        {/* PC用のCTAボタン（モバイルでは非表示） */}
-                        <div className="hidden md:block">
-                            <button
-                                onClick={handleConfirmOrder}
-                                className="w-full py-5 rounded-xl text-[1.1rem] font-bold shadow-md active:scale-95 transition-all duration-200 tracking-[0.15em] bg-[#8e3a3a] text-white hover:bg-[#7a3131]"
-                            >
-                                注文を確定する
-                            </button>
-                            <p className="text-center text-[0.8rem] text-[#8a7a6c] mt-4 tracking-widest">
-                                商品と希望日にお間違いがないか<br />再度ご確認ください。
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* サポート案内 */}
-                    <div className="hidden md:flex flex-col items-center justify-center p-6 bg-[#fdfbf6] rounded-2xl border border-[#ebdcd0]">
-                        <Phone size={24} className="text-[#bc8a7e] mb-3" />
-                        <p className="text-[0.85rem] font-bold text-[#4a3f35] mb-1">ご不明な点がございましたら</p>
-                        <p className="text-[1.2rem] font-bold text-[#9e4646] tracking-widest">0134-XX-XXXX</p>
-                        <p className="text-[0.7rem] text-[#8a7a6c] mt-1">受付時間：9:00 〜 18:00（水曜定休）</p>
-                    </div>
-                </section>
+                </div>
             </div>
-
-            {/* 4. モバイル用固定フッター（PCでは非表示） */}
-            <div className="md:hidden fixed bottom-0 w-full bg-[#fdfbf6]/95 backdrop-blur-md border-t border-[#ebdcd0] px-5 py-5 soft-shadow-sm pb-[env(safe-area-inset-bottom,1.25rem)] z-50">
-                <button
-                    onClick={handleConfirmOrder}
-                    className="w-full py-4 bg-[#8e3a3a] text-white rounded-xl text-[1.1rem] font-bold shadow-[0_8px_24px_rgba(142,58,58,0.2)] hover:bg-[#7a3131] active:scale-95 transition-all duration-200 tracking-[0.15em] border border-white/10"
-                >
-                    注文を確定する
-                </button>
-            </div>
-
-        </div>
+        </motion.div>
     );
 }
