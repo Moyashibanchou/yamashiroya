@@ -3,6 +3,7 @@ import { CheckCircle } from 'lucide-react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCart } from './context/CartContext.jsx';
 import { AnimatePresence, motion } from 'framer-motion';
+import API_BASE_URL from './apiConfig';
 
 export default function Success() {
     const { clearCart } = useCart();
@@ -31,7 +32,7 @@ export default function Success() {
                     return;
                 }
 
-                const res = await fetch(`/api/payments/verify-session?sessionId=${encodeURIComponent(sessionId)}`);
+                const res = await fetch(`${API_BASE_URL}/api/payments/verify-session?sessionId=${encodeURIComponent(sessionId)}`);
                 if (!res.ok) {
                     throw new Error('verify failed');
                 }

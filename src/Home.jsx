@@ -4,6 +4,7 @@ import { Search, ShoppingCart, Award, HeartHandshake, Truck, Gift, Heart, Store,
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from './context/CartContext.jsx';
 import logoImg from './shoplogo.png';
+import API_BASE_URL from './apiConfig';
 
 export default function Home() {
     const [hasSeenAnimation, setHasSeenAnimation] = useState(() => {
@@ -80,9 +81,8 @@ export default function Home() {
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
-        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
-        if (imageUrl.startsWith('/')) return imageUrl;
-        return `/${imageUrl}`;
+        const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+        return `${API_BASE_URL}${path}`;
     };
 
     useEffect(() => {
@@ -90,7 +90,7 @@ export default function Home() {
         const fetchRecommended = async () => {
             setRecommendedLoading(true);
             try {
-                const res = await fetch(`/api/recommended-products`);
+                const res = await fetch(`${API_BASE_URL}/api/recommended-products`);
                 if (!res.ok) throw new Error('おすすめ商品の取得に失敗しました');
                 const data = await res.json();
                 if (!canceled) {
@@ -508,9 +508,9 @@ export default function Home() {
 
                                 <div className="min-w-0">
                                     <div className="text-[0.95rem] md:text-[1.1rem] text-[#6e5e54] leading-[2.2] md:leading-[2.4] space-y-6 text-center md:text-left px-2 md:px-0 mb-10 md:mb-12 tracking-wide font-medium">
-                                        <p>大正九年（1920年）、小樽の街角で産声を上げた『花の山城屋』。</p>
-                                        <p>時代は移り変われど、花を愛でる人々の想いは変わりません。</p>
-                                        <p>市場から厳選した新鮮な花材と、一世紀にわたり受け継がれてきた熟練の技。私たちはこれからも、皆様の特別な日を彩る『心に寄り添う花』をお届けしてまいります。</p>
+                                        <p>大正九年（1920年）、<br className="block md:hidden" />小樽の街角で産声を上げた『花の山城屋』。</p>
+                                        <p>時代は移り変われど、<br className="block md:hidden" />花を愛でる人々の想いは変わりません。</p>
+                                        <p>市場から厳選した新鮮な花材と、<br className="block md:hidden" />一世紀にわたり受け継がれてきた熟練の技。私たちはこれからも、皆様の特別な日を彩る『心に寄り添う花』をお届けしてまいります。</p>
                                     </div>
 
                                     <div className="mt-14 flex justify-center md:justify-start">

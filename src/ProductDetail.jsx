@@ -3,6 +3,7 @@ import { ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useCart } from './context/CartContext.jsx';
 import { AnimatePresence, motion } from 'framer-motion';
+import API_BASE_URL from './apiConfig';
 
 export default function ProductDetail() {
     const { id } = useParams();
@@ -11,7 +12,7 @@ export default function ProductDetail() {
 
     const [petals, setPetals] = useState([]);
 
-    const API_URL = useMemo(() => `/api/products/${id}`, [id]);
+    const API_URL = useMemo(() => `${API_BASE_URL}/api/products/${id}`, [id]);
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -55,9 +56,8 @@ export default function ProductDetail() {
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
-        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
-        if (imageUrl.startsWith('/')) return imageUrl;
-        return `/${imageUrl}`;
+        const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+        return `${API_BASE_URL}${path}`;
     };
 
     const normalizeMulti = (value) => {

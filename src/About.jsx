@@ -75,15 +75,15 @@ export default function About() {
 
                 {/* 3. ストーリー本文 */}
                 <section className="px-6 pt-16 md:pt-24 pb-14 md:pb-24 text-center md:text-left">
-                    <div className="max-w-3xl mx-auto space-y-8 md:space-y-12 text-[0.95rem] md:text-[1.2rem] text-[#4a3f35] leading-[2.2] md:leading-[2.4] tracking-wide font-medium break-keep">
+                    <div className="max-w-3xl mx-auto space-y-8 md:space-y-12 text-[0.95rem] md:text-[1.2rem] text-[#4a3f35] leading-[2.2] md:leading-[2.4] tracking-wide font-medium">
                         <motion.p variants={itemFadeUp}>
-                            1920年の創業以来、私たち花の山城屋は、小樽の人々の喜怒哀楽に花を添えてまいりました。
+                            1920年の創業以来、<br className="block md:hidden" />私たち花の山城屋は、小樽の人々の喜怒哀楽に花を添えてまいりました。
                         </motion.p>
                         <motion.p variants={itemFadeUp}>
-                            嬉しい日も、悲しい日も。何気ない日常や、一度きりの特別な瞬間にも。花は言葉以上の想いを伝える「手紙」のようなものだと考えています。
+                            嬉しい日も、悲しい日も。<br className="block md:hidden" />何気ない日常や、一度きりの特別な瞬間にも。花は言葉以上の想いを伝える「手紙」のようなものだと考えています。
                         </motion.p>
                         <motion.p variants={itemFadeUp}>
-                            市場で直接目利きをした新鮮な花材だけを使用し、花に携わり続けてきた熟練のスタッフが、お客様の想いを一つひとつ丁寧にお仕立てします。
+                            市場で直接目利きをした新鮮な花材だけを使用し、<br className="block md:hidden" />花に携わり続けてきた熟練のスタッフが、お客様の想いを一つひとつ丁寧にお仕立てします。
                         </motion.p>
                     </div>
                 </section>
@@ -216,7 +216,7 @@ export default function About() {
                                             <td className="py-4 text-[0.95rem] md:text-[1.05rem] leading-[2.1] tracking-widest">
                                                 <div className="flex items-start gap-2">
                                                     <MapPin className="mt-0.5 w-4 h-4 text-[#2B5740]" />
-                                                    <span>〒047-0024 北海道小樽市花園4-4-2</span>
+                                                    <span>〒047-0024<br className="block md:hidden" /> 北海道小樽市花園4-4-2</span>
                                                 </div>
                                             </td>
                                         </tr>

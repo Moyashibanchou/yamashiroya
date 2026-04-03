@@ -5,6 +5,7 @@ import {
     Package, Search, Loader2, AlertCircle, ChevronLeft, ChevronDown, LogOut
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import API_BASE_URL from './apiConfig';
 
 export default function Admin() {
     const navigate = useNavigate();
@@ -72,21 +73,20 @@ export default function Admin() {
     const [imageFile, setImageFile] = useState(null);
     const [imagePreviewUrl, setImagePreviewUrl] = useState('');
 
-    const API_URL = '/api/products';
+    const API_URL = `${API_BASE_URL}/api/products`;
 
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
-        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
-        if (imageUrl.startsWith('/')) return imageUrl;
-        return `/${imageUrl}`;
+        const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+        return `${API_BASE_URL}${path}`;
     };
 
     // 商品一覧の取得
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const response = await fetch('/api/products');
+            const response = await fetch(API_URL);
             if (!response.ok) throw new Error('商品データの取得に失敗しました');
             const data = await response.json();
             setProducts(data);

@@ -2,6 +2,7 @@ import React from 'react';
 import { ArrowLeft, Trash2 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from './context/CartContext.jsx';
+import API_BASE_URL from './apiConfig';
 
 export default function Cart() {
     const { items, removeFromCart, cartTotal } = useCart();
@@ -10,9 +11,8 @@ export default function Cart() {
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
-        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
-        if (imageUrl.startsWith('/')) return imageUrl;
-        return `/${imageUrl}`;
+        const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+        return `${API_BASE_URL}${path}`;
     };
 
     return (

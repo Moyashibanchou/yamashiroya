@@ -3,6 +3,7 @@ import { ArrowLeft, Search, SlidersHorizontal, ChevronDown, Image as ImageIcon }
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCart } from './context/CartContext';
 import { AnimatePresence, motion } from 'framer-motion';
+import API_BASE_URL from './apiConfig';
 
 export default function ProductList() {
     const navigate = useNavigate();
@@ -11,7 +12,7 @@ export default function ProductList() {
 
     const [petalBursts, setPetalBursts] = useState([]);
 
-    const API_URL = `/api/products`;
+    const API_URL = `${API_BASE_URL}/api/products`;
 
     const STYLE_OPTIONS = [
         { label: 'アレンジメント', value: 'arrangement' },
@@ -128,9 +129,8 @@ export default function ProductList() {
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
-        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
-        if (imageUrl.startsWith('/')) return imageUrl;
-        return `/${imageUrl}`;
+        const path = imageUrl.startsWith('/') ? imageUrl : `/${imageUrl}`;
+        return `${API_BASE_URL}${path}`;
     };
 
     const handleAddToCart = (product) => {
