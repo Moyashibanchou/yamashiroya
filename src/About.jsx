@@ -74,8 +74,8 @@ export default function About() {
                 </section>
 
                 {/* 3. ストーリー本文 */}
-                <section className="px-6 pt-16 md:pt-24 pb-14 md:pb-24 text-justify">
-                    <div className="max-w-3xl mx-auto space-y-8 md:space-y-12 text-[0.95rem] md:text-[1.2rem] text-[#4a3f35] leading-[2.2] md:leading-[2.4] tracking-wide font-medium">
+                <section className="px-6 pt-16 md:pt-24 pb-14 md:pb-24 text-center md:text-left">
+                    <div className="max-w-3xl mx-auto space-y-8 md:space-y-12 text-[0.95rem] md:text-[1.2rem] text-[#4a3f35] leading-[2.2] md:leading-[2.4] tracking-wide font-medium break-keep">
                         <motion.p variants={itemFadeUp}>
                             1920年の創業以来、私たち花の山城屋は、小樽の人々の喜怒哀楽に花を添えてまいりました。
                         </motion.p>
@@ -110,7 +110,7 @@ export default function About() {
                                 <Leaf size={32} strokeWidth={2} className="md:w-10 md:h-10" />
                             </div>
                             <h4 className="text-[1.05rem] md:text-[1.25rem] font-bold text-[#4a3f35] tracking-widest mb-4">鮮度へのこだわり</h4>
-                            <p className="text-[0.85rem] md:text-[1rem] text-[#6e5e54] leading-[2.2] text-justify md:text-center mt-2">
+                            <p className="text-[0.85rem] md:text-[1rem] text-[#6e5e54] leading-[2.2] text-center mt-2">
                                 全国から質の高い花材を直接仕入れ、一つひとつ水揚げから丁寧に管理しています。花本来の美しさを長く楽しんでいただけるよう、最高水準の鮮度でお届けします。
                             </p>
                         </motion.div>
@@ -121,7 +121,7 @@ export default function About() {
                                 <Sparkles size={32} strokeWidth={2} className="md:w-10 md:h-10" />
                             </div>
                             <h4 className="text-[1.05rem] md:text-[1.25rem] font-bold text-[#4a3f35] tracking-widest mb-4">技術へのこだわり</h4>
-                            <p className="text-[0.85rem] md:text-[1rem] text-[#6e5e54] leading-[2.2] text-justify md:text-center mt-2">
+                            <p className="text-[0.85rem] md:text-[1rem] text-[#6e5e54] leading-[2.2] text-center mt-2">
                                 長年花と向き合ってきた経験豊富なフローリストたちが、皆様のご要望にお応えします。伝統的なアレンジからモダンなブーケまで、確かな技術で花を束ねます。
                             </p>
                         </motion.div>
@@ -132,7 +132,7 @@ export default function About() {
                                 <MapPin size={32} strokeWidth={2} className="md:w-10 md:h-10" />
                             </div>
                             <h4 className="text-[1.05rem] md:text-[1.25rem] font-bold text-[#4a3f35] tracking-widest mb-4">地域への想い</h4>
-                            <p className="text-[0.85rem] md:text-[1rem] text-[#6e5e54] leading-[2.2] text-justify md:text-center mt-2">
+                            <p className="text-[0.85rem] md:text-[1rem] text-[#6e5e54] leading-[2.2] text-center mt-2">
                                 大正・昭和・平成・令和と、100年にわたり小樽の街と共に歩んできました。地元の皆様への感謝を胸に、これからも「まちの花屋」であり続けます。
                             </p>
                         </motion.div>

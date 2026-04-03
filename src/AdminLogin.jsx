@@ -15,6 +15,7 @@ export default function AdminLogin() {
         // 簡易認証（テスト用）
         if (email === 'admin@yamashiroya.com' && password === 'password123') {
             localStorage.setItem('yamashiroya_admin_logged_in', 'true');
+            window.scrollTo(0, 0);
             navigate('/admin');
         } else {
             setError('メールアドレスまたはパスワードが正しくありません。');

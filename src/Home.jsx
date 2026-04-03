@@ -6,7 +6,14 @@ import { useCart } from './context/CartContext.jsx';
 import logoImg from './shoplogo.png';
 
 export default function Home() {
-    const [isReady, setIsReady] = useState(false);
+    const [hasSeenAnimation, setHasSeenAnimation] = useState(() => {
+        try {
+            return sessionStorage.getItem('hasSeenAnimation') === 'true';
+        } catch {
+            return false;
+        }
+    });
+    const [isReady, setIsReady] = useState(hasSeenAnimation);
     const [activeOccasion, setActiveOccasion] = useState('すべて');
     const [activeColor, setActiveColor] = useState('すべて');
     const [activeBudget, setActiveBudget] = useState('すべて');
@@ -19,20 +26,35 @@ export default function Home() {
     const { cartCount, addToCart } = useCart();
     const navigate = useNavigate();
 
+    const shouldAnimate = !hasSeenAnimation;
+
+    const finishIntro = () => {
+        try {
+            sessionStorage.setItem('hasSeenAnimation', 'true');
+        } catch {
+            // no-op
+        }
+        setHasSeenAnimation(true);
+        setIsReady(true);
+    };
+
     const heroImages = ['/otaru1.jpg', '/otaru2.jpg'];
 
     useEffect(() => {
+        // 初回以外はアニメーションを完全にスキップ
+        if (!shouldAnimate) return;
+
         // すでに準備ができている場合は何もしない
         if (isReady) return;
 
         // 2.6秒後に自動で終了
-        const timer = setTimeout(() => setIsReady(true), 2600);
+        const timer = setTimeout(() => finishIntro(), 2600);
 
         // Enterキーでスキップ
         const handleKeyDown = (e) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                setIsReady(true);
+                finishIntro();
             }
         };
 
@@ -43,7 +65,7 @@ export default function Home() {
             clearTimeout(timer);
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [isReady]);
+    }, [isReady, shouldAnimate]);
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -55,13 +77,12 @@ export default function Home() {
         };
     }, [heroImages.length]);
 
-    const API_ORIGIN = 'http://localhost:8080';
-
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
-        if (imageUrl.startsWith('/')) return `${API_ORIGIN}${imageUrl}`;
-        return imageUrl;
+        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
+        if (imageUrl.startsWith('/')) return imageUrl;
+        return `/${imageUrl}`;
     };
 
     useEffect(() => {
@@ -69,7 +90,7 @@ export default function Home() {
         const fetchRecommended = async () => {
             setRecommendedLoading(true);
             try {
-                const res = await fetch(`${API_ORIGIN}/api/recommended-products`);
+                const res = await fetch(`/api/recommended-products`);
                 if (!res.ok) throw new Error('おすすめ商品の取得に失敗しました');
                 const data = await res.json();
                 if (!canceled) {
@@ -104,7 +125,7 @@ export default function Home() {
                         initial={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.8, ease: "easeInOut" }}
-                        onClick={() => setIsReady(true)}
+                        onClick={() => finishIntro()}
                     >
                         <div
                             className="absolute inset-0 opacity-10 bg-cover bg-center mix-blend-multiply"
@@ -187,7 +208,11 @@ export default function Home() {
             </AnimatePresence>
 
             {isReady && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1.2 }}>
+                <motion.div
+                    initial={shouldAnimate ? { opacity: 0 } : false}
+                    animate={{ opacity: 1 }}
+                    transition={shouldAnimate ? { duration: 1.2 } : { duration: 0 }}
+                >
 
 
                     {/* 3. ヒーローセクション */}
@@ -205,17 +230,17 @@ export default function Home() {
                         </div>
                         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-[#4a3f35]/90 flex flex-col items-center justify-end pb-12 md:pb-20 px-6 text-center">
                             <motion.h2
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={shouldAnimate ? { opacity: 0, y: 30 } : false}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 1.2, ease: "easeOut", delay: 0.3 }}
+                                transition={shouldAnimate ? { duration: 1.2, ease: "easeOut", delay: 0.3 } : { duration: 0 }}
                                 className="font-hand text-[#fdfbf6] text-[2rem] md:text-[3.5rem] font-bold leading-relaxed mb-4 md:mb-8 drop-shadow-2xl tracking-widest"
                             >
                                 想いを束ねて、百年。
                             </motion.h2>
                             <motion.p
-                                initial={{ opacity: 0, y: 30 }}
+                                initial={shouldAnimate ? { opacity: 0, y: 30 } : false}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
+                                transition={shouldAnimate ? { duration: 1.2, ease: "easeOut", delay: 0.5 } : { duration: 0 }}
                                 className="text-[#fdfbf6] text-[0.9rem] md:text-[1.1rem] leading-[2.2] md:leading-[2.4] font-bold mb-10 md:mb-14 drop-shadow-md px-2 max-w-[340px] md:max-w-2xl text-center tracking-widest opacity-95"
                             >
                                 大正九年創業。小樽の街で愛され続ける老舗『花の山城屋』。<br />
@@ -223,9 +248,9 @@ export default function Home() {
                                 お仕立てします。
                             </motion.p>
                             <motion.div
-                                initial={{ opacity: 0, y: 20 }}
+                                initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ duration: 1.0, ease: "easeOut", delay: 0.7 }}
+                                transition={shouldAnimate ? { duration: 1.0, ease: "easeOut", delay: 0.7 } : { duration: 0 }}
                             >
                                 <button onClick={() => navigate('/products')} className="w-full max-w-[280px] md:max-w-[340px] bg-[#bc8a7e] text-white font-bold py-4 md:py-5 rounded-xl shadow-[0_8px_24px_rgba(74,63,53,0.3)] active:scale-95 transition-transform text-lg md:text-xl tracking-widest hover:bg-[#a67468] border border-white/20 cursor-pointer">
                                     お花を探す
@@ -251,10 +276,10 @@ export default function Home() {
                     <div className="max-w-6xl mx-auto">
                         {/* 5. 高度な商品検索・絞り込みエリア（日比谷花壇風） */}
                         <motion.section
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
+                            initial={shouldAnimate ? { opacity: 0, y: 40 } : false}
+                            whileInView={shouldAnimate ? { opacity: 1, y: 0 } : undefined}
                             viewport={{ once: true, margin: "-50px" }}
-                            transition={{ duration: 1.2, ease: "easeOut" }}
+                            transition={shouldAnimate ? { duration: 1.2, ease: "easeOut" } : { duration: 0 }}
                             className="pt-16 md:pt-24 pb-8 md:pb-16 px-5 md:px-0 relative z-10"
                         >
                             <h2 className="font-hand text-xl md:text-2xl font-bold text-[#4a3f35] tracking-widest mb-10 text-center border-b-2 border-[#bc8a7e] pb-4 inline-block relative left-1/2 -translate-x-1/2">
@@ -390,10 +415,10 @@ export default function Home() {
 
                         {/* 6. 商品一覧グリッド */}
                         <motion.section
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
+                            initial={shouldAnimate ? { opacity: 0, y: 40 } : false}
+                            whileInView={shouldAnimate ? { opacity: 1, y: 0 } : undefined}
                             viewport={{ once: true, margin: "-50px" }}
-                            transition={{ duration: 1.2, ease: "easeOut" }}
+                            transition={shouldAnimate ? { duration: 1.2, ease: "easeOut" } : { duration: 0 }}
                             className="px-5 md:px-6 pt-12 md:pt-16 pb-20 md:pb-28"
                         >
                             <h2 className="font-hand text-xl md:text-3xl font-bold text-[#4a3f35] tracking-widest mb-8 md:mb-12 text-center md:text-left border-b-2 border-[#bc8a7e] pb-4 inline-block md:block">おすすめの品</h2>
@@ -459,10 +484,10 @@ export default function Home() {
 
                     {/* About Us セクション */}
                     <motion.section
-                        initial={{ opacity: 0, y: 40 }}
-                        whileInView={{ opacity: 1, y: 0 }}
+                        initial={shouldAnimate ? { opacity: 0, y: 40 } : false}
+                        whileInView={shouldAnimate ? { opacity: 1, y: 0 } : undefined}
                         viewport={{ once: true, margin: "-50px" }}
-                        transition={{ duration: 1.2, ease: "easeOut" }}
+                        transition={shouldAnimate ? { duration: 1.2, ease: "easeOut" } : { duration: 0 }}
                         className="bg-[#f5efe9] px-6 pt-16 md:pt-28 pb-20 md:pb-28 border-y border-[#ebdcd0]"
                     >
                         <div className="max-w-6xl mx-auto">
@@ -482,7 +507,7 @@ export default function Home() {
                                 </div>
 
                                 <div className="min-w-0">
-                                    <div className="text-[0.95rem] md:text-[1.1rem] text-[#6e5e54] leading-[2.2] md:leading-[2.4] space-y-6 text-justify px-2 md:px-0 mb-10 md:mb-12 tracking-wide font-medium">
+                                    <div className="text-[0.95rem] md:text-[1.1rem] text-[#6e5e54] leading-[2.2] md:leading-[2.4] space-y-6 text-center md:text-left px-2 md:px-0 mb-10 md:mb-12 tracking-wide font-medium">
                                         <p>大正九年（1920年）、小樽の街角で産声を上げた『花の山城屋』。</p>
                                         <p>時代は移り変われど、花を愛でる人々の想いは変わりません。</p>
                                         <p>市場から厳選した新鮮な花材と、一世紀にわたり受け継がれてきた熟練の技。私たちはこれからも、皆様の特別な日を彩る『心に寄り添う花』をお届けしてまいります。</p>
@@ -515,20 +540,20 @@ export default function Home() {
 
                     {/* 7. 年表・歴史セクション */}
                     <motion.section
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
+                        initial={shouldAnimate ? { opacity: 0 } : false}
+                        whileInView={shouldAnimate ? { opacity: 1 } : undefined}
                         viewport={{ once: true, margin: "-50px" }}
-                        transition={{ duration: 1.5, ease: "easeOut" }}
+                        transition={shouldAnimate ? { duration: 1.5, ease: "easeOut" } : { duration: 0 }}
                         className="bg-[#f0e9df] px-6 pt-20 md:pt-32 pb-24 md:pb-32 border-t border-[#d8c8b6] shadow-inner relative"
                     >
                         <div className="max-w-4xl mx-auto">
                             <div className="absolute inset-0 opacity-40 bg-[url('https://www.transparenttextures.com/patterns/rice-paper-2.png')]" />
 
                             <motion.div
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
+                                initial={shouldAnimate ? { opacity: 0, y: 30 } : false}
+                                whileInView={shouldAnimate ? { opacity: 1, y: 0 } : undefined}
                                 viewport={{ once: true, margin: "-50px" }}
-                                transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
+                                transition={shouldAnimate ? { duration: 1.2, ease: "easeOut", delay: 0.2 } : { duration: 0 }}
                                 className="text-center mb-16 md:mb-24 relative z-10"
                             >
                                 <h2 className="font-hand text-[1.4rem] md:text-[2.4rem] font-bold text-[#4a3f35] leading-loose tracking-widest drop-shadow-sm">
@@ -539,10 +564,10 @@ export default function Home() {
                             <div className="relative max-w-sm md:max-w-2xl mx-auto pl-10 md:pl-16 border-l-2 border-[#b5a392] space-y-16 md:space-y-20 pb-4 z-10">
                                 <motion.div
                                     className="relative"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
+                                    initial={shouldAnimate ? { opacity: 0, x: -20 } : false}
+                                    whileInView={shouldAnimate ? { opacity: 1, x: 0 } : undefined}
                                     viewport={{ once: true, margin: "-50px" }}
-                                    transition={{ duration: 1.0, ease: "easeOut", delay: 0.1 }}
+                                    transition={shouldAnimate ? { duration: 1.0, ease: "easeOut", delay: 0.1 } : { duration: 0 }}
                                 >
                                     <span className="absolute -left-[46px] md:-left-[71px] bg-[#6e5e54] w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-full border-2 border-[#f0e9df] top-2 soft-shadow-sm ring-4 ring-[#f0e9df]"></span>
                                     <h4 className="text-xl md:text-2xl font-bold text-[#4a3f35] mb-3 md:mb-5 tracking-wider">1920年：誕生</h4>
@@ -553,10 +578,10 @@ export default function Home() {
 
                                 <motion.div
                                     className="relative"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
+                                    initial={shouldAnimate ? { opacity: 0, x: -20 } : false}
+                                    whileInView={shouldAnimate ? { opacity: 1, x: 0 } : undefined}
                                     viewport={{ once: true, margin: "-50px" }}
-                                    transition={{ duration: 1.0, ease: "easeOut", delay: 0.1 }}
+                                    transition={shouldAnimate ? { duration: 1.0, ease: "easeOut", delay: 0.1 } : { duration: 0 }}
                                 >
                                     <span className="absolute -left-[46px] md:-left-[71px] bg-[#6e5e54] w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-full border-2 border-[#f0e9df] top-2 soft-shadow-sm ring-4 ring-[#f0e9df]"></span>
                                     <h4 className="text-xl md:text-2xl font-bold text-[#4a3f35] mb-3 md:mb-5 tracking-wider">寄り添う</h4>
@@ -567,10 +592,10 @@ export default function Home() {
 
                                 <motion.div
                                     className="relative"
-                                    initial={{ opacity: 0, x: -20 }}
-                                    whileInView={{ opacity: 1, x: 0 }}
+                                    initial={shouldAnimate ? { opacity: 0, x: -20 } : false}
+                                    whileInView={shouldAnimate ? { opacity: 1, x: 0 } : undefined}
                                     viewport={{ once: true, margin: "-50px" }}
-                                    transition={{ duration: 1.0, ease: "easeOut", delay: 0.1 }}
+                                    transition={shouldAnimate ? { duration: 1.0, ease: "easeOut", delay: 0.1 } : { duration: 0 }}
                                 >
                                     <span className="absolute -left-[46px] md:-left-[71px] bg-[#6e5e54] w-2.5 h-2.5 md:w-3.5 md:h-3.5 rounded-full border-2 border-[#f0e9df] top-2 soft-shadow-sm ring-4 ring-[#f0e9df]"></span>
                                     <h4 className="text-xl md:text-2xl font-bold text-[#4a3f35] mb-3 md:mb-5 tracking-wider">これから</h4>

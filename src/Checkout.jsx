@@ -10,6 +10,14 @@ export default function Checkout() {
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('credit'); // 'credit', 'paypay', 'applepay', 'convenience'
 
+    const resolveImageUrl = (imageUrl) => {
+        if (!imageUrl) return '';
+        if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
+        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
+        if (imageUrl.startsWith('/')) return imageUrl;
+        return `/${imageUrl}`;
+    };
+
     const CHECKOUT_FORM_STORAGE_KEY = 'checkoutFormData';
 
     const [form, setForm] = useState(() => {
@@ -75,7 +83,7 @@ export default function Checkout() {
 
     const [isLookingUpZip, setIsLookingUpZip] = useState(false);
 
-    const API_URL_CREATE_SESSION = 'http://localhost:8080/api/payments/create-session';
+    const API_URL_CREATE_SESSION = '/api/payments/create-session';
 
     // 送料（ダミー）
     const shippingFee = 1100;
@@ -509,7 +517,7 @@ export default function Checkout() {
                                     {items.map((item) => (
                                         <div key={item.id} className="flex gap-6">
                                             <div className="w-20 h-20 bg-white rounded-2xl overflow-hidden shrink-0 border border-[#ebdcd0] shadow-sm">
-                                                <img src={item.image} alt={item.name} className="w-full h-full object-cover mix-blend-multiply p-1" />
+                                                <img src={resolveImageUrl(item.imageUrl)} alt={item.name} className="w-full h-full object-cover mix-blend-multiply opacity-95" />
                                             </div>
                                             <div className="flex flex-col justify-center flex-1 min-w-0">
                                                 <p className="text-sm font-bold leading-relaxed mb-1 truncate">{item.name}</p>

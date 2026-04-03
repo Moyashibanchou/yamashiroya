@@ -7,6 +7,14 @@ export default function Cart() {
     const { items, removeFromCart, cartTotal } = useCart();
     const navigate = useNavigate();
 
+    const resolveImageUrl = (imageUrl) => {
+        if (!imageUrl) return '';
+        if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
+        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
+        if (imageUrl.startsWith('/')) return imageUrl;
+        return `/${imageUrl}`;
+    };
+
     return (
         <div className="w-full min-h-screen washi-pattern text-[#4a3f35] relative shadow-2xl elegant-font overflow-x-hidden md:pb-20">
 
@@ -42,7 +50,7 @@ export default function Cart() {
                             {items.map((item) => (
                                 <div key={item.id} className="flex gap-4 md:gap-8 p-4 md:p-6 bg-[#fffdf7] rounded-2xl md:rounded-3xl border border-[#ebdcd0] soft-shadow-sm relative transition-shadow hover:shadow-md group">
                                     <div className="w-24 h-24 md:w-36 md:h-36 bg-[#f5efe9] rounded-xl md:rounded-2xl overflow-hidden shrink-0">
-                                        <img src={item.image} alt="商品" className="w-full h-full object-cover mix-blend-multiply opacity-95 group-hover:scale-105 transition-transform duration-500" />
+                                        <img src={resolveImageUrl(item.imageUrl)} alt="商品" className="w-full h-full object-cover mix-blend-multiply opacity-95 group-hover:scale-105 transition-transform duration-500" />
                                     </div>
                                     <div className="flex flex-col flex-1 py-1 md:py-3 justify-between">
                                         <div>

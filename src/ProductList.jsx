@@ -11,8 +11,7 @@ export default function ProductList() {
 
     const [petalBursts, setPetalBursts] = useState([]);
 
-    const API_ORIGIN = 'http://localhost:8080';
-    const API_URL = `${API_ORIGIN}/api/products`;
+    const API_URL = `/api/products`;
 
     const STYLE_OPTIONS = [
         { label: 'アレンジメント', value: 'arrangement' },
@@ -129,8 +128,9 @@ export default function ProductList() {
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
-        if (imageUrl.startsWith('/')) return `${API_ORIGIN}${imageUrl}`;
-        return imageUrl;
+        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
+        if (imageUrl.startsWith('/')) return imageUrl;
+        return `/${imageUrl}`;
     };
 
     const handleAddToCart = (product) => {
@@ -168,6 +168,10 @@ export default function ProductList() {
         const matchesValueOr = (value, selected) => {
             if (selected.size === 0) return true;
             if (!value) return false;
+
+            if (Array.isArray(value)) {
+                return value.some((v) => selected.has(v));
+            }
             return selected.has(value);
         };
 
@@ -201,6 +205,12 @@ export default function ProductList() {
             return styleOk && colorOk && purposeOk && priceOk;
         });
     }, [products, filters]);
+
+    const normalizeMulti = (value) => {
+        if (!value) return [];
+        if (Array.isArray(value)) return value.filter(Boolean);
+        return [value].filter(Boolean);
+    };
 
     const toggleFilterValue = (key, value) => {
         setFilters((prev) => {
@@ -362,6 +372,20 @@ export default function ProductList() {
                                     <h3 className="text-[1rem] md:text-[1.1rem] text-[#6e5e54] leading-[1.8] mb-4 font-bold whitespace-pre-wrap flex-1">
                                         {product.name}
                                     </h3>
+                                    {normalizeMulti(product.purpose).length > 0 ? (
+                                        <div className="-mt-2 mb-3 flex flex-wrap gap-1.5">
+                                            {normalizeMulti(product.purpose)
+                                                .slice(0, 3)
+                                                .map((v) => (
+                                                    <span
+                                                        key={`purpose_${product.id}_${v}`}
+                                                        className="px-2.5 py-1 rounded-full bg-[#f5efe9] border border-[#ebdcd0] text-[#4a3f35] text-[0.7rem] font-bold tracking-widest"
+                                                    >
+                                                        {v}
+                                                    </span>
+                                                ))}
+                                        </div>
+                                    ) : null}
                                     <p className="text-[1.3rem] md:text-[1.5rem] font-bold text-[#4a3f35] mt-auto">
                                         ¥{typeof product.price === 'number' ? product.price.toLocaleString() : product.price}
                                         <span className="text-[0.7rem] ml-1 font-normal text-[#8a7a6c]">税込</span>

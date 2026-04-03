@@ -68,6 +68,7 @@ export default function Footer() {
           <div className="mt-4">
             <Link
               to="/admin"
+              onClick={() => window.scrollTo(0, 0)}
               className="text-[10px] text-[#a38f7d] hover:text-[#4a3f35] tracking-[0.2em] font-medium transition-colors"
             >
               管理者ログイン

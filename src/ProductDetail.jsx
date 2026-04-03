@@ -11,8 +11,7 @@ export default function ProductDetail() {
 
     const [petals, setPetals] = useState([]);
 
-    const API_ORIGIN = 'http://localhost:8080';
-    const API_URL = useMemo(() => `${API_ORIGIN}/api/products/${id}`, [id]);
+    const API_URL = useMemo(() => `/api/products/${id}`, [id]);
 
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -56,8 +55,15 @@ export default function ProductDetail() {
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
-        if (imageUrl.startsWith('/')) return `${API_ORIGIN}${imageUrl}`;
-        return imageUrl;
+        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
+        if (imageUrl.startsWith('/')) return imageUrl;
+        return `/${imageUrl}`;
+    };
+
+    const normalizeMulti = (value) => {
+        if (!value) return [];
+        if (Array.isArray(value)) return value.filter(Boolean);
+        return [value].filter(Boolean);
     };
 
     const spawnPetalBurst = (clientX, clientY) => {
@@ -194,9 +200,25 @@ export default function ProductDetail() {
                                 </div>
 
                                 <div className="mt-6 text-[0.8rem] text-[#8a7a6c] tracking-widest">
-                                    {product.style ? `スタイル: ${product.style}` : ''}
-                                    {product.color ? `${product.style ? ' / ' : ''}カラー: ${product.color}` : ''}
-                                    {product.purpose ? `${product.style || product.color ? ' / ' : ''}ご用途: ${product.purpose}` : ''}
+                                    {(normalizeMulti(product.style).length > 0 || normalizeMulti(product.color).length > 0 || normalizeMulti(product.purpose).length > 0) ? (
+                                        <div className="flex flex-wrap gap-2">
+                                            {normalizeMulti(product.style).map((v) => (
+                                                <span key={`style_${v}`} className="px-3 py-1 rounded-full bg-white/60 border border-[#ebdcd0] text-[#6e5e54] text-[0.75rem] font-bold tracking-widest">
+                                                    スタイル: {v}
+                                                </span>
+                                            ))}
+                                            {normalizeMulti(product.color).map((v) => (
+                                                <span key={`color_${v}`} className="px-3 py-1 rounded-full bg-white/60 border border-[#ebdcd0] text-[#6e5e54] text-[0.75rem] font-bold tracking-widest">
+                                                    カラー: {v}
+                                                </span>
+                                            ))}
+                                            {normalizeMulti(product.purpose).map((v) => (
+                                                <span key={`purpose_${v}`} className="px-3 py-1 rounded-full bg-[#f5efe9] border border-[#ebdcd0] text-[#4a3f35] text-[0.75rem] font-bold tracking-widest">
+                                                    ご用途: {v}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    ) : null}
                                 </div>
                             </div>
                         </div>

@@ -31,7 +31,7 @@ export default function Success() {
                     return;
                 }
 
-                const res = await fetch(`http://localhost:8080/api/payments/verify-session?sessionId=${encodeURIComponent(sessionId)}`);
+                const res = await fetch(`/api/payments/verify-session?sessionId=${encodeURIComponent(sessionId)}`);
                 if (!res.ok) {
                     throw new Error('verify failed');
                 }

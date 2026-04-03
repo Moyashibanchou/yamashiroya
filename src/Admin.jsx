@@ -12,7 +12,9 @@ export default function Admin() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const API_ORIGIN = 'http://localhost:8080';
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const STYLE_OPTIONS = [
         { label: 'アレンジメント', value: 'arrangement' },
@@ -43,6 +45,7 @@ export default function Admin() {
     useEffect(() => {
         const isLoggedIn = localStorage.getItem('yamashiroya_admin_logged_in') === 'true';
         if (!isLoggedIn) {
+            window.scrollTo(0, 0);
             navigate('/admin-login');
         }
     }, [navigate]);
@@ -60,29 +63,30 @@ export default function Admin() {
         name: '',
         price: '',
         description: '',
-        style: '',
-        color: '',
-        purpose: '',
+        style: [],
+        color: [],
+        purpose: [],
         recommended: false
     });
 
     const [imageFile, setImageFile] = useState(null);
     const [imagePreviewUrl, setImagePreviewUrl] = useState('');
 
-    const API_URL = 'http://localhost:8080/api/products';
+    const API_URL = '/api/products';
 
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
-        if (imageUrl.startsWith('/')) return `${API_ORIGIN}${imageUrl}`;
-        return imageUrl;
+        // 先頭がスラッシュでない場合はスラッシュを付与して、プロキシ経由 (/uploads/...) でアクセスできるようにする
+        if (imageUrl.startsWith('/')) return imageUrl;
+        return `/${imageUrl}`;
     };
 
     // 商品一覧の取得
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const response = await fetch(API_URL);
+            const response = await fetch('/api/products');
             if (!response.ok) throw new Error('商品データの取得に失敗しました');
             const data = await response.json();
             setProducts(data);
@@ -102,6 +106,20 @@ export default function Admin() {
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    };
+
+    const normalizeMulti = (value) => {
+        if (!value) return [];
+        if (Array.isArray(value)) return value.filter(Boolean);
+        return [value].filter(Boolean);
+    };
+
+    const toggleMultiValue = (key, value) => {
+        setFormData((prev) => {
+            const prevArr = Array.isArray(prev[key]) ? prev[key] : normalizeMulti(prev[key]);
+            const next = prevArr.includes(value) ? prevArr.filter((v) => v !== value) : [...prevArr, value];
+            return { ...prev, [key]: next };
+        });
     };
 
     const handleImageChange = (e) => {
@@ -137,9 +155,14 @@ export default function Admin() {
             fd.append('name', formData.name);
             fd.append('price', String(parseInt(formData.price)));
             if (formData.description) fd.append('description', formData.description);
-            if (formData.style) fd.append('style', formData.style);
-            if (formData.color) fd.append('color', formData.color);
-            if (formData.purpose) fd.append('purpose', formData.purpose);
+
+            const appendMulti = (key, values) => {
+                const arr = normalizeMulti(values);
+                arr.forEach((v) => fd.append(key, v));
+            };
+            appendMulti('style', formData.style);
+            appendMulti('color', formData.color);
+            appendMulti('purpose', formData.purpose);
             fd.append('recommended', String(Boolean(formData.recommended)));
 
             const response = await fetch(url, {
@@ -167,9 +190,9 @@ export default function Admin() {
             name: product.name,
             price: product.price.toString(),
             description: product.description,
-            style: product.style || '',
-            color: product.color || '',
-            purpose: product.purpose || '',
+            style: normalizeMulti(product.style),
+            color: normalizeMulti(product.color),
+            purpose: normalizeMulti(product.purpose),
             recommended: Boolean(product.recommended)
         });
         setImageFile(null);
@@ -206,9 +229,9 @@ export default function Admin() {
             name: '',
             price: '',
             description: '',
-            style: '',
-            color: '',
-            purpose: '',
+            style: [],
+            color: [],
+            purpose: [],
             recommended: false
         });
 
@@ -390,7 +413,7 @@ export default function Admin() {
                                     <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">商品説明</label>
                                     <textarea 
                                         name="description"
-                                        value={formData.description}
+                                        value={formData.description || ''}
                                         onChange={handleInputChange}
                                         rows="4"
                                         placeholder="商品の詳細な説明を入力してください..." 
@@ -400,19 +423,20 @@ export default function Admin() {
 
                                 <div>
                                     <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">スタイル</label>
-                                    <div className="relative">
-                                        <select
-                                            name="style"
-                                            value={formData.style}
-                                            onChange={handleInputChange}
-                                            className="w-full appearance-none bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 pl-6 pr-12 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/10 focus:border-[#4a3f35] transition-all font-medium"
-                                        >
-                                            <option value="">選択してください</option>
+                                    <div className="bg-white/30 border border-[#ebdcd0] rounded-2xl px-6 py-5">
+                                        <div className="flex flex-wrap gap-3">
                                             {STYLE_OPTIONS.map((opt) => (
-                                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                <label key={opt.value} className="inline-flex items-center gap-2 cursor-pointer select-none">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={Array.isArray(formData.style) && formData.style.includes(opt.value)}
+                                                        onChange={() => toggleMultiValue('style', opt.value)}
+                                                        className="w-5 h-5 accent-[#2B5740]"
+                                                    />
+                                                    <span className="text-[0.9rem] font-bold tracking-widest text-[#6e5e54]">{opt.label}</span>
+                                                </label>
                                             ))}
-                                        </select>
-                                        <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-[#8a7a6c] pointer-events-none w-5 h-5" />
+                                        </div>
                                     </div>
                                 </div>
 
@@ -434,37 +458,39 @@ export default function Admin() {
 
                                 <div>
                                     <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">カラー</label>
-                                    <div className="relative">
-                                        <select
-                                            name="color"
-                                            value={formData.color}
-                                            onChange={handleInputChange}
-                                            className="w-full appearance-none bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 pl-6 pr-12 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/10 focus:border-[#4a3f35] transition-all font-medium"
-                                        >
-                                            <option value="">選択してください</option>
+                                    <div className="bg-white/30 border border-[#ebdcd0] rounded-2xl px-6 py-5">
+                                        <div className="flex flex-wrap gap-3">
                                             {COLOR_OPTIONS.map((opt) => (
-                                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                <label key={opt.value} className="inline-flex items-center gap-2 cursor-pointer select-none">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={Array.isArray(formData.color) && formData.color.includes(opt.value)}
+                                                        onChange={() => toggleMultiValue('color', opt.value)}
+                                                        className="w-5 h-5 accent-[#2B5740]"
+                                                    />
+                                                    <span className="text-[0.9rem] font-bold tracking-widest text-[#6e5e54]">{opt.label}</span>
+                                                </label>
                                             ))}
-                                        </select>
-                                        <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-[#8a7a6c] pointer-events-none w-5 h-5" />
+                                        </div>
                                     </div>
                                 </div>
 
                                 <div>
                                     <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">ご用途</label>
-                                    <div className="relative">
-                                        <select
-                                            name="purpose"
-                                            value={formData.purpose}
-                                            onChange={handleInputChange}
-                                            className="w-full appearance-none bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 pl-6 pr-12 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/10 focus:border-[#4a3f35] transition-all font-medium"
-                                        >
-                                            <option value="">選択してください</option>
+                                    <div className="bg-white/30 border border-[#ebdcd0] rounded-2xl px-6 py-5">
+                                        <div className="flex flex-wrap gap-3">
                                             {PURPOSE_OPTIONS.map((opt) => (
-                                                <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                <label key={opt.value} className="inline-flex items-center gap-2 cursor-pointer select-none">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={Array.isArray(formData.purpose) && formData.purpose.includes(opt.value)}
+                                                        onChange={() => toggleMultiValue('purpose', opt.value)}
+                                                        className="w-5 h-5 accent-[#2B5740]"
+                                                    />
+                                                    <span className="text-[0.9rem] font-bold tracking-widest text-[#6e5e54]">{opt.label}</span>
+                                                </label>
                                             ))}
-                                        </select>
-                                        <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-[#8a7a6c] pointer-events-none w-5 h-5" />
+                                        </div>
                                     </div>
                                 </div>
 
