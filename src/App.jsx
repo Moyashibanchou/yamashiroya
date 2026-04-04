@@ -1,24 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 
 // ▼▼▼ 追加：制作物フォルダから水彩画を読み込む ▼▼▼
-import cityBg from './picture_city.jpg';
+import cityBg from "./picture_city.jpg";
 
-import Home from './Home.jsx';
-import ProductDetail from './ProductDetail.jsx';
-import Cart from './Cart.jsx';
-import Checkout from './Checkout.jsx';
-import Success from './Success.jsx';
-import About from './About.jsx';
-import Legal from './Legal.jsx';
-import Privacy from './Privacy.jsx';
-import ProductList from './ProductList.jsx';
-import Admin from './Admin.jsx';
-import AdminLogin from './AdminLogin.jsx';
-import Navbar from './components/Navbar.jsx';
-import Footer from './components/Footer.jsx';
-import { CartProvider } from './context/CartContext.jsx';
+import Home from "./Home.jsx";
+import ProductDetail from "./ProductDetail.jsx";
+import Cart from "./Cart.jsx";
+import Checkout from "./Checkout.jsx";
+import Success from "./Success.jsx";
+import About from "./About.jsx";
+import Legal from "./Legal.jsx";
+import Privacy from "./Privacy.jsx";
+import ProductList from "./ProductList.jsx";
+import Admin from "./Admin.jsx";
+import AdminLogin from "./AdminLogin.jsx";
+import Navbar from "./components/Navbar.jsx";
+import Footer from "./components/Footer.jsx";
+import CartAddedModal from "./components/CartAddedModal.jsx";
+import { CartProvider } from "./context/CartContext.jsx";
 
 export default function App() {
   const [showOpening, setShowOpening] = useState(false);
@@ -34,18 +35,18 @@ export default function App() {
 
     // Enterキーでスキップ
     const handleKeyDown = (e) => {
-      if (e.key === 'Enter') {
+      if (e.key === "Enter") {
         e.preventDefault(); // デフォルトの動作を抑制
         setShowOpening(false);
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
 
     // クリーンアップ
     return () => {
       clearTimeout(timer);
-      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener("keydown", handleKeyDown);
     };
   }, [showOpening]); // showOpeningが変化するたびにリスナーを再設定し、最新の状態を維持する
 
@@ -58,13 +59,13 @@ export default function App() {
         .brush-font { font-family: 'Yuji Syuku','Yuji Mai','Noto Serif JP',serif; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        
+
         /* 和紙風テクスチャ背景 */
         .washi-pattern {
           background-color: #faf8f1;
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
         }
-        
+
         /* レンガのモチーフ */
         .brick-pattern {
           background-color: #f7f2e7;
@@ -110,7 +111,9 @@ export default function App() {
               className="relative z-10 text-center px-4"
             >
               <h1 className="text-3xl md:text-5xl lg:text-6xl elegant-font font-bold tracking-widest drop-shadow-md text-[#4a3f35]">
-                想いを花に　<br className="md:hidden" />小樽で百年。
+                想いを花に　
+                <br className="md:hidden" />
+                小樽で百年。
               </h1>
             </motion.div>
           </motion.div>
@@ -139,6 +142,8 @@ export default function App() {
             </div>
             <Footer />
           </div>
+          {/* カート追加モーダル：Router内に置くことでuseNavigateが使える */}
+          <CartAddedModal />
         </Router>
       </CartProvider>
     </>
