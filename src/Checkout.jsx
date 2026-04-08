@@ -10,6 +10,7 @@ export default function Checkout() {
     const { items, cartTotal, clearCart } = useCart();
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('credit'); // 'credit', 'paypay', 'applepay', 'convenience'
+    const [step, setStep] = useState('input'); // 'input' | 'confirm'
 
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
@@ -28,9 +29,14 @@ export default function Checkout() {
                     name: '',
                     email: '',
                     phone: '',
+                    fax: '',
                     zipcode: '',
                     prefectureCity: '',
                     addressLine: '',
+                    deliveryDateMode: 'none',
+                    deliveryDate: '',
+                    deliveryTimeNote: '',
+                    requests: '',
                 };
             }
 
@@ -40,9 +46,14 @@ export default function Checkout() {
                     name: '',
                     email: '',
                     phone: '',
+                    fax: '',
                     zipcode: '',
                     prefectureCity: '',
                     addressLine: '',
+                    deliveryDateMode: 'none',
+                    deliveryDate: '',
+                    deliveryTimeNote: '',
+                    requests: '',
                 };
             }
 
@@ -50,18 +61,28 @@ export default function Checkout() {
                 name: String(parsed.name || ''),
                 email: String(parsed.email || ''),
                 phone: String(parsed.phone || ''),
+                fax: String(parsed.fax || ''),
                 zipcode: String(parsed.zipcode || ''),
                 prefectureCity: String(parsed.prefectureCity || ''),
                 addressLine: String(parsed.addressLine || ''),
+                deliveryDateMode: parsed.deliveryDateMode === 'specified' ? 'specified' : 'none',
+                deliveryDate: String(parsed.deliveryDate || ''),
+                deliveryTimeNote: String(parsed.deliveryTimeNote || ''),
+                requests: String(parsed.requests || ''),
             };
         } catch {
             return {
                 name: '',
                 email: '',
                 phone: '',
+                fax: '',
                 zipcode: '',
                 prefectureCity: '',
                 addressLine: '',
+                deliveryDateMode: 'none',
+                deliveryDate: '',
+                deliveryTimeNote: '',
+                requests: '',
             };
         }
     });
@@ -85,9 +106,8 @@ export default function Checkout() {
 
     const API_URL_CREATE_SESSION = '/api/payments/create-session';
 
-    // 送料（ダミー）
-    const shippingFee = 1100;
-    const totalAmount = cartTotal + (items.length > 0 ? shippingFee : 0);
+    const shippingFee = 0;
+    const totalAmount = cartTotal;
 
     const emailIsValid = useMemo(() => {
         const v = String(form.email || '').trim();
@@ -129,6 +149,12 @@ export default function Checkout() {
         return !next.email && !next.phone && !next.zipcode && !next.address;
     };
 
+    const handleGoToConfirm = () => {
+        if (!validateBeforeSubmit()) return;
+        setStep('confirm');
+        window.scrollTo(0, 0);
+    };
+
     const lookupAddressByZipcode = async () => {
         const zip = zipcodeNormalized;
         if (!/^\d{7}$/.test(zip)) {
@@ -163,11 +189,7 @@ export default function Checkout() {
     };
 
     // Spring Boot API との本番連携
-    const handleConfirmOrder = async () => {
-        if (!validateBeforeSubmit()) {
-            return;
-        }
-
+    const handlePlaceOrder = async () => {
         setIsProcessing(true);
 
         try {
@@ -219,12 +241,20 @@ export default function Checkout() {
         }
     };
 
+    const formatDeliveryDate = (value) => {
+        const v = String(value || '').trim();
+        if (!v) return '';
+        const [y, m, d] = v.split('-');
+        if (!y || !m || !d) return v;
+        return `${y}年${m}月${d}日`;
+    };
+
     return (
         <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full min-h-screen washi-pattern text-[#4a3f35] relative shadow-2xl elegant-font overflow-x-hidden pb-20 md:pb-32"
+            className="w-full min-h-screen washi-pattern text-[#1f1b16] relative shadow-2xl elegant-font overflow-x-hidden pb-20 md:pb-32 text-lg leading-relaxed"
         >
             {/* 1. 戻るボタン */}
             <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-12 pb-4">
@@ -251,6 +281,7 @@ export default function Checkout() {
                     <div className="md:w-[55%] lg:w-[60%] space-y-12 md:space-y-20">
                         
                         {/* セクション：お客様情報 */}
+                        {step === 'input' ? (
                         <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
                             <div className="flex items-center gap-4 mb-10">
                                 <div className="w-10 h-10 bg-[#4a3f35] rounded-full flex items-center justify-center text-white">
@@ -303,6 +334,16 @@ export default function Checkout() {
                                     {errors.phone ? (
                                         <p className="mt-2 text-xs font-bold tracking-widest text-red-600">{errors.phone}</p>
                                     ) : null}
+                                </div>
+                                <div className="md:col-span-2">
+                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">FAX（任意）</label>
+                                    <input
+                                        type="text"
+                                        value={form.fax}
+                                        onChange={(e) => setForm((prev) => ({ ...prev, fax: e.target.value }))}
+                                        placeholder="例：0134-00-0000"
+                                        className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40"
+                                    />
                                 </div>
                             </div>
 
@@ -375,6 +416,225 @@ export default function Checkout() {
                                 </div>
                             </div>
                         </section>
+
+                        <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
+                            <div className="flex items-center gap-4 mb-10">
+                                <div className="w-10 h-10 bg-[#2B5740] rounded-full flex items-center justify-center text-white">
+                                    <MapPin size={20} />
+                                </div>
+                                <h2 className="text-xl font-bold tracking-widest">配送指定</h2>
+                            </div>
+
+                            <div className="bg-white/60 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8">
+                                <div className="text-sm md:text-base font-bold tracking-widest text-[#4a3f35]">
+                                    ■小樽市内配達
+                                </div>
+                                <p className="mt-4 text-sm text-[#6e5e54] leading-relaxed tracking-wide font-medium">
+                                    通常、ご入金確認後翌々営業日以内、もしくはご指定の日時に配達いたします。本商品は小樽市内への配達に限定させていただいておりますので、配達料は無料です。
+                                </p>
+
+                                <div className="mt-8 space-y-6">
+                                    <div>
+                                        <div className="text-xs font-bold text-[#8a7a6c] tracking-[0.2em] uppercase mb-3">配送日指定</div>
+                                        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                                            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+                                                <input
+                                                    type="radio"
+                                                    name="deliveryDateMode"
+                                                    value="none"
+                                                    checked={form.deliveryDateMode === 'none'}
+                                                    onChange={() => setForm((prev) => ({ ...prev, deliveryDateMode: 'none' }))}
+                                                    className="w-5 h-5 accent-[#2B5740]"
+                                                />
+                                                <span className="text-sm font-bold tracking-widest text-[#6e5e54]">指定なし</span>
+                                            </label>
+                                            <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+                                                <input
+                                                    type="radio"
+                                                    name="deliveryDateMode"
+                                                    value="specified"
+                                                    checked={form.deliveryDateMode === 'specified'}
+                                                    onChange={() => setForm((prev) => ({ ...prev, deliveryDateMode: 'specified' }))}
+                                                    className="w-5 h-5 accent-[#2B5740]"
+                                                />
+                                                <span className="text-sm font-bold tracking-widest text-[#6e5e54]">指定</span>
+                                            </label>
+                                        </div>
+
+                                        <div className="mt-4">
+                                            <input
+                                                type="date"
+                                                value={form.deliveryDate}
+                                                onChange={(e) => setForm((prev) => ({ ...prev, deliveryDate: e.target.value }))}
+                                                disabled={form.deliveryDateMode !== 'specified'}
+                                                className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">配達時間帯指定</label>
+                                        <input
+                                            type="text"
+                                            value={form.deliveryTimeNote}
+                                            onChange={(e) => setForm((prev) => ({ ...prev, deliveryTimeNote: e.target.value }))}
+                                            placeholder="ex. 午前中、18時以降...など"
+                                            className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
+                            <div className="flex items-center gap-4 mb-10">
+                                <div className="w-10 h-10 bg-[#bc8a7e] rounded-full flex items-center justify-center text-white">
+                                    <Mail size={20} />
+                                </div>
+                                <h2 className="text-xl font-bold tracking-widest">その他</h2>
+                            </div>
+
+                            <div>
+                                <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">ご要望</label>
+                                <textarea
+                                    value={form.requests}
+                                    onChange={(e) => setForm((prev) => ({ ...prev, requests: e.target.value }))}
+                                    rows={5}
+                                    placeholder="備考・ご要望などがありましたらご記入ください。"
+                                    className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40 resize-none"
+                                />
+                            </div>
+                        </section>
+
+                        ) : (
+                        <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
+                            <div className="flex items-center gap-4 mb-10">
+                                <div className="w-10 h-10 bg-[#4a3f35] rounded-full flex items-center justify-center text-white">
+                                    <ShieldCheck size={20} />
+                                </div>
+                                <h2 className="text-xl font-bold tracking-widest">入力内容の確認</h2>
+                            </div>
+
+                            <div className="space-y-8">
+                                <div className="bg-white/70 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8">
+                                    <div className="text-base md:text-lg font-bold tracking-widest">ご注文内容</div>
+                                    <div className="mt-5 space-y-4">
+                                        {items.map((item) => (
+                                            <div key={item.id} className="flex items-start gap-4 border-b border-[#ebdcd0]/60 pb-4">
+                                                <div className="w-16 h-16 bg-white rounded-2xl overflow-hidden shrink-0 border border-[#ebdcd0] shadow-sm">
+                                                    <img src={resolveImageUrl(item.imageUrl)} alt={item.name} className="w-full h-full object-cover mix-blend-multiply opacity-95" />
+                                                </div>
+                                                <div className="min-w-0 flex-1">
+                                                    <div className="font-bold tracking-wide break-words">{item.name}</div>
+                                                    <div className="mt-2 flex justify-between gap-4 text-base font-bold text-[#2B5740]">
+                                                        <span>数量: {item.quantity}</span>
+                                                        <span>¥{(item.price * item.quantity).toLocaleString()}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                        {items.length === 0 ? (
+                                            <div className="text-[#4a3f35] font-bold tracking-widest">カートが空です</div>
+                                        ) : null}
+                                    </div>
+
+                                    <div className="mt-6 space-y-3">
+                                        <div className="flex justify-between font-bold">
+                                            <span>商品小計</span>
+                                            <span>¥{cartTotal.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between font-bold">
+                                            <span>送料</span>
+                                            <span>¥0（小樽市内配達）</span>
+                                        </div>
+                                        <div className="flex justify-between text-xl font-black pt-4 border-t border-[#ebdcd0]/70">
+                                            <span>お支払い合計</span>
+                                            <span className="text-[#2B5740]">¥{totalAmount.toLocaleString()}</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white/70 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8">
+                                    <div className="text-base md:text-lg font-bold tracking-widest">お客様情報</div>
+                                    <div className="mt-5 space-y-3 font-bold">
+                                        <div className="flex flex-col sm:flex-row sm:gap-4">
+                                            <span className="text-[#6e5e54]">お名前</span>
+                                            <span className="text-[#1f1b16]">{form.name || '（未入力）'}</span>
+                                        </div>
+                                        <div className="flex flex-col sm:flex-row sm:gap-4">
+                                            <span className="text-[#6e5e54]">メール</span>
+                                            <span className="text-[#1f1b16] break-all">{form.email || '（未入力）'}</span>
+                                        </div>
+                                        <div className="flex flex-col sm:flex-row sm:gap-4">
+                                            <span className="text-[#6e5e54]">電話</span>
+                                            <span className="text-[#1f1b16]">{form.phone || '（未入力）'}</span>
+                                        </div>
+                                        {String(form.fax || '').trim() ? (
+                                            <div className="flex flex-col sm:flex-row sm:gap-4">
+                                                <span className="text-[#6e5e54]">FAX</span>
+                                                <span className="text-[#1f1b16]">{form.fax}</span>
+                                            </div>
+                                        ) : null}
+                                        <div className="pt-3 border-t border-[#ebdcd0]/70">
+                                            <div className="text-[#6e5e54]">ご住所</div>
+                                            <div className="mt-2 text-[#1f1b16] break-words">
+                                                〒{form.zipcode} {form.prefectureCity} {form.addressLine}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white/70 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8">
+                                    <div className="text-base md:text-lg font-bold tracking-widest">配送指定</div>
+                                    <div className="mt-5 space-y-4 font-bold">
+                                        <div>
+                                            <div className="text-[#6e5e54]">配送方法</div>
+                                            <div className="mt-2 text-[#1f1b16]">小樽市内配達（送料無料）</div>
+                                        </div>
+                                        <div>
+                                            <div className="text-[#6e5e54]">配送日</div>
+                                            <div className="mt-2 text-[#1f1b16]">
+                                                {form.deliveryDateMode === 'specified' ? (form.deliveryDate ? formatDeliveryDate(form.deliveryDate) : '（日付未入力）') : '指定なし'}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="text-[#6e5e54]">時間帯</div>
+                                            <div className="mt-2 text-[#1f1b16]">{String(form.deliveryTimeNote || '').trim() ? form.deliveryTimeNote : '指定なし'}</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-white/70 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8">
+                                    <div className="text-base md:text-lg font-bold tracking-widest">ご要望</div>
+                                    <div className="mt-5 whitespace-pre-wrap font-bold text-[#1f1b16]">
+                                        {String(form.requests || '').trim() ? form.requests : '（なし）'}
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setStep('input');
+                                            window.scrollTo(0, 0);
+                                        }}
+                                        disabled={isProcessing}
+                                        className="w-full py-4 rounded-2xl bg-white/70 border-2 border-[#4a3f35] text-[#4a3f35] font-black tracking-widest hover:bg-white active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                                    >
+                                        入力画面へ戻る（修正する）
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={handlePlaceOrder}
+                                        disabled={isProcessing || items.length === 0}
+                                        className="w-full py-4 rounded-2xl bg-[#4a3f35] text-white font-black tracking-widest shadow-xl hover:bg-[#322a23] active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                                    >
+                                        注文を確定する
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+                        )}
 
                         {/* セクション：決済方法 */}
                         <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
@@ -563,9 +823,9 @@ export default function Checkout() {
                                 {/* 決済ボタン（KOMOJU等の統合決済をイメージ） */}
                                 <div className="space-y-6">
                                     <button
-                                        onClick={handleConfirmOrder}
+                                        onClick={step === 'input' ? handleGoToConfirm : handlePlaceOrder}
                                         disabled={isProcessing || items.length === 0}
-                                        className={`w-full py-6 rounded-[2rem] text-lg font-bold tracking-[0.3em] shadow-2xl transition-all duration-500 flex items-center justify-center gap-4 group
+                                        className={`w-full py-6 rounded-[2rem] text-xl font-black tracking-[0.25em] shadow-2xl transition-all duration-500 flex items-center justify-center gap-4 group
                                             ${isProcessing 
                                                 ? 'bg-[#a38f7d] text-white cursor-not-allowed opacity-80' 
                                                 : 'bg-[#4a3f35] text-white hover:bg-[#322a23] active:scale-[0.97] cursor-pointer'
@@ -582,8 +842,8 @@ export default function Checkout() {
                                             </>
                                         ) : (
                                             <>
-                                                <span>注文を確定する</span>
-                                                <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                                                <span>{step === 'input' ? '入力内容を確認する' : '注文を確定する'}</span>
+                                                <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                                             </>
                                         )}
                                     </button>
