@@ -64,7 +64,14 @@ export default function ProductDetail() {
   const normalizeMulti = (value) => {
     if (!value) return [];
     if (Array.isArray(value)) return value.filter(Boolean);
-    return [value].filter(Boolean);
+    const s = String(value);
+    if (s.includes(',')) {
+      return s
+        .split(',')
+        .map((x) => x.trim())
+        .filter(Boolean);
+    }
+    return [s].filter(Boolean);
   };
 
   const LABEL_MAP = useMemo(() => {
