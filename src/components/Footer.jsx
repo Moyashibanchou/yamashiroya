@@ -21,7 +21,7 @@ export default function Footer() {
           <div className="flex-1">
             <div className="flex flex-col">
               <nav className="flex flex-wrap gap-x-8 gap-y-3 text-[0.9rem] md:text-[0.95rem] tracking-widest font-medium">
-                <Link to="/legal" className="hover:text-[#322a23] transition-colors">会社情報・特定商取引表示項目</Link>
+                <Link to="/legal" className="hover:text-[#322a23] transition-colors">特定商取引法に基づく表記</Link>
                 <Link to="/privacy" className="hover:text-[#322a23] transition-colors">個人情報保護方針</Link>
                 <Link to="/legal#payment" className="hover:text-[#322a23] transition-colors">支払・配送</Link>
                 <Link to="/legal#return" className="hover:text-[#322a23] transition-colors">返品特約</Link>
@@ -31,23 +31,30 @@ export default function Footer() {
 
               <div className="mt-6 md:mt-7 grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 md:gap-8 items-start">
                 <div className="space-y-3">
+                  <div className="text-[0.85rem] md:text-[0.9rem] font-black tracking-[0.18em] text-[#6e5e54]">
+                    お問い合わせ窓口
+                  </div>
                   <div className="text-[0.95rem] md:text-[1.0rem] tracking-widest leading-relaxed">
                     〒047-0024 北海道小樽市花園4丁目4-2
                   </div>
 
                   <a
                     href="tel:0134-23-1187"
-                    className="inline-flex items-center gap-2 text-[#2B5740] font-black text-[1.35rem] md:text-[1.6rem] tracking-[0.08em] hover:opacity-90 transition-opacity"
+                    className="inline-flex items-center gap-2 text-primary font-black text-[1.35rem] md:text-[1.6rem] tracking-[0.08em] hover:opacity-90 transition-opacity"
                   >
                     <Phone className="w-5 h-5 md:w-6 md:h-6" />
                     0134-23-1187
                   </a>
+
+                  <div className="text-[0.95rem] md:text-[1.0rem] tracking-widest leading-relaxed">
+                    メール：yamashiroya1187@gmail.com
+                  </div>
                 </div>
 
                 <div className="flex md:justify-end">
                   <a
                     href="mailto:yamashiroya1187@gmail.com"
-                    className="w-full md:w-auto px-8 py-4 bg-[#4a3f35] text-[#fdfbf6] rounded-full text-center font-bold tracking-[0.2em] hover:bg-[#322a23] active:scale-95 transition-all"
+                    className="w-full md:w-auto px-8 py-4 bg-primary text-[#fdfbf6] rounded-full text-center font-bold tracking-[0.2em] hover:opacity-90 active:scale-95 transition-all"
                   >
                     お問い合わせ
                   </a>

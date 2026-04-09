@@ -12,6 +12,12 @@ export default function Checkout() {
     const [paymentMethod, setPaymentMethod] = useState('credit'); // 'credit', 'paypay', 'applepay', 'convenience'
     const [step, setStep] = useState('input'); // 'input' | 'confirm'
 
+    const normalizeDigitsOnly = (value) => {
+        const s = String(value ?? '');
+        const half = s.replace(/[０-９]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
+        return half.replace(/\D/g, '');
+    };
+
     const resolveImageUrl = (imageUrl) => {
         if (!imageUrl) return '';
         if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) return imageUrl;
@@ -119,10 +125,10 @@ export default function Checkout() {
         const v = String(form.phone || '').trim();
         if (!v) return false;
         if (/^\d{10,11}$/.test(v)) return true;
-        return /^0\d{1,4}-\d{1,4}-\d{4}$/.test(v);
+        return false;
     }, [form.phone]);
 
-    const zipcodeNormalized = useMemo(() => String(form.zipcode || '').replace(/-/g, ''), [form.zipcode]);
+    const zipcodeNormalized = useMemo(() => String(form.zipcode || '').replace(/\D/g, ''), [form.zipcode]);
 
     const isOtaruAddress = useMemo(() => {
         const v = `${String(form.prefectureCity || '')} ${String(form.addressLine || '')}`;
@@ -348,7 +354,7 @@ export default function Checkout() {
                                         type="tel"
                                         value={form.phone}
                                         onChange={(e) => {
-                                            const v = e.target.value;
+                                            const v = normalizeDigitsOnly(e.target.value);
                                             setForm((prev) => ({ ...prev, phone: v }));
                                             if (errors.phone) setErrors((prev) => ({ ...prev, phone: '' }));
                                         }}
@@ -380,7 +386,7 @@ export default function Checkout() {
                                                 type="text"
                                                 value={form.zipcode}
                                                 onChange={(e) => {
-                                                    const v = e.target.value;
+                                                    const v = normalizeDigitsOnly(e.target.value);
                                                     setForm((prev) => ({ ...prev, zipcode: v }));
                                                     if (errors.zipcode) setErrors((prev) => ({ ...prev, zipcode: '' }));
                                                 }}

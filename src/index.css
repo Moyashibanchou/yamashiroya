@@ -1,5 +1,17 @@
 @import "tailwindcss";
 
+html {
+  font-size: 18px;
+}
+
+body {
+  line-height: 1.6;
+}
+
+button {
+  min-height: 44px;
+}
+
 body {
   -webkit-tap-highlight-color: transparent;
 }

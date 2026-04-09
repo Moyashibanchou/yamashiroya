@@ -123,7 +123,7 @@ export default function App() {
 
       <CartProvider>
         <Router>
-          <div className="min-h-screen flex flex-col text-xl leading-relaxed">
+          <div className="min-h-screen flex flex-col text-lg leading-relaxed">
             <Navbar />
             <div className="flex-1">
               <Routes>

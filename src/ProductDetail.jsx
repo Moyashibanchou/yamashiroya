@@ -239,13 +239,27 @@ export default function ProductDetail() {
                 ) : null}
 
                 <div className="mt-8 grid grid-cols-1 gap-3">
-                  <div className="text-red-700 font-bold text-lg md:text-xl leading-relaxed">
-                    ※この商品は小樽市内限定でお届けします
+                  <div className="bg-red-50 border border-red-200 rounded-2xl p-4 md:p-5">
+                    <div className="text-red-800 font-black text-lg md:text-xl leading-relaxed">
+                      ※この商品は【小樽市内限定】でお届けします
+                    </div>
+                    <div className="mt-4 text-[#4a3f35] text-[0.95rem] md:text-[1rem] leading-relaxed">
+                      <div className="font-black tracking-widest mb-2">返品・交換について</div>
+                      <ul className="list-disc pl-5 space-y-2 font-bold">
+                        <li>
+                          不良品・破損・品違いの場合：到着後7日以内にご連絡ください。送料弊社負担で交換いたします。
+                        </li>
+                        <li>
+                          お客様都合の返品の場合：到着後7日以内にご連絡ください。返品可能です（返送料・振込手数料はお客様負担）。
+                        </li>
+                      </ul>
+                      <div className="mt-3 font-bold">※まずはメールにてお気軽にご相談ください。</div>
+                    </div>
                   </div>
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="w-full py-4 rounded-2xl bg-[#4a3f35] text-white font-bold tracking-[0.25em] shadow-xl hover:bg-[#322a23] active:scale-[0.98] transition-all"
+                    className="w-full py-4 rounded-2xl bg-primary text-white font-bold tracking-[0.25em] shadow-xl hover:opacity-90 active:scale-[0.98] transition-all"
                   >
                     カートに入れる
                   </button>

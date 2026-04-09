@@ -626,7 +626,7 @@ export default function Home() {
                       className="bg-[#fffdf7] rounded-2xl md:rounded-3xl soft-shadow border border-[#ebdcd0] overflow-hidden flex flex-col group cursor-pointer block hover:shadow-[0_16px_40px_rgba(74,63,53,0.1)] transition-shadow duration-300 relative"
                     >
                       <div className="absolute top-4 left-4 z-10 bg-red-700 text-white text-[0.8rem] font-bold px-3 py-1 rounded-sm shadow-md tracking-wider">
-                        小樽限定
+                        小樽限定配送
                       </div>
                       <div className="aspect-[4/3] md:aspect-square bg-[#f5efe9] relative overflow-hidden">
                         {product.imageUrl ? (
@@ -664,7 +664,7 @@ export default function Home() {
                               e.stopPropagation();
                               if (addToCart) addToCart(product);
                             }}
-                            className="w-full py-3 md:py-3.5 bg-[#4a3f35] text-white rounded-xl text-[0.95rem] font-bold tracking-widest hover:bg-[#322a23] active:scale-[0.98] transition-all"
+                            className="w-full py-3 md:py-3.5 bg-primary text-white rounded-xl text-[0.95rem] font-bold tracking-widest hover:opacity-90 active:scale-[0.98] transition-all"
                           >
                             カートに入れる
                           </button>
