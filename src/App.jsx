@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
 // ▼▼▼ 追加：制作物フォルダから水彩画を読み込む ▼▼▼
@@ -20,6 +20,16 @@ import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import CartAddedModal from "./components/CartAddedModal.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
+
+function ScrollToTop() {
+  const { pathname, search } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname, search]);
+
+  return null;
+}
 
 export default function App() {
   const [showOpening, setShowOpening] = useState(false);
@@ -123,6 +133,7 @@ export default function App() {
 
       <CartProvider>
         <Router>
+          <ScrollToTop />
           <div className="min-h-screen flex flex-col text-lg leading-relaxed">
             <Navbar />
             <div className="flex-1">
