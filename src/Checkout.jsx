@@ -282,6 +282,7 @@ export default function Checkout() {
                         
                         {/* セクション：お客様情報 */}
                         {step === 'input' ? (
+                        <>
                         <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
                             <div className="flex items-center gap-4 mb-10">
                                 <div className="w-10 h-10 bg-[#4a3f35] rounded-full flex items-center justify-center text-white">
@@ -506,6 +507,7 @@ export default function Checkout() {
                             </div>
                         </section>
 
+                        </>
                         ) : (
                         <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
                             <div className="flex items-center gap-4 mb-10">
