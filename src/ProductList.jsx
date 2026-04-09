@@ -369,8 +369,11 @@ export default function ProductList() {
                         {filteredProducts.map((product) => (
                             <Link to={`/product/${product.id}`} key={product.id} className="bg-[#fffdf7] rounded-2xl md:rounded-3xl soft-shadow border border-[#ebdcd0] overflow-hidden flex flex-col group cursor-pointer block hover:shadow-[0_16px_40px_rgba(74,63,53,0.1)] transition-shadow duration-300 relative">
                                 {/* バッジ */}
+                                <div className="absolute top-4 left-4 z-10 bg-red-700 text-white text-[0.8rem] font-bold px-3 py-1 rounded-sm shadow-md tracking-wider">
+                                    小樽限定
+                                </div>
                                 {product.badge && (
-                                    <div className="absolute top-4 left-4 z-10 bg-[#2B5740] text-white text-[0.75rem] font-bold px-3 py-1 rounded-sm shadow-md tracking-wider">
+                                    <div className="absolute top-14 left-4 z-10 bg-[#2B5740] text-white text-[0.75rem] font-bold px-3 py-1 rounded-sm shadow-md tracking-wider">
                                         {product.badge}
                                     </div>
                                 )}

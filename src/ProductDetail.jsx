@@ -239,6 +239,9 @@ export default function ProductDetail() {
                 ) : null}
 
                 <div className="mt-8 grid grid-cols-1 gap-3">
+                  <div className="text-red-700 font-bold text-lg md:text-xl leading-relaxed">
+                    ※この商品は小樽市内限定でお届けします
+                  </div>
                   <button
                     type="button"
                     onClick={handleAddToCart}
