@@ -259,7 +259,7 @@ export default function ProductDetail() {
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="w-full py-4 rounded-2xl bg-primary text-white font-bold tracking-[0.25em] shadow-xl hover:opacity-90 active:scale-[0.98] transition-all"
+                    className="w-full py-4 rounded-2xl bg-[#0055AA] text-white font-bold tracking-[0.25em] shadow-xl hover:opacity-90 active:scale-[0.98] transition-all"
                   >
                     カートに入れる
                   </button>

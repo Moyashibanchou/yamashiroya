@@ -40,7 +40,7 @@ export default function Footer() {
 
                   <a
                     href="tel:0134-23-1187"
-                    className="inline-flex items-center gap-2 text-primary font-black text-[1.35rem] md:text-[1.6rem] tracking-[0.08em] hover:opacity-90 transition-opacity"
+                    className="inline-flex items-center gap-2 text-red-700 font-black text-[1.35rem] md:text-[1.6rem] tracking-[0.08em] hover:opacity-90 transition-opacity"
                   >
                     <Phone className="w-5 h-5 md:w-6 md:h-6" />
                     0134-23-1187
