@@ -39,6 +39,28 @@ export default function ProductList() {
         { label: '自宅用', value: 'home' },
     ];
 
+    const VALUE_LABEL_MAP = useMemo(() => {
+        const toMap = (options) => {
+            const m = new Map();
+            options.forEach((o) => m.set(o.value, o.label));
+            return m;
+        };
+
+        return {
+            style: toMap(STYLE_OPTIONS),
+            color: toMap(COLOR_OPTIONS),
+            purpose: toMap(PURPOSE_OPTIONS),
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const labelFor = (kind, value) => {
+        const v = String(value || '');
+        const m = VALUE_LABEL_MAP[kind];
+        if (!m) return v;
+        return m.get(v) || v;
+    };
+
     const PRICE_OPTIONS = [
         { label: '〜3,000円', value: '0_3000' },
         { label: '3,000円〜5,000円', value: '3000_5000' },
@@ -381,7 +403,7 @@ export default function ProductList() {
                                                         key={`purpose_${product.id}_${v}`}
                                                         className="px-2.5 py-1 rounded-full bg-[#f5efe9] border border-[#ebdcd0] text-[#4a3f35] text-[0.7rem] font-bold tracking-widest"
                                                     >
-                                                        {v}
+                                                        {labelFor('purpose', v)}
                                                     </span>
                                                 ))}
                                         </div>

@@ -124,6 +124,11 @@ export default function Checkout() {
 
     const zipcodeNormalized = useMemo(() => String(form.zipcode || '').replace(/-/g, ''), [form.zipcode]);
 
+    const isOtaruAddress = useMemo(() => {
+        const v = `${String(form.prefectureCity || '')} ${String(form.addressLine || '')}`;
+        return v.includes('北海道小樽市');
+    }, [form.prefectureCity, form.addressLine]);
+
     const validateBeforeSubmit = () => {
         const next = {
             email: '',
@@ -143,6 +148,8 @@ export default function Checkout() {
         }
         if (!String(form.prefectureCity || '').trim() || !String(form.addressLine || '').trim()) {
             next.address = '住所を入力してください。';
+        } else if (!isOtaruAddress) {
+            next.address = '誠に申し訳ございません。配達は小樽市内のみとさせていただいております。';
         }
 
         setErrors(next);
@@ -190,6 +197,7 @@ export default function Checkout() {
 
     // Spring Boot API との本番連携
     const handlePlaceOrder = async () => {
+        if (!validateBeforeSubmit()) return;
         setIsProcessing(true);
 
         try {
@@ -254,7 +262,7 @@ export default function Checkout() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: "easeOut" }}
-            className="w-full min-h-screen washi-pattern text-[#1f1b16] relative shadow-2xl elegant-font overflow-x-hidden pb-20 md:pb-32 text-lg leading-relaxed"
+            className="w-full min-h-screen washi-pattern text-[#1f1b16] relative shadow-2xl elegant-font overflow-x-hidden pb-20 md:pb-32 text-xl leading-relaxed"
         >
             {/* 1. 戻るボタン */}
             <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-12 pb-4">
@@ -266,6 +274,21 @@ export default function Checkout() {
                     <ArrowLeft className="w-[18px] md:w-[22px] group-hover:-translate-x-1 transition-transform" strokeWidth={2.5} />
                     お買い物に戻る
                 </button>
+            </div>
+
+            <div className="max-w-6xl mx-auto px-6 pb-4">
+                <div className="bg-[#fffdf7]/80 border border-[#ebdcd0] rounded-2xl px-4 md:px-6 py-4">
+                    <div className="flex items-center gap-2 md:gap-3 text-sm md:text-base font-black tracking-widest text-[#4a3f35]">
+                        <span className={step === 'input' ? 'text-[#2B5740]' : 'text-[#a38f7d]'}>情報入力</span>
+                        <span className="text-[#a38f7d]">＞</span>
+                        <span className={step === 'confirm' ? 'text-[#2B5740]' : 'text-[#a38f7d]'}>入力確認</span>
+                        <span className="text-[#a38f7d]">＞</span>
+                        <span className="text-[#a38f7d]">完了</span>
+                    </div>
+                    <div className="mt-3 h-2 w-full bg-[#ebdcd0] rounded-full overflow-hidden">
+                        <div className={`h-full ${step === 'confirm' ? 'w-[66%]' : 'w-[33%]'} bg-[#2B5740]`}></div>
+                    </div>
+                </div>
             </div>
 
             <div className="max-w-6xl mx-auto px-6 py-6 md:py-8">
@@ -479,7 +502,7 @@ export default function Checkout() {
                                             type="text"
                                             value={form.deliveryTimeNote}
                                             onChange={(e) => setForm((prev) => ({ ...prev, deliveryTimeNote: e.target.value }))}
-                                            placeholder="ex. 午前中、18時以降...など"
+                                            placeholder="例：午前中、18時以降...など"
                                             className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40"
                                         />
                                     </div>
@@ -856,8 +879,8 @@ export default function Checkout() {
                                             <span className="text-[10px] font-bold tracking-widest text-[#2B5740]">セキュア決済システム保護済み</span>
                                         </div>
                                         <p className="text-[9px] text-[#8a7a6c] text-center leading-loose tracking-widest font-medium uppercase">
-                                            Trusted by customers for over 100 years. <br />
-                                            Yamashiroya Otaru since 1920.
+                                            小樽で百年。<br />
+                                            花の山城屋（創業1920年）
                                         </p>
                                     </div>
                                 </div>

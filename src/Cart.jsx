@@ -26,6 +26,23 @@ export default function Cart() {
                 </button>
             </div>
 
+            <div className="max-w-6xl mx-auto px-5 md:px-6 pb-4">
+                <div className="bg-[#fffdf7]/80 border border-[#ebdcd0] rounded-2xl px-4 md:px-6 py-4">
+                    <div className="flex items-center gap-2 md:gap-3 text-sm md:text-base font-black tracking-widest text-[#4a3f35]">
+                        <span className="text-[#2B5740]">カート</span>
+                        <span className="text-[#a38f7d]">＞</span>
+                        <span className="text-[#a38f7d]">情報入力</span>
+                        <span className="text-[#a38f7d]">＞</span>
+                        <span className="text-[#a38f7d]">入力確認</span>
+                        <span className="text-[#a38f7d]">＞</span>
+                        <span className="text-[#a38f7d]">完了</span>
+                    </div>
+                    <div className="mt-3 h-2 w-full bg-[#ebdcd0] rounded-full overflow-hidden">
+                        <div className="h-full w-[25%] bg-[#2B5740]"></div>
+                    </div>
+                </div>
+            </div>
+
             {/* 2. メインコンテンツ（PCは2カラム） */}
             <div className="max-w-6xl mx-auto px-5 md:px-6 py-8 md:py-16 md:flex md:gap-14 lg:gap-20 md:items-start">
 
@@ -73,9 +90,13 @@ export default function Cart() {
                                 </div>
                             ))}
 
-                            <p className="hidden md:block text-[0.9rem] text-[#8a7a6c] font-medium tracking-wider leading-relaxed pt-2 pl-2">
-                                ※ 北海道内は送料無料。その他の地域への配送は、決済画面でご確認ください。
-                            </p>
+                            <div className="hidden md:block pt-4">
+                                <div className="bg-[#fff3cd] border-2 border-red-500 rounded-2xl p-5 text-red-700 font-black tracking-wide shadow-sm">
+                                    <div className="text-[1.05rem] leading-relaxed">
+                                        ※ 本商品は小樽市内への配達に限定させていただいております。配達料は無料です。
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     )}
                 </section>
@@ -111,9 +132,13 @@ export default function Cart() {
                             </div>
                         </div>
 
-                        <p className="md:hidden text-[0.8rem] text-[#8a7a6c] tracking-wider leading-relaxed pt-6 pb-32 text-center">
-                            ※北海道内は送料無料。その他の地域への配送は、決済画面でご確認ください。
-                        </p>
+                        <div className="md:hidden pt-6 pb-32">
+                            <div className="bg-[#fff3cd] border-2 border-red-500 rounded-2xl p-5 text-red-700 font-black tracking-wide shadow-sm text-center">
+                                <div className="text-[0.95rem] leading-relaxed">
+                                    ※ 本商品は小樽市内への配達に限定させていただいております。配達料は無料です。
+                                </div>
+                            </div>
+                        </div>
                     </section>
                 )}
             </div>

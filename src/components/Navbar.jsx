@@ -31,7 +31,7 @@ export default function Navbar() {
                         <button
                             className="md:hidden text-[#4a3f35] hover:text-[#2B5740] active:scale-95 transition-transform cursor-pointer"
                             onClick={toggleMenu}
-                            aria-label="Menu"
+                            aria-label="メニュー"
                         >
                             <Menu className="w-[26px] h-[26px]" strokeWidth={2} />
                         </button>
@@ -50,7 +50,7 @@ export default function Navbar() {
 
                     {/* 右側：カートアイコン */}
                     <div className="flex justify-end items-center gap-4">
-                        <Link to="/cart" aria-label="Cart" className="relative text-[#4a3f35] hover:text-[#2B5740] active:scale-95 transition-transform cursor-pointer p-2" onClick={closeMenu}>
+                        <Link to="/cart" aria-label="カート" className="relative text-[#4a3f35] hover:text-[#2B5740] active:scale-95 transition-transform cursor-pointer p-2" onClick={closeMenu}>
                             <ShoppingCart className="w-[24px] h-[24px] md:w-[28px] md:h-[28px]" strokeWidth={2} />
                             {cartCount > 0 && (
                                 <span className="absolute top-0 right-0 bg-[#2B5740] text-white text-[10px] font-bold w-4 h-4 md:w-5 md:h-5 rounded-full flex items-center justify-center shadow-sm">
@@ -109,7 +109,7 @@ export default function Navbar() {
                                     alt="花の山城屋 ロゴ" 
                                     className="h-16 w-auto mx-auto mb-4 object-contain"
                                 />
-                                <p className="text-[#a38f7d] text-sm tracking-widest">© 1920 Yamashiroya</p>
+                                <p className="text-[#a38f7d] text-sm tracking-widest">© 1920 花の山城屋</p>
                             </div>
                         </motion.nav>
                     </>

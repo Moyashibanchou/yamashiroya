@@ -67,6 +67,40 @@ export default function ProductDetail() {
     return [value].filter(Boolean);
   };
 
+  const LABEL_MAP = useMemo(() => {
+    return {
+      purpose: {
+        celebration: "お祝い",
+        condolence: "お供え・お悔やみ",
+        birthday: "誕生日・記念日",
+        visit: "お見舞い",
+        home: "自宅用",
+      },
+      style: {
+        arrangement: "アレンジメント",
+        bouquet: "花束（ブーケ）",
+        orchid: "胡蝶蘭",
+        plant: "観葉植物",
+        preserved: "プリザーブド",
+      },
+      color: {
+        red: "赤系",
+        pink: "ピンク系",
+        white: "白系",
+        yellow_orange: "黄・オレンジ系",
+        blue_purple: "ブルー・パープル系",
+        other: "その他・おまかせ",
+      },
+    };
+  }, []);
+
+  const labelFor = (kind, value) => {
+    const v = String(value || "");
+    const m = LABEL_MAP[kind];
+    if (!m) return v;
+    return m[v] || v;
+  };
+
   const spawnPetalBurst = (clientX, clientY) => {
     const id = `${Date.now()}_${Math.random().toString(16).slice(2)}`;
     const next = Array.from({ length: 10 }).map((_, i) => {
@@ -224,7 +258,7 @@ export default function ProductDetail() {
                           key={`style_${v}`}
                           className="px-3 py-1 rounded-full bg-white/60 border border-[#ebdcd0] text-[#6e5e54] text-[0.75rem] font-bold tracking-widest"
                         >
-                          スタイル: {v}
+                          スタイル: {labelFor("style", v)}
                         </span>
                       ))}
                       {normalizeMulti(product.color).map((v) => (
@@ -232,7 +266,7 @@ export default function ProductDetail() {
                           key={`color_${v}`}
                           className="px-3 py-1 rounded-full bg-white/60 border border-[#ebdcd0] text-[#6e5e54] text-[0.75rem] font-bold tracking-widest"
                         >
-                          カラー: {v}
+                          カラー: {labelFor("color", v)}
                         </span>
                       ))}
                       {normalizeMulti(product.purpose).map((v) => (
@@ -240,7 +274,7 @@ export default function ProductDetail() {
                           key={`purpose_${v}`}
                           className="px-3 py-1 rounded-full bg-[#f5efe9] border border-[#ebdcd0] text-[#4a3f35] text-[0.75rem] font-bold tracking-widest"
                         >
-                          ご用途: {v}
+                          ご用途: {labelFor("purpose", v)}
                         </span>
                       ))}
                     </div>
