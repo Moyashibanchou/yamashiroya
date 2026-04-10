@@ -19,6 +19,17 @@ export default function Success() {
     useEffect(() => {
         window.scrollTo(0, 0);
 
+        try {
+            const req = sessionStorage.getItem('yamashiroya_last_create_session_request');
+            const res = sessionStorage.getItem('yamashiroya_last_create_session_response');
+            const err = sessionStorage.getItem('yamashiroya_last_create_session_error');
+            if (req) console.log('create-session request (stored)', JSON.parse(req));
+            if (res) console.log('create-session response (stored)', JSON.parse(res));
+            if (err) console.log('create-session error (stored)', JSON.parse(err));
+        } catch {
+            // ignore
+        }
+
         let canceled = false;
         const verify = async () => {
             setChecking(true);

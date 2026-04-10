@@ -248,6 +248,16 @@ export default function Checkout() {
                 paymentMethod: komojuPaymentType,
             };
 
+            try {
+                sessionStorage.setItem('yamashiroya_last_create_session_request', JSON.stringify({
+                    at: new Date().toISOString(),
+                    endpoint: `${API_BASE_URL}/api/payments/create-session`,
+                    payload,
+                }));
+            } catch {
+                // ignore
+            }
+
             console.log('送信開始', {
                 endpoint: `${API_BASE_URL}/api/payments/create-session`,
                 payload,
@@ -279,6 +289,17 @@ export default function Checkout() {
 
             const data = await response.json();
             console.log('成功', data);
+
+            try {
+                sessionStorage.setItem('yamashiroya_last_create_session_response', JSON.stringify({
+                    at: new Date().toISOString(),
+                    endpoint: `${API_BASE_URL}/api/payments/create-session`,
+                    payload,
+                    response: data,
+                }));
+            } catch {
+                // ignore
+            }
             
             if (data.checkoutUrl) {
                 window.location.href = data.checkoutUrl;
@@ -290,6 +311,16 @@ export default function Checkout() {
                 message: error?.message,
                 error,
             });
+
+            try {
+                sessionStorage.setItem('yamashiroya_last_create_session_error', JSON.stringify({
+                    at: new Date().toISOString(),
+                    endpoint: `${API_BASE_URL}/api/payments/create-session`,
+                    message: error?.message,
+                }));
+            } catch {
+                // ignore
+            }
             console.error('Payment Error:', error);
             alert('決済処理に失敗しました。サーバーが起動しているか確認し、時間をおいて再度お試しください。');
             setIsProcessing(false);
