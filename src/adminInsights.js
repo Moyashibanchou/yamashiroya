@@ -1,4 +1,4 @@
-import API_BASE_URL from './apiConfig';
+import { apiUrl, API_BASE_URL } from './apiConfig';
 
 function safeNumber(v) {
   const n = Number(v);
@@ -181,7 +181,7 @@ export async function getAdminInsights(options = {}) {
     throw new Error('VITE_API_URL が未設定のため、統計データを取得できませんでした。');
   }
 
-  const url = `${String(apiBaseUrl).replace(/\/$/, '')}/api/admin/stats`;
+  const url = apiUrl('/api/admin/stats');
   const res = await fetch(url, {
     method: 'GET',
     headers: {
