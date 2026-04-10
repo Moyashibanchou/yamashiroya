@@ -72,8 +72,71 @@ function normalizeMetricBlock(block) {
   };
 }
 
+function normalizeFromCurrentPreviousShape(source) {
+  const cur = source?.current && typeof source.current === 'object' ? source.current : null;
+  const prev = source?.previous && typeof source.previous === 'object' ? source.previous : null;
+  if (!cur || !prev) return null;
+
+  const monthLabel = monthLabelFromISO(cur.from);
+  const prevMonthLabel = monthLabelFromISO(prev.from);
+
+  const curRevenue = safeNumber(cur.totalRevenue);
+  const prevRevenue = safeNumber(prev.totalRevenue);
+
+  const curOrders = safeNumber(cur.totalOrders);
+  const prevOrders = safeNumber(prev.totalOrders);
+
+  const curCvr = safeNumber(cur.purchaseRate);
+  const prevCvr = safeNumber(prev.purchaseRate);
+
+  const curAov = curOrders ? curRevenue / curOrders : 0;
+  const prevAov = prevOrders ? prevRevenue / prevOrders : 0;
+
+  const funnelCur = cur.funnel && typeof cur.funnel === 'object' ? cur.funnel : {};
+  const sessions = safeNumber(cur.totalSessions);
+  const funnel = [
+    { step: '商品閲覧', count: sessions },
+    { step: 'カート投入', count: safeNumber(funnelCur.cartAdds) },
+    { step: '配送先入力', count: safeNumber(funnelCur.checkoutStarts) },
+    { step: '決済完了', count: safeNumber(funnelCur.checkoutCompletes) },
+  ];
+
+  return {
+    period: {
+      monthLabel: monthLabel || '—',
+      prevMonthLabel: prevMonthLabel || '—',
+    },
+    outcome: {
+      revenue: { current: curRevenue, prev: prevRevenue, target: 0 },
+      purchases: { current: curOrders, prev: prevOrders, target: 0 },
+      purchaseRate: { current: curCvr, prev: prevCvr, target: 0 },
+      avgOrderValue: { current: curAov, prev: prevAov, target: 0 },
+    },
+    behavior: {
+      funnel,
+      addressInput: {
+        starts: safeNumber(funnelCur.checkoutStarts),
+        completes: safeNumber(funnelCur.checkoutCompletes),
+        otaruBlocked: 0,
+        otherDropOff: 0,
+      },
+      form: {
+        starts: safeNumber(funnelCur.checkoutStarts),
+        completes: safeNumber(funnelCur.checkoutCompletes),
+        errorCount: 0,
+      },
+    },
+    acquisition: {
+      sessionsByChannel: normalizeSessionsByChannel(cur.channels),
+    },
+  };
+}
+
 function normalizeAdminStats(raw) {
   const source = raw && typeof raw === 'object' ? raw : {};
+
+  const mapped = normalizeFromCurrentPreviousShape(source);
+  if (mapped) return mapped;
 
   const period = source.period && typeof source.period === 'object' ? source.period : {};
   const monthLabel = String(
