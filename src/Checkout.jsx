@@ -12,6 +12,10 @@ export default function Checkout() {
     const [paymentMethod, setPaymentMethod] = useState('credit'); // 'credit', 'paypay', 'applepay', 'convenience'
     const [step, setStep] = useState('input'); // 'input' | 'confirm'
 
+    useEffect(() => {
+        console.log('Checkout mounted', { API_BASE_URL });
+    }, []);
+
     const normalizeDigitsOnly = (value) => {
         const s = String(value ?? '');
         const half = s.replace(/[０-９]/g, (ch) => String.fromCharCode(ch.charCodeAt(0) - 0xFEE0));
@@ -163,7 +167,10 @@ export default function Checkout() {
     };
 
     const handleGoToConfirm = () => {
-        if (!validateBeforeSubmit()) return;
+        console.log('確認へ進む クリック', { step, isProcessing, itemsCount: items.length });
+        const ok = validateBeforeSubmit();
+        console.log('確認へ進む validateBeforeSubmit', { ok });
+        if (!ok) return;
         setStep('confirm');
         window.scrollTo(0, 0);
     };
@@ -203,7 +210,17 @@ export default function Checkout() {
 
     // Spring Boot API との本番連携
     const handlePlaceOrder = async () => {
-        if (!validateBeforeSubmit()) return;
+        console.log('handlePlaceOrder called', {
+            step,
+            isProcessing,
+            itemsCount: items.length,
+            paymentMethod,
+            apiBase: API_BASE_URL,
+        });
+
+        const ok = validateBeforeSubmit();
+        console.log('handlePlaceOrder validateBeforeSubmit', { ok });
+        if (!ok) return;
         setIsProcessing(true);
 
         try {
@@ -242,6 +259,12 @@ export default function Checkout() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(payload),
+            });
+
+            console.log('fetch戻り値', {
+                ok: response.ok,
+                status: response.status,
+                statusText: response.statusText,
             });
 
             if (!response.ok) {
@@ -674,7 +697,10 @@ export default function Checkout() {
                                     </button>
                                     <button
                                         type="button"
-                                        onClick={handlePlaceOrder}
+                                        onClick={() => {
+                                            console.log('注文を確定する クリック', { step, isProcessing, itemsCount: items.length });
+                                            return handlePlaceOrder();
+                                        }}
                                         disabled={isProcessing || items.length === 0}
                                         className="w-full py-4 rounded-2xl bg-[#4a3f35] text-white font-black tracking-widest shadow-xl hover:bg-[#322a23] active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                                     >
