@@ -226,22 +226,36 @@ export default function Checkout() {
 
         try {
             // Spring Boot バックエンドに対して決済セッションの作成をリクエスト
+            const payload = {
+                amount: totalAmount,
+                paymentMethod: komojuPaymentType,
+            };
+
+            console.log('送信開始', {
+                endpoint: `${API_BASE_URL}/api/payments/create-session`,
+                payload,
+            });
+
             const response = await fetch(`${API_BASE_URL}/api/payments/create-session`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ 
-                    amount: totalAmount,
-                    paymentMethod: komojuPaymentType
-                }),
+                body: JSON.stringify(payload),
             });
 
             if (!response.ok) {
+                const text = await response.text().catch(() => '');
+                console.log('失敗', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: text,
+                });
                 throw new Error('Network response was not ok');
             }
 
             const data = await response.json();
+            console.log('成功', data);
             
             if (data.checkoutUrl) {
                 window.location.href = data.checkoutUrl;
@@ -249,6 +263,10 @@ export default function Checkout() {
                 throw new Error('Checkout URL not found in response');
             }
         } catch (error) {
+            console.log('失敗', {
+                message: error?.message,
+                error,
+            });
             console.error('Payment Error:', error);
             alert('決済処理に失敗しました。サーバーが起動しているか確認し、時間をおいて再度お試しください。');
             setIsProcessing(false);

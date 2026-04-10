@@ -1,3 +1,5 @@
+import API_BASE_URL from './apiConfig';
+
 function safeNumber(v) {
   const n = Number(v);
   return Number.isFinite(n) ? n : 0;
@@ -174,7 +176,7 @@ export async function getAdminInsights(options = {}) {
   const { useMock = false } = options;
   if (useMock) return mockAdminInsights();
 
-  const apiBaseUrl = import.meta.env.VITE_API_URL;
+  const apiBaseUrl = API_BASE_URL;
   if (!apiBaseUrl) {
     throw new Error('VITE_API_URL が未設定のため、統計データを取得できませんでした。');
   }

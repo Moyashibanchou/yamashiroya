@@ -32,11 +32,16 @@ export default function Success() {
                     return;
                 }
 
-                const res = await fetch(`${API_BASE_URL}/api/payments/verify-session?sessionId=${encodeURIComponent(sessionId)}`);
+                const endpoint = `${API_BASE_URL}/api/payments/verify-session?sessionId=${encodeURIComponent(sessionId)}`;
+                console.log('送信開始', { endpoint });
+                const res = await fetch(endpoint);
                 if (!res.ok) {
+                    const text = await res.text().catch(() => '');
+                    console.log('失敗', { status: res.status, statusText: res.statusText, body: text });
                     throw new Error('verify failed');
                 }
                 const data = await res.json();
+                console.log('成功', data);
                 const ok = Boolean(data && data.verified === true);
 
                 if (!canceled) {
@@ -54,6 +59,7 @@ export default function Success() {
                     }
                 }
             } catch (e) {
+                console.log('失敗', { message: e?.message, error: e });
                 if (!canceled) {
                     setIsVerified(false);
                     navigate('/cart', { replace: true });
