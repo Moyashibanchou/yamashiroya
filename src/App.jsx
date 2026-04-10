@@ -16,6 +16,7 @@ import Privacy from "./Privacy.jsx";
 import ProductList from "./ProductList.jsx";
 import Admin from "./Admin.jsx";
 import AdminLogin from "./AdminLogin.jsx";
+import AdminDashboard from "./AdminDashboard.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import CartAddedModal from "./components/CartAddedModal.jsx";
@@ -148,6 +149,7 @@ export default function App() {
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/products" element={<ProductList />} />
                 <Route path="/admin" element={<Admin />} />
+                <Route path="/admin-dashboard" element={<AdminDashboard />} />
                 <Route path="/admin-login" element={<AdminLogin />} />
               </Routes>
             </div>

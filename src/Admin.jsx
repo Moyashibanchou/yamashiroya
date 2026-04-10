@@ -272,6 +272,12 @@ export default function Admin() {
                         </h1>
                     </div>
                     <div className="flex flex-wrap items-center gap-4">
+                        <button
+                            onClick={() => navigate('/admin-dashboard')}
+                            className="bg-[#0055AA] text-white px-6 py-3 rounded-2xl flex items-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-sm"
+                        >
+                            <span className="font-bold tracking-widest text-sm">分析ダッシュボード</span>
+                        </button>
                         <button 
                             onClick={handleLogout}
                             className="bg-white/50 backdrop-blur-sm px-6 py-3 rounded-2xl border border-[#ebdcd0] flex items-center gap-2 hover:bg-[#2B5740] hover:text-white hover:border-[#2B5740] transition-all group"
