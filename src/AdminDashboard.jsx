@@ -90,7 +90,7 @@ export default function AdminDashboard() {
       } catch (e) {
         if (!canceled) {
           setData(null);
-          setError(e?.message || 'データの取得に失敗しました');
+          setError('データが取得できませんでした');
         }
       } finally {
         if (!canceled) setLoading(false);
