@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { ArrowLeft, Image as ImageIcon } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useCart } from "./context/CartContext.jsx";
 import { AnimatePresence, motion } from "framer-motion";
 import API_BASE_URL from "./apiConfig";
 
 export default function ProductDetail() {
   const { id } = useParams();
+  const location = useLocation();
 
   const { addToCart } = useCart();
 
@@ -175,7 +176,7 @@ export default function ProductDetail() {
       {/* 1. 戻るボタン */}
       <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-8 pb-2">
         <Link
-          to="/products"
+          to={location?.state?.from || '/products'}
           className="inline-flex items-center gap-1.5 md:gap-2.5 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#3E2723] active:scale-95 transition-all w-fit"
         >
           <ArrowLeft className="w-[18px] md:w-[22px]" strokeWidth={2.5} />
@@ -266,7 +267,7 @@ export default function ProductDetail() {
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="w-full py-4 rounded-2xl bg-[#0055AA] text-white font-bold tracking-[0.25em] shadow-xl hover:opacity-90 active:scale-[0.98] transition-all"
+                    className="w-full py-4 rounded-2xl bg-[#2B5740] text-white font-bold tracking-[0.25em] shadow-xl hover:bg-[#234a35] active:scale-[0.98] transition-all"
                   >
                     カートに入れる
                   </button>

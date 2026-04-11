@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Search, SlidersHorizontal, ChevronDown, Image as ImageIcon } from 'lucide-react';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useCart } from './context/CartContext';
 import { AnimatePresence, motion } from 'framer-motion';
 import API_BASE_URL from './apiConfig';
 
 export default function ProductList() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [searchParams, setSearchParams] = useSearchParams();
     const cart = useCart();
 
@@ -228,6 +229,38 @@ export default function ProductList() {
         });
     }, [products, filters]);
 
+    const PAGE_SIZE = 12;
+    const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));
+    const currentPage = useMemo(() => {
+        const raw = searchParams.get('page');
+        const n = Number(raw);
+        if (!Number.isFinite(n) || n < 1) return 1;
+        return Math.min(Math.floor(n), totalPages);
+    }, [searchParams, totalPages]);
+
+    useEffect(() => {
+        if (currentPage > totalPages) {
+            const next = new URLSearchParams(searchParams);
+            next.set('page', '1');
+            setSearchParams(next, { replace: true });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [totalPages]);
+
+    const visibleProducts = useMemo(() => {
+        const start = (currentPage - 1) * PAGE_SIZE;
+        return filteredProducts.slice(start, start + PAGE_SIZE);
+    }, [filteredProducts, currentPage]);
+
+    const setPage = (page) => {
+        const p = Math.max(1, Math.min(totalPages, Number(page) || 1));
+        const next = new URLSearchParams(searchParams);
+        if (p === 1) next.delete('page');
+        else next.set('page', String(p));
+        setSearchParams(next, { replace: true });
+        window.scrollTo(0, 0);
+    };
+
     const normalizeMulti = (value) => {
         if (!value) return [];
         if (Array.isArray(value)) return value.filter(Boolean);
@@ -311,7 +344,7 @@ export default function ProductList() {
 
             {/* 1. 戻るボタン */}
             <div className="max-w-6xl mx-auto px-4 md:px-6 pt-6 md:pt-8 pb-2">
-                <button onClick={() => navigate(-1)} className="inline-flex items-center gap-1.5 md:gap-2.5 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#3E2723] active:scale-95 transition-all w-fit cursor-pointer">
+                <button onClick={() => navigate('/')} className="inline-flex items-center gap-1.5 md:gap-2.5 text-[#6e5e54] font-bold text-sm md:text-base hover:text-[#3E2723] active:scale-95 transition-all w-fit cursor-pointer">
                     <ArrowLeft className="w-[18px] md:w-[22px]" strokeWidth={2.5} />
                     戻る
                 </button>
@@ -373,8 +406,8 @@ export default function ProductList() {
                     </div>
                 ) : filteredProducts.length > 0 ? (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 flex-1">
-                        {filteredProducts.map((product) => (
-                            <Link to={`/product/${product.id}`} key={product.id} className="bg-[#fffdf7] rounded-2xl md:rounded-3xl soft-shadow border border-[#ebdcd0] overflow-hidden flex flex-col group cursor-pointer block hover:shadow-[0_16px_40px_rgba(74,63,53,0.1)] transition-shadow duration-300 relative">
+                        {visibleProducts.map((product) => (
+                            <Link to={`/product/${product.id}`} state={{ from: `${location.pathname}${location.search}` }} key={product.id} className="bg-[#fffdf7] rounded-2xl md:rounded-3xl soft-shadow border border-[#ebdcd0] overflow-hidden flex flex-col group cursor-pointer block hover:shadow-[0_16px_40px_rgba(74,63,53,0.1)] transition-shadow duration-300 relative">
                                 {/* バッジ */}
                                 <div className="absolute top-4 left-4 z-10 bg-red-700 text-white text-[0.8rem] font-bold px-3 py-1 rounded-sm shadow-md tracking-wider">
                                     小樽限定配送
@@ -435,7 +468,7 @@ export default function ProductList() {
                                                 spawnPetalBurst(rect.left + rect.width / 2, rect.top + rect.height / 2);
                                                 handleAddToCart(product);
                                             }}
-                                            className="w-full py-3 md:py-3.5 bg-[#0055AA] text-white rounded-xl text-[0.95rem] font-bold tracking-widest hover:opacity-90 active:scale-[0.98] transition-all"
+                                            className="w-full py-3 md:py-3.5 bg-[#2B5740] text-white rounded-xl text-[0.95rem] font-bold tracking-widest hover:bg-[#234a35] active:scale-[0.98] transition-all"
                                         >
                                             カートに入れる
                                         </button>
@@ -451,13 +484,44 @@ export default function ProductList() {
                 )}
 
                 {/* ページネーション */}
-                <div className="mt-16 flex justify-center items-center gap-2">
-                    <button className="w-10 h-10 flex items-center justify-center rounded-full border border-[#ebdcd0] text-[#a38f7d] hover:bg-[#f5efe9] transition-colors bg-white font-bold">&lsaquo;</button>
-                    <button className="w-10 h-10 flex items-center justify-center rounded-full border border-[#bc8a7e] bg-[#bc8a7e] text-white font-bold shadow-sm">1</button>
-                    <button className="w-10 h-10 flex items-center justify-center rounded-full border border-[#ebdcd0] text-[#6e5e54] hover:bg-[#f5efe9] transition-colors bg-white font-bold">2</button>
-                    <button className="w-10 h-10 flex items-center justify-center rounded-full border border-[#ebdcd0] text-[#6e5e54] hover:bg-[#f5efe9] transition-colors bg-white font-bold">3</button>
-                    <button className="w-10 h-10 flex items-center justify-center rounded-full border border-[#ebdcd0] text-[#a38f7d] hover:bg-[#f5efe9] transition-colors bg-white font-bold">&rsaquo;</button>
-                </div>
+                {totalPages > 1 ? (
+                    <div className="mt-16 flex justify-center items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={() => setPage(currentPage - 1)}
+                            disabled={currentPage <= 1}
+                            className="w-10 h-10 flex items-center justify-center rounded-full border border-[#ebdcd0] text-[#a38f7d] hover:bg-[#f5efe9] transition-colors bg-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            &lsaquo;
+                        </button>
+                        {Array.from({ length: totalPages }).map((_, i) => {
+                            const n = i + 1;
+                            const active = n === currentPage;
+                            return (
+                                <button
+                                    key={`page_${n}`}
+                                    type="button"
+                                    onClick={() => setPage(n)}
+                                    className={
+                                        active
+                                            ? 'w-10 h-10 flex items-center justify-center rounded-full border border-[#bc8a7e] bg-[#bc8a7e] text-white font-bold shadow-sm'
+                                            : 'w-10 h-10 flex items-center justify-center rounded-full border border-[#ebdcd0] text-[#6e5e54] hover:bg-[#f5efe9] transition-colors bg-white font-bold'
+                                    }
+                                >
+                                    {n}
+                                </button>
+                            );
+                        })}
+                        <button
+                            type="button"
+                            onClick={() => setPage(currentPage + 1)}
+                            disabled={currentPage >= totalPages}
+                            className="w-10 h-10 flex items-center justify-center rounded-full border border-[#ebdcd0] text-[#a38f7d] hover:bg-[#f5efe9] transition-colors bg-white font-bold disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            &rsaquo;
+                        </button>
+                    </div>
+                ) : null}
 
             </main>
 

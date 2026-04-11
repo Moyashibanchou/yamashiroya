@@ -663,7 +663,7 @@ export default function Home() {
                               e.stopPropagation();
                               if (addToCart) addToCart(product);
                             }}
-                            className="w-full py-3 md:py-3.5 bg-[#0055AA] text-white rounded-xl text-[0.95rem] font-bold tracking-widest hover:opacity-90 active:scale-[0.98] transition-all"
+                            className="w-full py-3 md:py-3.5 bg-[#2B5740] text-white rounded-xl text-[0.95rem] font-bold tracking-widest hover:bg-[#234a35] active:scale-[0.98] transition-all"
                           >
                             カートに入れる
                           </button>
