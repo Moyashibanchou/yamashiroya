@@ -23,11 +23,45 @@ import CartAddedModal from "./components/CartAddedModal.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 
 function ScrollToTop() {
-  const { pathname, search } = useLocation();
+  const { pathname, search, hash } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname, search]);
+    let rafId = null;
+    let timeoutId = null;
+
+    if (!hash) {
+      window.scrollTo(0, 0);
+      return () => {
+        if (rafId) cancelAnimationFrame(rafId);
+        if (timeoutId) clearTimeout(timeoutId);
+      };
+    }
+
+    const id = hash.replace('#', '');
+    const start = Date.now();
+
+    const tryScroll = () => {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+
+      if (Date.now() - start > 1200) {
+        window.scrollTo(0, 0);
+        return;
+      }
+
+      rafId = requestAnimationFrame(tryScroll);
+    };
+
+    timeoutId = setTimeout(tryScroll, 0);
+
+    return () => {
+      if (rafId) cancelAnimationFrame(rafId);
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [pathname, search, hash]);
 
   return null;
 }
@@ -122,7 +156,7 @@ export default function App() {
               className="relative z-10 text-center px-4"
             >
               <h1 className="text-3xl md:text-5xl lg:text-6xl elegant-font font-bold tracking-widest drop-shadow-md text-[#4a3f35]">
-                想いを花に　
+                想いを花に
                 <br className="md:hidden" />
                 小樽で百年。
               </h1>
@@ -137,7 +171,7 @@ export default function App() {
           <ScrollToTop />
           <div className="min-h-screen flex flex-col text-lg leading-relaxed">
             <Navbar />
-            <div className="flex-1">
+            <div className="flex-1 w-full max-w-6xl mx-auto px-4 md:px-6">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/product/:id" element={<ProductDetail />} />

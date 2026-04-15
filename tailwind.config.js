@@ -9,6 +9,7 @@ export default {
             colors: {
                 primary: {
                     DEFAULT: '#0055AA',
+                    container: '#004488',
                 },
                 brand: {
                     dark: '#1A4A38',   /* Deep green */

@@ -188,6 +188,7 @@ export default function ProductList() {
     };
 
     const filteredProducts = useMemo(() => {
+        const q = (searchParams.get('q') || '').trim().toLowerCase();
         const matchesValueOr = (value, selected) => {
             if (selected.size === 0) return true;
             if (!value) return false;
@@ -221,13 +222,18 @@ export default function ProductList() {
         };
 
         return products.filter((p) => {
+            if (q) {
+                const name = String(p?.name || '').toLowerCase();
+                const desc = String(p?.description || '').toLowerCase();
+                if (!name.includes(q) && !desc.includes(q)) return false;
+            }
             const styleOk = matchesValueOr(p.style, filters.style);
             const colorOk = matchesValueOr(p.color, filters.color);
             const purposeOk = matchesValueOr(p.purpose, filters.purpose);
             const priceOk = matchesPrice(p.price, filters.price);
             return styleOk && colorOk && purposeOk && priceOk;
         });
-    }, [products, filters]);
+    }, [products, filters, searchParams]);
 
     const PAGE_SIZE = 12;
     const totalPages = Math.max(1, Math.ceil(filteredProducts.length / PAGE_SIZE));

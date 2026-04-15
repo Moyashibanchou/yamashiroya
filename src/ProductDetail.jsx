@@ -1,5 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { ArrowLeft, Image as ImageIcon } from "lucide-react";
+import {
+  ArrowLeft,
+  Image as ImageIcon,
+  Heart,
+  Truck,
+  Mail,
+  Package,
+} from "lucide-react";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { useCart } from "./context/CartContext.jsx";
 import { AnimatePresence, motion } from "framer-motion";
@@ -18,6 +25,44 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  const favoriteStorageKey = "favoriteProductIds";
+  const favoriteId = String(id);
+
+  const readFavoriteIds = () => {
+    try {
+      const raw = localStorage.getItem(favoriteStorageKey);
+      const parsed = raw ? JSON.parse(raw) : [];
+      if (!Array.isArray(parsed)) return [];
+      return parsed.filter((x) => typeof x === "string");
+    } catch {
+      return [];
+    }
+  };
+
+  const writeFavoriteIds = (ids) => {
+    try {
+      localStorage.setItem(favoriteStorageKey, JSON.stringify(ids));
+    } catch {
+      // no-op
+    }
+  };
+
+  useEffect(() => {
+    const ids = readFavoriteIds();
+    setIsFavorite(ids.includes(favoriteId));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [favoriteId]);
+
+  const toggleFavorite = () => {
+    const ids = readFavoriteIds();
+    const has = ids.includes(favoriteId);
+    const next = has ? ids.filter((x) => x !== favoriteId) : [...ids, favoriteId];
+    writeFavoriteIds(next);
+    setIsFavorite(!has);
+  };
 
   useEffect(() => {
     let canceled = false;
@@ -271,6 +316,57 @@ export default function ProductDetail() {
                   >
                     カートに入れる
                   </button>
+                  <button
+                    type="button"
+                    onClick={toggleFavorite}
+                    className="w-full py-3.5 rounded-2xl bg-white border border-[#ebdcd0] text-[#6e5e54] font-bold tracking-widest hover:border-[#2B5740] hover:text-[#2B5740] active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2"
+                  >
+                    <Heart
+                      className={isFavorite ? "w-5 h-5 fill-[#2B5740] text-[#2B5740]" : "w-5 h-5"}
+                      strokeWidth={2.2}
+                    />
+                    {isFavorite ? "お気に入りから削除" : "お気に入りに追加"}
+                  </button>
+                </div>
+
+                <div className="mt-8 bg-[#fdfbf6]/70 border border-[#ebdcd0] rounded-2xl p-5 md:p-6">
+                  <div className="space-y-4">
+                    <div className="flex gap-3">
+                      <div className="mt-0.5 text-[#2B5740]">
+                        <Truck className="w-5 h-5" strokeWidth={2.2} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-black tracking-widest">最短お届け日</div>
+                        <div className="mt-1 text-[#6e5e54] text-[0.9rem] leading-relaxed">
+                          本日14時までのご注文で、明後日のお届けが可能です。（北海道内限定）
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <div className="mt-0.5 text-[#2B5740]">
+                        <Mail className="w-5 h-5" strokeWidth={2.2} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-black tracking-widest">メッセージカード無料</div>
+                        <div className="mt-1 text-[#6e5e54] text-[0.9rem] leading-relaxed">
+                          オリジナルの和紙メッセージカードを無料でお付けします。代筆承ります。
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex gap-3">
+                      <div className="mt-0.5 text-[#2B5740]">
+                        <Package className="w-5 h-5" strokeWidth={2.2} />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-black tracking-widest">丁寧な梱包</div>
+                        <div className="mt-1 text-[#6e5e54] text-[0.9rem] leading-relaxed">
+                          鮮度を保つ専用ボックスでお届け。運送中の衝撃から繊細なお花を守ります。
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="mt-6 text-[0.8rem] text-[#8a7a6c] tracking-widest">

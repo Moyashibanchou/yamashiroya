@@ -291,63 +291,65 @@ export default function Home() {
           transition={shouldAnimate ? { duration: 1.2 } : { duration: 0 }}
         >
           {/* 3. ヒーローセクション */}
-          <section className="relative w-full h-[60vh] md:h-[75vh] min-h-[420px]">
+          <section className="relative w-full h-[calc(100vh-80px)] min-h-[600px] overflow-hidden">
             <div className="absolute inset-0">
               {heroImages.map((src, idx) => (
                 <img
                   key={src}
                   src={src}
                   alt="小樽の風景"
-                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ease-in-out ${idx === heroSlideIndex ? "opacity-100" : "opacity-0"}`}
+                  className={`absolute inset-0 w-full h-full object-cover brightness-75 transition-opacity duration-1000 ease-in-out ${idx === heroSlideIndex ? "opacity-100" : "opacity-0"}`}
                   loading={idx === 0 ? "eager" : "lazy"}
                 />
               ))}
             </div>
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-[#4a3f35]/90 flex flex-col items-center justify-end pb-12 md:pb-20 px-6 text-center">
-              <motion.h2
-                initial={shouldAnimate ? { opacity: 0, y: 30 } : false}
-                animate={{ opacity: 1, y: 0 }}
-                transition={
-                  shouldAnimate
-                    ? { duration: 1.2, ease: "easeOut", delay: 0.3 }
-                    : { duration: 0 }
-                }
-                className="font-hand text-[#fdfbf6] text-[1.5rem] md:text-[3.5rem] font-bold leading-relaxed mb-4 md:mb-8 drop-shadow-2xl tracking-widest whitespace-nowrap"
-              >
-                想いを束ねて、百年。
-              </motion.h2>
-              <motion.p
-                initial={shouldAnimate ? { opacity: 0, y: 30 } : false}
-                animate={{ opacity: 1, y: 0 }}
-                transition={
-                  shouldAnimate
-                    ? { duration: 1.2, ease: "easeOut", delay: 0.5 }
-                    : { duration: 0 }
-                }
-                className="text-[#fdfbf6] text-[0.9rem] md:text-[1.1rem] leading-[2.2] md:leading-[2.4] font-bold mb-10 md:mb-14 drop-shadow-md px-2 max-w-[340px] md:max-w-2xl text-center tracking-widest opacity-95"
-              >
-                大正九年創業。小樽の街で愛され続ける老舗『花の山城屋』。
-                <br />
-                熟練のフローリストが、あなたの特別な日を彩るお花を心を込めて
-                <br />
-                お仕立てします。
-              </motion.p>
-              <motion.div
-                initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
-                animate={{ opacity: 1, y: 0 }}
-                transition={
-                  shouldAnimate
-                    ? { duration: 1.0, ease: "easeOut", delay: 0.7 }
-                    : { duration: 0 }
-                }
-              >
-                <button
-                  onClick={() => navigate("/products")}
-                  className="w-full max-w-[280px] md:max-w-[340px] bg-[#bc8a7e] text-white font-bold py-4 md:py-5 rounded-xl shadow-[0_8px_24px_rgba(74,63,53,0.3)] active:scale-95 transition-transform text-lg md:text-xl tracking-widest hover:bg-[#a67468] border border-white/20 cursor-pointer"
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-[#4a3f35]/90 flex flex-col justify-center items-center px-6 text-center">
+              <div className="relative z-10 flex flex-col justify-center items-center">
+                <motion.h2
+                  initial={shouldAnimate ? { opacity: 0, y: 30 } : false}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={
+                    shouldAnimate
+                      ? { duration: 1.2, ease: "easeOut", delay: 0.3 }
+                      : { duration: 0 }
+                  }
+                  className="font-hand text-[#fdfbf6] text-[1.5rem] md:text-[3.5rem] font-bold leading-relaxed mb-4 md:mb-8 drop-shadow-2xl tracking-widest whitespace-nowrap"
                 >
-                  お花を探す
-                </button>
-              </motion.div>
+                  想いを束ねて、百年。
+                </motion.h2>
+                <motion.p
+                  initial={shouldAnimate ? { opacity: 0, y: 30 } : false}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={
+                    shouldAnimate
+                      ? { duration: 1.2, ease: "easeOut", delay: 0.5 }
+                      : { duration: 0 }
+                  }
+                  className="text-[#fdfbf6] text-[0.9rem] md:text-[1.1rem] leading-[2.2] md:leading-[2.4] font-bold drop-shadow-md px-2 max-w-[340px] md:max-w-2xl text-center tracking-widest opacity-95"
+                >
+                  大正九年創業。小樽の街で愛され続ける老舗『花の山城屋』。
+                  <br />
+                  熟練のフローリストが、あなたの特別な日を彩るお花を心を込めて
+                  <br />
+                  お仕立てします。
+                </motion.p>
+                <motion.div
+                  initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={
+                    shouldAnimate
+                      ? { duration: 1.0, ease: "easeOut", delay: 0.7 }
+                      : { duration: 0 }
+                }
+                >
+                  <button
+                    onClick={() => navigate("/products")}
+                    className="mt-8 px-16 py-5 text-xl font-bold text-white bg-[#bc8a7e] rounded-full shadow-lg hover:bg-[#a67468] transition-all border border-white/20"
+                  >
+                    お花を探す
+                  </button>
+                </motion.div>
+              </div>
             </div>
           </section>
 
@@ -766,7 +768,7 @@ export default function Home() {
                     strokeWidth={2}
                   />
                   <span className="min-w-0 flex-1 font-bold text-[#4a3f35] text-[1.02rem] tracking-wider whitespace-normal break-words leading-snug">
-                    小樽市内・全国配送対応
+                    小樽市内のみ配送
                   </span>
                 </div>
               </div>
