@@ -291,7 +291,7 @@ export default function Home() {
           transition={shouldAnimate ? { duration: 1.2 } : { duration: 0 }}
         >
           {/* 3. ヒーローセクション */}
-          <section className="relative w-full h-[calc(100vh-80px)] min-h-[600px] overflow-hidden">
+          <section className="relative w-full h-[calc(100vh-80px)] min-h-[520px] md:min-h-[600px] overflow-hidden">
             <div className="absolute inset-0">
               {heroImages.map((src, idx) => (
                 <img
@@ -303,7 +303,7 @@ export default function Home() {
                 />
               ))}
             </div>
-            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-[#4a3f35]/90 flex flex-col justify-center items-center px-6 text-center">
+            <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-[#4a3f35]/90 flex flex-col justify-center items-center px-4 sm:px-6 text-center">
               <div className="relative z-10 flex flex-col justify-center items-center">
                 <motion.h2
                   initial={shouldAnimate ? { opacity: 0, y: 30 } : false}
@@ -313,7 +313,7 @@ export default function Home() {
                       ? { duration: 1.2, ease: "easeOut", delay: 0.3 }
                       : { duration: 0 }
                   }
-                  className="font-hand text-[#fdfbf6] text-[1.5rem] md:text-[3.5rem] font-bold leading-relaxed mb-4 md:mb-8 drop-shadow-2xl tracking-widest whitespace-nowrap"
+                  className="font-hand text-[#fdfbf6] text-[1.6rem] sm:text-[1.85rem] md:text-[3.5rem] font-bold leading-[1.45] md:leading-relaxed mb-4 md:mb-8 drop-shadow-2xl tracking-widest md:whitespace-nowrap"
                 >
                   想いを束ねて、百年。
                 </motion.h2>
@@ -325,7 +325,7 @@ export default function Home() {
                       ? { duration: 1.2, ease: "easeOut", delay: 0.5 }
                       : { duration: 0 }
                   }
-                  className="text-[#fdfbf6] text-[0.9rem] md:text-[1.1rem] leading-[2.2] md:leading-[2.4] font-bold drop-shadow-md px-2 max-w-[340px] md:max-w-2xl text-center tracking-widest opacity-95"
+                  className="text-[#fdfbf6] text-[1rem] md:text-[1.1rem] leading-[2.05] md:leading-[2.4] font-bold drop-shadow-md px-1 sm:px-2 max-w-[360px] md:max-w-2xl text-center tracking-widest opacity-95"
                 >
                   大正九年創業。小樽の街で愛され続ける老舗『花の山城屋』。
                   <br />
@@ -344,7 +344,7 @@ export default function Home() {
                 >
                   <button
                     onClick={() => navigate("/products")}
-                    className="mt-8 px-16 py-5 text-xl font-bold text-white bg-[#bc8a7e] rounded-full shadow-lg hover:bg-[#a67468] transition-all border border-white/20"
+                    className="mt-8 w-full max-w-[320px] sm:max-w-[360px] px-10 sm:px-12 py-5 text-xl font-bold text-white bg-[#bc8a7e] rounded-full shadow-lg hover:bg-[#a67468] transition-all border border-white/20"
                   >
                     お花を探す
                   </button>

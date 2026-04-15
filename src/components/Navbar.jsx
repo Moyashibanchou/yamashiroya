@@ -17,8 +17,8 @@ export default function Navbar() {
 
     const drawerLinkClass = (to) => {
         const isActive = location.pathname === to;
-        return `py-4 border-b border-[#ebdcd0]/50 transition-colors ${
-            isActive ? 'text-[#2B5740]' : 'hover:text-[#2B5740]'
+        return `py-5 px-3 rounded-xl border-b border-[#ebdcd0]/50 transition-colors ${
+            isActive ? 'text-[#2B5740] bg-[#f7f2e7]' : 'hover:text-[#2B5740] hover:bg-[#f7f2e7]'
         }`;
     };
 
@@ -39,11 +39,11 @@ export default function Navbar() {
                     {/* 左側：ハンバーガー（モバイル） + ロゴ（PC） */}
                     <div className="flex items-center gap-6 min-w-0 md:w-[220px]">
                         <button
-                            className="md:hidden text-[#4a3f35] hover:text-[#2B5740] active:scale-95 transition-transform cursor-pointer"
+                            className="md:hidden text-[#4a3f35] hover:text-[#2B5740] active:scale-95 transition-transform cursor-pointer p-2 -ml-2"
                             onClick={toggleMenu}
                             aria-label="メニュー"
                         >
-                            <Menu className="w-[26px] h-[26px]" strokeWidth={2} />
+                            <Menu className="w-[30px] h-[30px]" strokeWidth={2} />
                         </button>
 
                         <Link to="/" className="hidden md:inline-flex hover:opacity-80 transition-opacity cursor-pointer" onClick={closeMenu}>
@@ -123,7 +123,7 @@ export default function Navbar() {
                             <img
                                 src={logoImg}
                                 alt="花の山城屋 ロゴ"
-                                className="h-14 w-auto object-contain"
+                                className="h-16 w-auto object-contain"
                             />
                         </Link>
                     </div>
@@ -175,7 +175,7 @@ export default function Navbar() {
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }} // ゆったりした上品な動き
-                            className="fixed top-0 right-0 w-[80%] max-w-[320px] h-full bg-[#fdfbf6] shadow-2xl z-[70] flex flex-col pt-6 px-6 elegant-font md:hidden border-l border-[#ebdcd0]"
+                            className="fixed top-0 right-0 w-[86%] max-w-[340px] h-full bg-[#fdfbf6] shadow-2xl z-[70] flex flex-col pt-6 px-6 pb-8 elegant-font md:hidden border-l border-[#ebdcd0]"
                         >
                             <div className="flex justify-end mb-10">
                                 <button onClick={closeMenu} className="text-[#6e5e54] hover:text-[#3E2723] transition-colors cursor-pointer p-2 active:scale-90">

@@ -112,7 +112,7 @@ export default function ChatBot() {
   };
 
   return (
-    <div className="fixed bottom-8 right-8 z-[80]">
+    <div className="fixed bottom-24 md:bottom-8 right-4 md:right-8 z-[80]">
       {isOpen && (
         <div className="mb-4 w-[350px] max-w-[calc(100vw-2rem)] max-h-[70vh] bg-[#fff8f4] border border-[#ebdcd0] rounded-2xl shadow-[0_18px_48px_rgba(18,63,42,0.18)] overflow-hidden flex flex-col">
           <div className="sticky top-0 z-10 flex items-center justify-between px-4 py-3 bg-[#123F2A] text-white">
@@ -130,7 +130,7 @@ export default function ChatBot() {
             </button>
           </div>
 
-          <div className="px-4 py-4 flex-1 overflow-y-auto">
+          <div className="px-4 py-3 flex-1 overflow-y-auto">
             <div className="space-y-3 pr-1">
               {messages.map((m, idx) => (
                 <div
@@ -151,7 +151,7 @@ export default function ChatBot() {
             </div>
           </div>
 
-          <div className="px-4 py-4 border-t border-[#ebdcd0] bg-[#fff8f4] shrink-0">
+          <div className="px-4 py-3 border-t border-[#ebdcd0] bg-[#fff8f4] shrink-0">
             <div className="flex items-center justify-between">
               <button
                 type="button"
@@ -166,18 +166,18 @@ export default function ChatBot() {
                 className="text-[0.8rem] font-bold tracking-widest text-[#6e5e54] hover:opacity-90 transition-opacity"
                 aria-label="クイックメニューを閉じる"
               >
-                閉じる
+                ×
               </button>
             </div>
 
             {isQuickMenuOpen && (
-              <div className="mt-3 grid grid-cols-1 gap-2">
+              <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
                 {INITIAL_OPTIONS.map((label) => (
                   <button
                     key={label}
                     type="button"
                     onClick={() => handleOption(label)}
-                    className={`w-full text-left px-4 py-2.5 rounded-xl border transition-colors text-[0.9rem] font-bold tracking-wide ${
+                    className={`shrink-0 whitespace-nowrap px-3 py-2 rounded-full border transition-colors text-[0.85rem] font-bold tracking-wide ${
                       selectedOption === label
                         ? 'bg-[#123F2A] text-white border-[#123F2A]'
                         : 'bg-white border-[#ebdcd0] text-[#4a3f35] hover:bg-[#f7f2e7]'
@@ -189,7 +189,7 @@ export default function ChatBot() {
               </div>
             )}
 
-            <div className={`${isQuickMenuOpen ? 'mt-3' : 'mt-2'} flex items-center gap-2`}>
+            <div className={`${isQuickMenuOpen ? 'mt-2' : 'mt-2'} flex items-center gap-2`}>
               <input
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
@@ -198,12 +198,12 @@ export default function ChatBot() {
                 }}
                 type="text"
                 placeholder="メッセージを入力…"
-                className="flex-1 bg-white border border-[#ebdcd0] rounded-full px-4 py-3 text-[0.95rem] tracking-wide outline-none focus:border-[#123F2A]"
+                className="flex-1 bg-white border border-[#ebdcd0] rounded-full px-4 py-2.5 text-[0.95rem] tracking-wide outline-none focus:border-[#123F2A]"
               />
               <button
                 type="button"
                 onClick={handleSend}
-                className="w-11 h-11 rounded-full bg-[#123F2A] text-white flex items-center justify-center shadow-md hover:opacity-95 active:scale-95 transition-transform"
+                className="w-10 h-10 rounded-full bg-[#123F2A] text-white flex items-center justify-center shadow-md hover:opacity-95 active:scale-95 transition-transform"
                 aria-label="送信"
               >
                 <Send className="w-5 h-5" strokeWidth={2.2} />
@@ -215,11 +215,11 @@ export default function ChatBot() {
 
       <button
         type="button"
-        className="w-14 h-14 rounded-full bg-[#123F2A] text-white shadow-[0_14px_40px_rgba(18,63,42,0.35)] hover:shadow-[0_18px_52px_rgba(18,63,42,0.45)] active:scale-95 transition-transform flex items-center justify-center"
+        className="w-16 h-16 md:w-14 md:h-14 rounded-full bg-[#123F2A] text-white shadow-[0_14px_40px_rgba(18,63,42,0.35)] hover:shadow-[0_18px_52px_rgba(18,63,42,0.45)] active:scale-95 transition-transform flex items-center justify-center"
         aria-label="チャットを開く"
         onClick={() => setIsOpen((v) => !v)}
       >
-        <Flower2 className="w-7 h-7" strokeWidth={2.2} />
+        <Flower2 className="w-8 h-8 md:w-7 md:h-7" strokeWidth={2.2} />
       </button>
     </div>
   );
