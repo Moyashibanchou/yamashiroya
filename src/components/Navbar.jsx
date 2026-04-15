@@ -109,12 +109,12 @@ export default function Navbar() {
                             アクセス
                         </NavLink>
 
-                        <Link
-                            to="/#footer-contact"
+                        <a
+                            href="#footer-contact"
                             className="pb-2 border-b-2 border-transparent hover:border-[#2B5740]/40 hover:text-[#2B5740] transition-colors cursor-pointer"
                         >
                             お問い合わせ
-                        </Link>
+                        </a>
                     </nav>
 
                     {/* 中央：ロゴ（モバイル） */}
@@ -209,9 +209,9 @@ export default function Navbar() {
                                 <Link to="/about#access" onClick={closeMenu} className={drawerLinkClass('/about')}>
                                     アクセス
                                 </Link>
-                                <Link to="/#footer-contact" onClick={closeMenu} className={drawerLinkClass('/')}>
+                                <a href="#footer-contact" onClick={closeMenu} className={drawerLinkClass('/')}>
                                     お問い合わせ
-                                </Link>
+                                </a>
                             </div>
 
                             {/* ドロワー下部のロゴデザイン */}

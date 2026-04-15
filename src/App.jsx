@@ -20,6 +20,7 @@ import AdminDashboard from "./AdminDashboard.jsx";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import CartAddedModal from "./components/CartAddedModal.jsx";
+import ChatBot from "./components/ChatBot.jsx";
 import { CartProvider } from "./context/CartContext.jsx";
 
 function ScrollToTop() {
@@ -189,6 +190,7 @@ export default function App() {
             </div>
             <Footer />
           </div>
+          <ChatBot />
           {/* カート追加モーダル：Router内に置くことでuseNavigateが使える */}
           <CartAddedModal />
         </Router>
