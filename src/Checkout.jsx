@@ -394,7 +394,7 @@ export default function Checkout() {
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                                 <div className="md:col-span-2">
-                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">お名前（姓名）</label>
+                                    <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">お名前（姓名）</label>
                                     <input
                                         type="text"
                                         value={form.name}
@@ -404,7 +404,7 @@ export default function Checkout() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">メールアドレス</label>
+                                    <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">メールアドレス</label>
                                     <input
                                         type="email"
                                         value={form.email}
@@ -417,11 +417,11 @@ export default function Checkout() {
                                         className={`w-full bg-white/60 border ${errors.email ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40`}
                                     />
                                     {errors.email ? (
-                                        <p className="mt-2 text-xs font-bold tracking-widest text-red-600">{errors.email}</p>
+                                        <p className="mt-2 text-sm md:text-xs font-bold tracking-widest text-red-600">{errors.email}</p>
                                     ) : null}
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">電話番号</label>
+                                    <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">電話番号</label>
                                     <input
                                         type="tel"
                                         value={form.phone}
@@ -434,11 +434,11 @@ export default function Checkout() {
                                         className={`w-full bg-white/60 border ${errors.phone ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40`}
                                     />
                                     {errors.phone ? (
-                                        <p className="mt-2 text-xs font-bold tracking-widest text-red-600">{errors.phone}</p>
+                                        <p className="mt-2 text-sm md:text-xs font-bold tracking-widest text-red-600">{errors.phone}</p>
                                     ) : null}
                                 </div>
                                 <div className="md:col-span-2">
-                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">FAX（任意）</label>
+                                    <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">FAX（任意）</label>
                                     <input
                                         type="text"
                                         value={form.fax}
@@ -452,7 +452,7 @@ export default function Checkout() {
                             <div className="space-y-8 pt-8 border-t border-[#ebdcd0]/50">
                                 <div className="flex gap-4 items-end">
                                     <div className="w-full">
-                                        <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">郵便番号</label>
+                                        <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">郵便番号</label>
                                         <div className="relative">
                                             <input
                                                 type="text"
@@ -473,20 +473,20 @@ export default function Checkout() {
                                             <MapPin className="absolute right-6 top-1/2 -translate-y-1/2 text-[#a38f7d]/40" size={18} />
                                         </div>
                                         {errors.zipcode ? (
-                                            <p className="mt-2 text-xs font-bold tracking-widest text-red-600">{errors.zipcode}</p>
+                                            <p className="mt-2 text-sm md:text-xs font-bold tracking-widest text-red-600">{errors.zipcode}</p>
                                         ) : null}
                                     </div>
                                     <button
                                         type="button"
                                         onClick={lookupAddressByZipcode}
                                         disabled={isLookingUpZip || isProcessing}
-                                        className="bg-[#4a3f35] text-white px-8 py-4 rounded-2xl text-sm font-bold hover:bg-[#322a23] transition-all cursor-pointer whitespace-nowrap shadow-md active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+                                        className="bg-[#4a3f35] text-white px-8 py-4 rounded-2xl text-base md:text-sm font-bold hover:bg-[#322a23] transition-all cursor-pointer whitespace-nowrap shadow-md active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
                                     >
                                         {isLookingUpZip ? '検索中...' : '住所検索'}
                                     </button>
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">都道府県・市区町村</label>
+                                    <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">都道府県・市区町村</label>
                                     <input
                                         type="text"
                                         value={form.prefectureCity}
@@ -500,7 +500,7 @@ export default function Checkout() {
                                     />
                                 </div>
                                 <div>
-                                    <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">番地・建物名</label>
+                                    <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">番地・建物名</label>
                                     <input
                                         type="text"
                                         value={form.addressLine}
@@ -513,7 +513,7 @@ export default function Checkout() {
                                         className={`w-full bg-white/60 border ${errors.address ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300`}
                                     />
                                     {errors.address ? (
-                                        <p className="mt-2 text-xs font-bold tracking-widest text-red-600">{errors.address}</p>
+                                        <p className="mt-2 text-sm md:text-xs font-bold tracking-widest text-red-600">{errors.address}</p>
                                     ) : null}
                                 </div>
                             </div>
@@ -537,7 +537,7 @@ export default function Checkout() {
 
                                 <div className="mt-8 space-y-6">
                                     <div>
-                                        <div className="text-xs font-bold text-[#8a7a6c] tracking-[0.2em] uppercase mb-3">配送日指定</div>
+                                        <div className="text-sm md:text-xs font-bold text-[#8a7a6c] tracking-[0.2em] uppercase mb-3">配送日指定</div>
                                         <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                                             <label className="inline-flex items-center gap-2 cursor-pointer select-none">
                                                 <input
@@ -575,7 +575,7 @@ export default function Checkout() {
                                     </div>
 
                                     <div>
-                                        <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">配達時間帯指定</label>
+                                        <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">配達時間帯指定</label>
                                         <input
                                             type="text"
                                             value={form.deliveryTimeNote}
@@ -597,7 +597,7 @@ export default function Checkout() {
                             </div>
 
                             <div>
-                                <label className="block text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">ご要望</label>
+                                <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">ご要望</label>
                                 <textarea
                                     value={form.requests}
                                     onChange={(e) => setForm((prev) => ({ ...prev, requests: e.target.value }))}
