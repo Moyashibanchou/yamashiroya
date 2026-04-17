@@ -2,7 +2,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   ArrowLeft,
   Image as ImageIcon,
-  Heart,
   Truck,
   Mail,
   Package,
@@ -25,44 +24,6 @@ export default function ProductDetail() {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  const favoriteStorageKey = "favoriteProductIds";
-  const favoriteId = String(id);
-
-  const readFavoriteIds = () => {
-    try {
-      const raw = localStorage.getItem(favoriteStorageKey);
-      const parsed = raw ? JSON.parse(raw) : [];
-      if (!Array.isArray(parsed)) return [];
-      return parsed.filter((x) => typeof x === "string");
-    } catch {
-      return [];
-    }
-  };
-
-  const writeFavoriteIds = (ids) => {
-    try {
-      localStorage.setItem(favoriteStorageKey, JSON.stringify(ids));
-    } catch {
-      // no-op
-    }
-  };
-
-  useEffect(() => {
-    const ids = readFavoriteIds();
-    setIsFavorite(ids.includes(favoriteId));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [favoriteId]);
-
-  const toggleFavorite = () => {
-    const ids = readFavoriteIds();
-    const has = ids.includes(favoriteId);
-    const next = has ? ids.filter((x) => x !== favoriteId) : [...ids, favoriteId];
-    writeFavoriteIds(next);
-    setIsFavorite(!has);
-  };
 
   useEffect(() => {
     let canceled = false;
@@ -315,17 +276,6 @@ export default function ProductDetail() {
                     className="w-full py-4 rounded-2xl bg-[#2B5740] text-white font-bold tracking-[0.25em] shadow-xl hover:bg-[#234a35] active:scale-[0.98] transition-all"
                   >
                     カートに入れる
-                  </button>
-                  <button
-                    type="button"
-                    onClick={toggleFavorite}
-                    className="w-full py-3.5 rounded-2xl bg-white border border-[#ebdcd0] text-[#6e5e54] font-bold tracking-widest hover:border-[#2B5740] hover:text-[#2B5740] active:scale-[0.98] transition-all inline-flex items-center justify-center gap-2"
-                  >
-                    <Heart
-                      className={isFavorite ? "w-5 h-5 fill-[#2B5740] text-[#2B5740]" : "w-5 h-5"}
-                      strokeWidth={2.2}
-                    />
-                    {isFavorite ? "お気に入りから削除" : "お気に入りに追加"}
                   </button>
                 </div>
 

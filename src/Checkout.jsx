@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Lock, ShieldCheck, CreditCard, User, MapPin, Mail, Phone, Smartphone, Store, Apple, ChevronRight } from 'lucide-react';
+import { ArrowLeft, Lock, ShieldCheck, CreditCard, User, MapPin, Mail, Phone, Smartphone, Store, Apple, ChevronRight, Minus, Plus } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from './context/CartContext.jsx';
@@ -7,7 +7,7 @@ import API_BASE_URL from './apiConfig';
 
 export default function Checkout() {
     const navigate = useNavigate();
-    const { items, cartTotal, clearCart } = useCart();
+    const { items, cartTotal, clearCart, incrementQuantity, decrementQuantity } = useCart();
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('credit'); // 'credit', 'paypay', 'applepay', 'convenience'
     const [step, setStep] = useState('input'); // 'input' | 'confirm'
@@ -629,9 +629,32 @@ export default function Checkout() {
                                                 </div>
                                                 <div className="min-w-0 flex-1">
                                                     <div className="font-bold tracking-wide break-words">{item.name}</div>
-                                                    <div className="mt-2 flex justify-between gap-4 text-base font-bold text-[#2B5740]">
-                                                        <span>数量: {item.quantity}</span>
-                                                        <span>¥{(item.price * item.quantity).toLocaleString()}</span>
+                                                    <div className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-base font-bold text-[#2B5740]">
+                                                        <div className="inline-flex items-center gap-2">
+                                                            <span className="text-[#6e5e54]">数量</span>
+                                                            <div className="inline-flex items-center bg-white border border-[#ebdcd0] rounded-full overflow-hidden">
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => decrementQuantity(item.id)}
+                                                                    disabled={isProcessing}
+                                                                    className="w-11 h-11 inline-flex items-center justify-center hover:bg-[#f7f2e7] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                                                                    aria-label="数量を減らす"
+                                                                >
+                                                                    <Minus className="w-5 h-5" strokeWidth={2.6} />
+                                                                </button>
+                                                                <div className="min-w-[3.25rem] px-3 text-center text-[#2B5740]">{item.quantity}</div>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => incrementQuantity(item.id)}
+                                                                    disabled={isProcessing}
+                                                                    className="w-11 h-11 inline-flex items-center justify-center hover:bg-[#f7f2e7] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                                                                    aria-label="数量を増やす"
+                                                                >
+                                                                    <Plus className="w-5 h-5" strokeWidth={2.6} />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                        <span className="self-end sm:self-auto">¥{(item.price * item.quantity).toLocaleString()}</span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -887,8 +910,28 @@ export default function Checkout() {
                                             </div>
                                             <div className="flex flex-col justify-center flex-1 min-w-0">
                                                 <p className="text-sm font-bold leading-relaxed mb-1 truncate">{item.name}</p>
-                                                <div className="flex justify-between items-center">
-                                                    <span className="text-xs text-[#8a7a6c] font-bold">数量: {item.quantity}</span>
+                                                <div className="flex items-center justify-between gap-3">
+                                                    <div className="inline-flex items-center bg-white border border-[#ebdcd0] rounded-full overflow-hidden">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => decrementQuantity(item.id)}
+                                                            disabled={isProcessing}
+                                                            className="w-10 h-10 inline-flex items-center justify-center hover:bg-[#f7f2e7] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                                                            aria-label="数量を減らす"
+                                                        >
+                                                            <Minus className="w-4 h-4" strokeWidth={2.6} />
+                                                        </button>
+                                                        <div className="min-w-[2.75rem] px-2 text-center text-sm font-bold text-[#2B5740]">{item.quantity}</div>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => incrementQuantity(item.id)}
+                                                            disabled={isProcessing}
+                                                            className="w-10 h-10 inline-flex items-center justify-center hover:bg-[#f7f2e7] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                                                            aria-label="数量を増やす"
+                                                        >
+                                                            <Plus className="w-4 h-4" strokeWidth={2.6} />
+                                                        </button>
+                                                    </div>
                                                     <span className="text-sm font-bold tracking-wider">¥{(item.price * item.quantity).toLocaleString()}</span>
                                                 </div>
                                             </div>

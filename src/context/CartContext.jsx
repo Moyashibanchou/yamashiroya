@@ -37,6 +37,37 @@ export function CartProvider({ children }) {
     setItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
+  const setItemQuantity = (id, quantity) => {
+    const q = Number(quantity);
+    if (!Number.isFinite(q)) return;
+    const nextQ = Math.max(0, Math.floor(q));
+    setItems((prevItems) => {
+      if (nextQ <= 0) return prevItems.filter((item) => item.id !== id);
+      return prevItems.map((item) =>
+        item.id === id ? { ...item, quantity: nextQ } : item,
+      );
+    });
+  };
+
+  const incrementQuantity = (id) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
+      ),
+    );
+  };
+
+  const decrementQuantity = (id) => {
+    setItems((prevItems) => {
+      const target = prevItems.find((item) => item.id === id);
+      if (!target) return prevItems;
+      if (target.quantity <= 1) return prevItems.filter((item) => item.id !== id);
+      return prevItems.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity - 1 } : item,
+      );
+    });
+  };
+
   const clearCart = () => {
     setItems([]);
   };
@@ -57,6 +88,9 @@ export function CartProvider({ children }) {
         items,
         addToCart,
         removeFromCart,
+        setItemQuantity,
+        incrementQuantity,
+        decrementQuantity,
         clearCart,
         cartTotal,
         cartCount,
