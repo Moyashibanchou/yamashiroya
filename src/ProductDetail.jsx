@@ -232,7 +232,7 @@ export default function ProductDetail() {
                 <div className="text-[0.75rem] font-bold tracking-[0.2em] uppercase text-[#8a7a6c] mb-3">
                   商品ID: {product.id}
                 </div>
-                <h1 className="text-2xl md:text-3xl font-bold tracking-widest text-[#4a3f35] leading-[1.6] whitespace-pre-wrap">
+                <h1 className="text-2xl md:text-3xl font-bold tracking-wide md:tracking-widest text-[#4a3f35] leading-[1.6] whitespace-pre-wrap break-words max-w-full">
                   {product.name}
                 </h1>
 
@@ -319,7 +319,7 @@ export default function ProductDetail() {
                   </div>
                 </div>
 
-                <div className="mt-6 text-[0.8rem] text-[#8a7a6c] tracking-widest">
+                <div className="mt-6 text-[0.9rem] md:text-[0.8rem] text-[#8a7a6c] tracking-wide md:tracking-widest">
                   {normalizeMulti(product.style).length > 0 ||
                   normalizeMulti(product.color).length > 0 ||
                   normalizeMulti(product.purpose).length > 0 ? (
@@ -327,7 +327,7 @@ export default function ProductDetail() {
                       {normalizeMulti(product.style).map((v) => (
                         <span
                           key={`style_${v}`}
-                          className="px-3 py-1 rounded-full bg-white/60 border border-[#ebdcd0] text-[#6e5e54] text-[0.75rem] font-bold tracking-widest"
+                          className="px-3 py-1 rounded-full bg-white/60 border border-[#ebdcd0] text-[#6e5e54] text-[0.8rem] md:text-[0.75rem] font-bold tracking-wide md:tracking-widest whitespace-normal break-words"
                         >
                           スタイル: {labelFor("style", v)}
                         </span>
@@ -335,7 +335,7 @@ export default function ProductDetail() {
                       {normalizeMulti(product.color).map((v) => (
                         <span
                           key={`color_${v}`}
-                          className="px-3 py-1 rounded-full bg-white/60 border border-[#ebdcd0] text-[#6e5e54] text-[0.75rem] font-bold tracking-widest"
+                          className="px-3 py-1 rounded-full bg-white/60 border border-[#ebdcd0] text-[#6e5e54] text-[0.8rem] md:text-[0.75rem] font-bold tracking-wide md:tracking-widest whitespace-normal break-words"
                         >
                           カラー: {labelFor("color", v)}
                         </span>
@@ -343,7 +343,7 @@ export default function ProductDetail() {
                       {normalizeMulti(product.purpose).map((v) => (
                         <span
                           key={`purpose_${v}`}
-                          className="px-3 py-1 rounded-full bg-[#f5efe9] border border-[#ebdcd0] text-[#4a3f35] text-[0.75rem] font-bold tracking-widest"
+                          className="px-3 py-1 rounded-full bg-[#f5efe9] border border-[#ebdcd0] text-[#4a3f35] text-[0.8rem] md:text-[0.75rem] font-bold tracking-wide md:tracking-widest whitespace-normal break-words"
                         >
                           ご用途: {labelFor("purpose", v)}
                         </span>

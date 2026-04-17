@@ -81,11 +81,11 @@ export default function About() {
       <div className="relative z-10 text-center text-white px-6">
         <motion.h1
           variants={itemFadeUp}
-          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-[0.2em] mb-6 drop-shadow-lg"
+          className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-[0.12em] md:tracking-[0.2em] mb-6 drop-shadow-lg whitespace-normal break-words max-w-[92vw] mx-auto"
         >
           山城屋の歩み
         </motion.h1>
-        <motion.p variants={itemFadeUp} className="text-lg md:text-2xl font-hand tracking-widest opacity-90">
+        <motion.p variants={itemFadeUp} className="text-lg md:text-2xl font-hand tracking-wide md:tracking-widest opacity-90 whitespace-normal break-words max-w-[92vw] mx-auto">
           小樽の地で百余年。四季折々の花と共に。
         </motion.p>
       </div>
@@ -98,7 +98,7 @@ export default function About() {
           <div className="inline-block border-b border-[#123F2A]/30 pb-2">
             <span className="text-[#586330] text-sm tracking-[0.3em] uppercase">Origin</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-bold leading-tight text-[#123F2A] tracking-widest">
+          <h2 className="text-3xl md:text-4xl font-bold leading-tight text-[#123F2A] tracking-wide md:tracking-widest whitespace-normal break-words">
             運河の街、小樽に根ざして
           </h2>
           <p className="text-lg leading-[1.9] text-[#231a11]/80 tracking-widest">
@@ -142,7 +142,7 @@ export default function About() {
               <h3 className="text-[1.75rem] md:text-[2.75rem] font-bold text-[#123F2A] leading-[1.18] tracking-[0.08em]">
                 朝摘みの息吹を、
                 <br />
-                <span className="whitespace-nowrap">その一瞬の輝きのまま。</span>
+                <span className="md:whitespace-nowrap">その一瞬の輝きのまま。</span>
               </h3>
               <div className="flex items-start gap-8">
                 <div
@@ -151,7 +151,7 @@ export default function About() {
                 >
                   鮮度への誓い
                 </div>
-                <p className="text-[0.92rem] md:text-base text-[#231a11]/70 leading-[2.1] tracking-[0.08em]">
+                <p className="text-[0.98rem] md:text-base text-[#231a11]/70 leading-[2.1] tracking-[0.08em]">
                   「花の命は短いからこそ、最も美しい瞬間を届けたい」
                   <br />
                   毎朝仕入れた花々は、独自の水揚げ技術と温度管理を徹底した環境で休ませます。お届けする瞬間まで、その生命力を損なうことはありません。
@@ -180,7 +180,7 @@ export default function About() {
               </p>
             </div>
             <div className="pt-10 border-t border-white/20">
-              <div className="font-hand text-xl md:text-2xl text-white/85 mb-2 tracking-[0.18em] text-center whitespace-nowrap">「花に心あり」</div>
+              <div className="font-hand text-xl md:text-2xl text-white/85 mb-2 tracking-[0.18em] text-center md:whitespace-nowrap">「花に心あり」</div>
               <p className="text-xs tracking-[0.35em] text-white/40 uppercase text-center">SPIRIT OF FLOWER</p>
             </div>
           </div>

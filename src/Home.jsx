@@ -313,7 +313,7 @@ export default function Home() {
                       ? { duration: 1.2, ease: "easeOut", delay: 0.3 }
                       : { duration: 0 }
                   }
-                  className="font-hand text-[#fdfbf6] text-[1.6rem] sm:text-[1.85rem] md:text-[3.5rem] font-bold leading-[1.45] md:leading-relaxed mb-4 md:mb-8 drop-shadow-2xl tracking-widest md:whitespace-nowrap"
+                  className="font-hand text-[#fdfbf6] text-[1.6rem] sm:text-[1.85rem] md:text-[3.5rem] font-bold leading-[1.45] md:leading-relaxed mb-4 md:mb-8 drop-shadow-2xl tracking-wide md:tracking-widest whitespace-normal break-words max-w-[92vw]"
                 >
                   想いを束ねて、百年。
                 </motion.h2>
@@ -325,7 +325,7 @@ export default function Home() {
                       ? { duration: 1.2, ease: "easeOut", delay: 0.5 }
                       : { duration: 0 }
                   }
-                  className="text-[#fdfbf6] text-[1rem] md:text-[1.1rem] leading-[2.05] md:leading-[2.4] font-bold drop-shadow-md px-1 sm:px-2 max-w-[360px] md:max-w-2xl text-center tracking-widest opacity-95"
+                  className="text-[#fdfbf6] text-[1rem] md:text-[1.1rem] leading-[2.05] md:leading-[2.4] font-bold drop-shadow-md px-1 sm:px-2 max-w-[360px] md:max-w-2xl text-center tracking-wide md:tracking-widest opacity-95 break-words"
                 >
                   大正九年創業。小樽の街で愛され続ける老舗『花の山城屋』。
                   <br />
@@ -460,7 +460,7 @@ export default function Home() {
                         <div className="group-hover:scale-110 transition-transform duration-300">
                           {item.icon}
                         </div>
-                        <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#4a3f35] tracking-wide mt-1 text-center whitespace-nowrap">
+                        <span className="text-[0.9rem] md:text-[0.9rem] font-bold text-[#4a3f35] tracking-wide md:tracking-wide mt-1 text-center whitespace-normal break-words max-w-[10.5rem] leading-snug">
                           {item.label}
                         </span>
                       </button>
@@ -515,7 +515,7 @@ export default function Home() {
                           />
                         </div>
                         <div className="p-3 text-center">
-                          <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#4a3f35] tracking-wide">
+                          <span className="text-[0.9rem] md:text-[0.9rem] font-bold text-[#4a3f35] tracking-wide whitespace-normal break-words leading-snug">
                             {item.label}
                           </span>
                         </div>
@@ -560,7 +560,7 @@ export default function Home() {
                         <span
                           className={`w-3.5 h-3.5 md:w-4 md:h-4 rounded-full shadow-sm flex-shrink-0 ${item.color}`}
                         ></span>
-                        <span className="text-[0.8rem] md:text-[0.9rem] font-bold text-[#4a3f35] tracking-wide whitespace-nowrap">
+                        <span className="text-[0.9rem] md:text-[0.9rem] font-bold text-[#4a3f35] tracking-wide whitespace-normal break-words leading-snug text-center">
                           {item.label}
                         </span>
                       </button>
