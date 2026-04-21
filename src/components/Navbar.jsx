@@ -175,15 +175,15 @@ export default function Navbar() {
                             animate={{ x: 0 }}
                             exit={{ x: '100%' }}
                             transition={{ duration: 0.5, ease: [0.25, 0.8, 0.25, 1] }} // ゆったりした上品な動き
-                            className="fixed top-0 right-0 w-[86%] max-w-[340px] h-full bg-[#fdfbf6] shadow-2xl z-[70] flex flex-col pt-6 px-6 pb-8 elegant-font md:hidden border-l border-[#ebdcd0]"
+                            className="fixed top-0 right-0 w-[86%] max-w-[340px] h-full bg-[#fdfbf6] shadow-2xl z-[70] flex flex-col pt-4 px-6 pb-6 elegant-font md:hidden border-l border-[#ebdcd0]"
                         >
-                            <div className="flex justify-end mb-10">
+                            <div className="flex justify-end mb-6">
                                 <button onClick={closeMenu} className="text-[#6e5e54] hover:text-[#3E2723] transition-colors cursor-pointer p-2 active:scale-90">
                                     <X className="w-8 h-8" strokeWidth={1.5} />
                                 </button>
                             </div>
 
-                            <div className="flex flex-col gap-8 text-[1.1rem] font-bold text-[#4a3f35] tracking-widest text-center mt-4">
+                            <div className="flex flex-col gap-6 text-[1.1rem] font-bold text-[#4a3f35] tracking-widest text-center">
                                 <form onSubmit={handleSearchSubmit} className="w-full">
                                     <div className="relative">
                                         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#a38f7d]" strokeWidth={2.2} />
@@ -215,7 +215,7 @@ export default function Navbar() {
                             </div>
 
                             {/* ドロワー下部のロゴデザイン */}
-                            <div className="mt-auto pb-12 text-center border-t border-[#ebdcd0]/30 pt-8">
+                            <div className="mt-auto pb-8 text-center border-t border-[#ebdcd0]/30 pt-6">
                                 <img 
                                     src={logoImg} 
                                     alt="花の山城屋 ロゴ" 
