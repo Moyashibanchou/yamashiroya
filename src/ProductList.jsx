@@ -461,7 +461,7 @@ export default function ProductList() {
                                         ¥{typeof product.price === 'number' ? product.price.toLocaleString() : product.price}
                                         <span className="text-[0.7rem] ml-1 font-normal text-[#8a7a6c]">税込</span>
                                     </p>
-                                    <div className="mt-5 grid grid-cols-2 gap-3">
+                                    <div className="mt-5 flex flex-col gap-3">
                                         <div className="w-full py-3 md:py-3.5 bg-[#f5f2e9] border border-[#d8c8b6] rounded-xl text-[0.95rem] font-bold group-hover:bg-[#bc8a7e] group-hover:text-white group-hover:border-[#bc8a7e] text-center transition-all duration-300 text-[#4a3f35]">
                                             詳細を見る
                                         </div>

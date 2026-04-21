@@ -357,12 +357,8 @@ export default function Home() {
           <section className="brick-pattern -mt-px border-b border-[#ebdcd0] relative z-20">
             <div className="max-w-6xl mx-auto px-6 py-14 md:py-24 text-center">
               <div className="bg-[#fdfbf6]/90 backdrop-blur-md rounded-2xl p-8 md:p-16 soft-shadow-sm border border-[#ebdcd0] max-w-3xl mx-auto">
-                <h3 className="text-[1.2rem] md:text-[1.6rem] font-bold text-[#4a3f35] leading-relaxed mb-8 md:mb-10 tracking-[0.15em]">
-                  この街の花屋として、
-                  <br />
-                  あなたの様々なシーンに、
-                  <br />
-                  そっと寄り添う。
+                <h3 className="text-[1.2rem] md:text-[1.6rem] font-bold text-[#4a3f35] leading-relaxed mb-8 md:mb-10 tracking-[0.08em] md:tracking-[0.15em] max-w-[92vw] mx-auto whitespace-normal break-words">
+                  この街の花屋として、<br className="hidden md:block" />あなたの様々なシーンに、<br className="hidden md:block" />そっと寄り添う。
                 </h3>
                 <p className="text-[0.95rem] md:text-[1.1rem] text-[#6e5e54] leading-[2.2] md:leading-[2.4] text-justify px-2 md:px-10">
                   大正栄華の小樽で産声を上げ、いつの時代も、あたたかい心に支えられながら、まちの花屋として営んでくることができました。創業百年を迎え、心あらたに次の百年へ進んでまいります。
@@ -555,7 +551,11 @@ export default function Home() {
                         onClick={() =>
                           navigate(`/products?color=${item.value}`)
                         }
-                        className="bg-white/50 border border-gray-200 rounded-full py-3 md:py-4 px-4 flex items-center justify-center gap-2 hover:shadow-md hover:border-[#bc8a7e] hover:bg-white transition-all duration-300"
+                        className={`bg-white/50 border border-gray-200 rounded-full py-3 md:py-4 px-4 flex items-center justify-center gap-2 hover:shadow-md hover:border-[#bc8a7e] hover:bg-white transition-all duration-300 ${
+                          item.value === "yellow_orange" || item.value === "blue_purple"
+                            ? "col-span-2 sm:col-span-1"
+                            : ""
+                        }`}
                       >
                         <span
                           className={`w-3.5 h-3.5 md:w-4 md:h-4 rounded-full shadow-sm flex-shrink-0 ${item.color}`}

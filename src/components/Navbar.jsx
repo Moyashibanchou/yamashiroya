@@ -213,16 +213,6 @@ export default function Navbar() {
                                     お問い合わせ
                                 </a>
                             </div>
-
-                            {/* ドロワー下部のロゴデザイン */}
-                            <div className="mt-auto pb-8 text-center border-t border-[#ebdcd0]/30 pt-6">
-                                <img 
-                                    src={logoImg} 
-                                    alt="花の山城屋 ロゴ" 
-                                    className="h-16 w-auto mx-auto mb-4 object-contain"
-                                />
-                                <p className="text-[#a38f7d] text-sm tracking-widest">© 1920 花の山城屋</p>
-                            </div>
                         </motion.nav>
                     </>
                 )}
