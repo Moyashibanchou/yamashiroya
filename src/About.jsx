@@ -141,7 +141,7 @@ export default function About() {
               </div>
               <h3 className="text-[1.75rem] md:text-[2.75rem] font-bold text-[#123F2A] leading-[1.18] tracking-[0.08em]">
                 朝摘みの息吹を、
-                <br />
+                <br className="hidden md:block" />
                 <span className="md:whitespace-nowrap">その一瞬の輝きのまま。</span>
               </h3>
               <div className="flex items-start gap-8">
@@ -153,7 +153,7 @@ export default function About() {
                 </div>
                 <p className="text-[0.98rem] md:text-base text-[#231a11]/70 leading-[2.1] tracking-[0.08em]">
                   「花の命は短いからこそ、最も美しい瞬間を届けたい」
-                  <br />
+                  <br className="hidden md:block" />
                   毎朝仕入れた花々は、独自の水揚げ技術と温度管理を徹底した環境で休ませます。お届けする瞬間まで、その生命力を損なうことはありません。
                 </p>
               </div>
@@ -171,7 +171,7 @@ export default function About() {
               </div>
               <h3 className="text-[1.25rem] md:text-[1.55rem] font-bold leading-[1.75] tracking-[0.1em]">
                 確かな審美眼、
-                <br />
+                <br className="hidden md:block" />
                 研ぎ澄まされた感性。
               </h3>
               <div className="w-full h-px bg-white/15" />

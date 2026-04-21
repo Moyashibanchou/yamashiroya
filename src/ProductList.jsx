@@ -361,22 +361,22 @@ export default function ProductList() {
                 <div className="max-w-6xl mx-auto px-5 md:px-6 py-4 flex justify-between items-center text-[#6e5e54]">
                     <div>
                         <span className="text-[0.7rem] md:text-[0.8rem] font-bold tracking-widest block mb-0.5 opacity-80">現在の検索条件：</span>
-                        <div className="text-[0.95rem] md:text-[1.1rem] font-bold tracking-wider text-[#4a3f35] flex items-center gap-2">
+                        <div className="text-[1rem] md:text-[1.1rem] font-bold tracking-wide md:tracking-wider text-[#4a3f35] flex flex-wrap items-center gap-x-2 gap-y-1 min-w-0">
                             {selectedLabels.length > 0 ? (
                                 <>
-                                    絞り込み中
-                                    <span className="text-[0.8rem] font-normal text-[#8a7a6c]">（{filteredProducts.length}件）</span>
+                                    <span className="whitespace-nowrap">絞り込み中</span>
+                                    <span className="text-[0.9rem] md:text-[0.8rem] font-normal text-[#8a7a6c] whitespace-nowrap">（{filteredProducts.length}件）</span>
                                 </>
                             ) : (
                                 <>
-                                    すべての商品
-                                    <span className="text-[0.8rem] font-normal text-[#8a7a6c]">（全{products.length}件）</span>
+                                    <span className="whitespace-nowrap">すべての商品</span>
+                                    <span className="text-[0.9rem] md:text-[0.8rem] font-normal text-[#8a7a6c] whitespace-nowrap">（全{products.length}件）</span>
                                 </>
                             )}
                         </div>
                     </div>
 
-                    <button onClick={() => setIsFilterOpen(true)} className="flex items-center gap-1.5 md:gap-2 text-[0.8rem] md:text-[0.9rem] font-bold border border-[#d8c8b6] bg-white px-3 md:px-4 py-2 md:py-2.5 rounded-full hover:bg-[#ebdcd0] transition-colors">
+                    <button onClick={() => setIsFilterOpen(true)} className="flex items-center gap-1.5 md:gap-2 text-[0.85rem] md:text-[0.9rem] font-bold border border-[#d8c8b6] bg-white px-3 md:px-4 py-2 md:py-2.5 rounded-full hover:bg-[#ebdcd0] transition-colors whitespace-nowrap flex-shrink-0">
                         <SlidersHorizontal size={16} className="md:w-[18px]" />
                         絞り込み <ChevronDown size={14} />
                     </button>

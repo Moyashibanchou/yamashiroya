@@ -275,7 +275,7 @@ export default function Home() {
               <div className="mt-7 text-[#4a3f35]">
                 <div className="text-[1.2rem] md:text-[1.7rem] font-bold tracking-widest leading-relaxed">
                   想いを花に
-                  <br />
+                  <br className="hidden md:block" />
                   小樽で百年。
                 </div>
               </div>
@@ -328,10 +328,8 @@ export default function Home() {
                   className="text-[#fdfbf6] text-[1rem] md:text-[1.1rem] leading-[2.05] md:leading-[2.4] font-bold drop-shadow-md px-1 sm:px-2 max-w-[360px] md:max-w-2xl text-center tracking-wide md:tracking-widest opacity-95 break-words"
                 >
                   大正九年創業。小樽の街で愛され続ける老舗『花の山城屋』。
-                  <br />
-                  熟練のフローリストが、あなたの特別な日を彩るお花を心を込めて
-                  <br />
-                  お仕立てします。
+                  <br className="hidden md:block" />
+                  熟練のフローリストが、あなたの特別な日を彩るお花を心を込めてお仕立てします。
                 </motion.p>
                 <motion.div
                   initial={shouldAnimate ? { opacity: 0, y: 20 } : false}
