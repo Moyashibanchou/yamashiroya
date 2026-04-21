@@ -474,7 +474,7 @@ export default function Home() {
                     <span className="w-1.5 h-4 bg-[#bc8a7e] inline-block rounded-full"></span>
                     スタイルから探す
                   </h3>
-                  <div className="flex gap-4 overflow-x-auto hide-scroll pb-4 lg:grid lg:grid-cols-5 lg:pb-0">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
                     {[
                       {
                         label: "アレンジメント",
@@ -503,7 +503,7 @@ export default function Home() {
                         onClick={() =>
                           navigate(`/products?style=${item.value}`)
                         }
-                        className="min-w-[120px] lg:min-w-0 bg-white border border-[#ebdcd0] rounded-2xl overflow-hidden flex flex-col group hover:shadow-md transition-all duration-300"
+                        className="bg-white border border-[#ebdcd0] rounded-2xl overflow-hidden flex flex-col group hover:shadow-md transition-all duration-300"
                       >
                         <div className="w-full aspect-square overflow-hidden bg-[#f5efe9]">
                           <img
@@ -530,7 +530,7 @@ export default function Home() {
                     <span className="w-1.5 h-4 bg-[#bc8a7e] inline-block rounded-full"></span>
                     色から探す
                   </h3>
-                  <div className="flex gap-4 overflow-x-auto hide-scroll pb-4 lg:grid lg:grid-cols-5 lg:pb-0">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4">
                     {[
                       { label: "赤系", value: "red", color: "bg-red-500" },
                       {
@@ -555,7 +555,7 @@ export default function Home() {
                         onClick={() =>
                           navigate(`/products?color=${item.value}`)
                         }
-                        className="min-w-[130px] lg:min-w-0 bg-white/50 border border-gray-200 rounded-full py-3 md:py-4 px-4 flex items-center justify-center gap-2 hover:shadow-md hover:border-[#bc8a7e] hover:bg-white transition-all duration-300"
+                        className="bg-white/50 border border-gray-200 rounded-full py-3 md:py-4 px-4 flex items-center justify-center gap-2 hover:shadow-md hover:border-[#bc8a7e] hover:bg-white transition-all duration-300"
                       >
                         <span
                           className={`w-3.5 h-3.5 md:w-4 md:h-4 rounded-full shadow-sm flex-shrink-0 ${item.color}`}
