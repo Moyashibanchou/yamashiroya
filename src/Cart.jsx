@@ -148,7 +148,7 @@ export default function Cart() {
                 <div className="md:hidden fixed bottom-0 w-full bg-[#fffdf7]/95 backdrop-blur-md border-t border-[#ebdcd0] px-5 py-5 soft-shadow-sm pb-[env(safe-area-inset-bottom,1.25rem)] z-50">
                     <button
                         onClick={() => navigate('/checkout')}
-                        className="w-full py-4 bg-[#2B5740] text-white rounded-xl text-[1.1rem] font-bold shadow-[0_8px_24px_rgba(43,87,64,0.18)] hover:bg-[#234836] active:scale-95 transition-all duration-200 tracking-widest border border-white/10"
+                        className="w-full max-w-[420px] mx-auto py-4 bg-[#2B5740] text-white rounded-xl text-[1.1rem] font-bold shadow-[0_8px_24px_rgba(43,87,64,0.18)] hover:bg-[#234836] active:scale-95 transition-all duration-200 tracking-widest border border-white/10"
                     >
                         レジへ進む
                     </button>

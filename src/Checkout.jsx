@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Lock, ShieldCheck, CreditCard, User, MapPin, Mail, Phone, Smartphone, Store, Apple, ChevronRight, Minus, Plus } from 'lucide-react';
+import { ArrowLeft, Lock, ShieldCheck, CreditCard, User, MapPin, Mail, Phone, Smartphone, Store, Apple, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from './context/CartContext.jsx';
@@ -7,7 +7,7 @@ import API_BASE_URL from './apiConfig';
 
 export default function Checkout() {
     const navigate = useNavigate();
-    const { items, cartTotal, clearCart, incrementQuantity, decrementQuantity } = useCart();
+    const { items, cartTotal, clearCart, setItemQuantity } = useCart();
     const [isProcessing, setIsProcessing] = useState(false);
     const [paymentMethod, setPaymentMethod] = useState('credit'); // 'credit', 'paypay', 'applepay', 'convenience'
     const [step, setStep] = useState('input'); // 'input' | 'confirm'
@@ -389,7 +389,7 @@ export default function Checkout() {
                                 <div className="w-10 h-10 bg-[#4a3f35] rounded-full flex items-center justify-center text-white">
                                     <User size={20} />
                                 </div>
-                                <h2 className="text-xl font-bold tracking-widest">お届け先 ＆ ご連絡先</h2>
+                                <h2 className="text-xl font-bold tracking-wide md:tracking-widest whitespace-normal break-words">お届け先・ご連絡先</h2>
                             </div>
                             
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
@@ -450,8 +450,8 @@ export default function Checkout() {
                             </div>
 
                             <div className="space-y-8 pt-8 border-t border-[#ebdcd0]/50">
-                                <div className="flex gap-4 items-end">
-                                    <div className="w-full">
+                                <div className="flex flex-col sm:flex-row gap-4 sm:items-end">
+                                    <div className="w-full min-w-0">
                                         <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">郵便番号</label>
                                         <div className="relative">
                                             <input
@@ -480,7 +480,7 @@ export default function Checkout() {
                                         type="button"
                                         onClick={lookupAddressByZipcode}
                                         disabled={isLookingUpZip || isProcessing}
-                                        className="bg-[#4a3f35] text-white px-8 py-4 rounded-2xl text-base md:text-sm font-bold hover:bg-[#322a23] transition-all cursor-pointer whitespace-nowrap shadow-md active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+                                        className="bg-[#4a3f35] text-white px-8 py-4 rounded-2xl text-base md:text-sm font-bold hover:bg-[#322a23] transition-all cursor-pointer whitespace-nowrap shadow-md active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed w-full sm:w-auto"
                                     >
                                         {isLookingUpZip ? '検索中...' : '住所検索'}
                                     </button>
@@ -527,7 +527,7 @@ export default function Checkout() {
                                 <h2 className="text-xl font-bold tracking-widest">配送指定</h2>
                             </div>
 
-                            <div className="bg-white/60 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8">
+                            <div className="bg-white/60 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8 max-w-[520px] mx-auto">
                                 <div className="text-sm md:text-base font-bold tracking-widest text-[#4a3f35]">
                                     ■小樽市内配達
                                 </div>
@@ -631,28 +631,20 @@ export default function Checkout() {
                                                     <div className="font-bold tracking-wide break-words">{item.name}</div>
                                                     <div className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-base font-bold text-[#2B5740]">
                                                         <div className="inline-flex items-center gap-2">
-                                                            <span className="text-[#6e5e54]">数量</span>
-                                                            <div className="inline-flex items-center bg-white border border-[#ebdcd0] rounded-full overflow-hidden">
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => decrementQuantity(item.id)}
-                                                                    disabled={isProcessing}
-                                                                    className="w-11 h-11 inline-flex items-center justify-center hover:bg-[#f7f2e7] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                                                                    aria-label="数量を減らす"
-                                                                >
-                                                                    <Minus className="w-5 h-5" strokeWidth={2.6} />
-                                                                </button>
-                                                                <div className="min-w-[3.25rem] px-3 text-center text-[#2B5740]">{item.quantity}</div>
-                                                                <button
-                                                                    type="button"
-                                                                    onClick={() => incrementQuantity(item.id)}
-                                                                    disabled={isProcessing}
-                                                                    className="w-11 h-11 inline-flex items-center justify-center hover:bg-[#f7f2e7] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                                                                    aria-label="数量を増やす"
-                                                                >
-                                                                    <Plus className="w-5 h-5" strokeWidth={2.6} />
-                                                                </button>
-                                                            </div>
+                                                            <span className="text-[#6e5e54] whitespace-nowrap">数量</span>
+                                                            <select
+                                                                value={item.quantity}
+                                                                onChange={(e) => setItemQuantity(item.id, Number(e.target.value))}
+                                                                disabled={isProcessing}
+                                                                className="h-11 bg-white border border-[#ebdcd0] rounded-full px-4 text-[#2B5740] font-bold outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                                                                aria-label="数量を選択"
+                                                            >
+                                                                {Array.from({ length: 10 }).map((_, n) => (
+                                                                    <option key={`${item.id}_q_${n}`} value={n}>
+                                                                        {n}
+                                                                    </option>
+                                                                ))}
+                                                            </select>
                                                         </div>
                                                         <span className="self-end sm:self-auto">¥{(item.price * item.quantity).toLocaleString()}</span>
                                                     </div>
@@ -911,27 +903,19 @@ export default function Checkout() {
                                             <div className="flex flex-col justify-center flex-1 min-w-0">
                                                 <p className="text-sm font-bold leading-relaxed mb-1 truncate">{item.name}</p>
                                                 <div className="flex items-center justify-between gap-3">
-                                                    <div className="inline-flex items-center bg-white border border-[#ebdcd0] rounded-full overflow-hidden">
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => decrementQuantity(item.id)}
-                                                            disabled={isProcessing}
-                                                            className="w-10 h-10 inline-flex items-center justify-center hover:bg-[#f7f2e7] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                                                            aria-label="数量を減らす"
-                                                        >
-                                                            <Minus className="w-4 h-4" strokeWidth={2.6} />
-                                                        </button>
-                                                        <div className="min-w-[2.75rem] px-2 text-center text-sm font-bold text-[#2B5740]">{item.quantity}</div>
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => incrementQuantity(item.id)}
-                                                            disabled={isProcessing}
-                                                            className="w-10 h-10 inline-flex items-center justify-center hover:bg-[#f7f2e7] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                                                            aria-label="数量を増やす"
-                                                        >
-                                                            <Plus className="w-4 h-4" strokeWidth={2.6} />
-                                                        </button>
-                                                    </div>
+                                                    <select
+                                                        value={item.quantity}
+                                                        onChange={(e) => setItemQuantity(item.id, Number(e.target.value))}
+                                                        disabled={isProcessing}
+                                                        className="h-10 bg-white border border-[#ebdcd0] rounded-full px-3 text-[#2B5740] font-bold outline-none cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                                                        aria-label="数量を選択"
+                                                    >
+                                                        {Array.from({ length: 10 }).map((_, n) => (
+                                                            <option key={`${item.id}_sidebar_q_${n}`} value={n}>
+                                                                {n}
+                                                            </option>
+                                                        ))}
+                                                    </select>
                                                     <span className="text-sm font-bold tracking-wider">¥{(item.price * item.quantity).toLocaleString()}</span>
                                                 </div>
                                             </div>
@@ -974,7 +958,7 @@ export default function Checkout() {
                                     <button
                                         onClick={step === 'input' ? handleGoToConfirm : handlePlaceOrder}
                                         disabled={isProcessing || items.length === 0}
-                                        className={`w-full py-6 rounded-[2rem] text-xl font-black tracking-[0.12em] md:tracking-[0.25em] shadow-2xl transition-all duration-500 flex items-center justify-center gap-4 group
+                                        className={`w-full py-5 md:py-6 rounded-[2rem] text-lg md:text-xl font-black tracking-[0.12em] md:tracking-[0.25em] shadow-2xl transition-all duration-500 flex items-center justify-center gap-4 group
                                             ${isProcessing 
                                                 ? 'bg-[#a38f7d] text-white cursor-not-allowed opacity-80' 
                                                 : 'bg-[#4a3f35] text-white hover:bg-[#322a23] active:scale-[0.97] cursor-pointer'
