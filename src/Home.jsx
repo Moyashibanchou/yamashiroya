@@ -532,12 +532,12 @@ export default function Home() {
                         value: "pink",
                         color: "bg-pink-400",
                       },
+                      { label: "白系", value: "white", color: "bg-zinc-200" },
                       {
                         label: "黄・オレンジ系",
                         value: "yellow_orange",
                         color: "bg-yellow-400",
                       },
-                      { label: "白系", value: "white", color: "bg-zinc-200" },
                       {
                         label: "ブルー・パープル系",
                         value: "blue_purple",
@@ -653,7 +653,7 @@ export default function Home() {
                             税込
                           </span>
                         </p>
-                        <div className="mt-5 grid grid-cols-2 gap-3">
+                        <div className="mt-5 flex flex-col gap-3">
                           <div className="w-full py-3 md:py-3.5 bg-[#f5f2e9] border border-[#d8c8b6] rounded-xl text-[0.95rem] font-bold group-hover:bg-[#bc8a7e] group-hover:text-white group-hover:border-[#bc8a7e] text-center transition-all duration-300 text-[#4a3f35]">
                             詳細を見る
                           </div>

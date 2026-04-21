@@ -258,7 +258,7 @@ export default function ProductDetail() {
                       ※この商品は【小樽市内限定】でお届けします
                     </div>
                     <div className="mt-4 text-[#4a3f35] text-[0.95rem] md:text-[1rem] leading-relaxed">
-                      <div className="font-black tracking-widest mb-2">返品・交換について</div>
+                      <div className="font-black tracking-wide md:tracking-widest mb-2 whitespace-nowrap">返品・交換について</div>
                       <ul className="list-disc pl-5 space-y-2 font-bold">
                         <li>
                           不良品・破損・品違いの場合：到着後7日以内にご連絡ください。送料弊社負担で交換いたします。
@@ -273,7 +273,7 @@ export default function ProductDetail() {
                   <button
                     type="button"
                     onClick={handleAddToCart}
-                    className="w-full py-4 rounded-2xl bg-[#2B5740] text-white font-bold tracking-[0.25em] shadow-xl hover:bg-[#234a35] active:scale-[0.98] transition-all"
+                    className="w-full py-4 rounded-2xl bg-[#2B5740] text-white font-bold tracking-[0.12em] md:tracking-[0.25em] shadow-xl hover:bg-[#234a35] active:scale-[0.98] transition-all whitespace-nowrap"
                   >
                     カートに入れる
                   </button>

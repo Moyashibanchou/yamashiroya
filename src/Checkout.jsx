@@ -371,7 +371,7 @@ export default function Checkout() {
 
             <div className="max-w-6xl mx-auto px-6 py-6 md:py-8">
                 <header className="text-center mb-12 md:mb-20">
-                    <h1 className="text-2xl md:text-4xl font-bold tracking-[0.3em] mb-4">お支払い</h1>
+                    <h1 className="text-2xl md:text-4xl font-bold tracking-[0.16em] md:tracking-[0.3em] mb-4 whitespace-nowrap">お支払い</h1>
                     <p className="text-[#8a7a6c] text-sm md:text-base tracking-widest font-medium">ご注文を確定してください</p>
                 </header>
 
@@ -974,7 +974,7 @@ export default function Checkout() {
                                     <button
                                         onClick={step === 'input' ? handleGoToConfirm : handlePlaceOrder}
                                         disabled={isProcessing || items.length === 0}
-                                        className={`w-full py-6 rounded-[2rem] text-xl font-black tracking-[0.25em] shadow-2xl transition-all duration-500 flex items-center justify-center gap-4 group
+                                        className={`w-full py-6 rounded-[2rem] text-xl font-black tracking-[0.12em] md:tracking-[0.25em] shadow-2xl transition-all duration-500 flex items-center justify-center gap-4 group
                                             ${isProcessing 
                                                 ? 'bg-[#a38f7d] text-white cursor-not-allowed opacity-80' 
                                                 : 'bg-[#4a3f35] text-white hover:bg-[#322a23] active:scale-[0.97] cursor-pointer'
@@ -991,7 +991,7 @@ export default function Checkout() {
                                             </>
                                         ) : (
                                             <>
-                                                <span>{step === 'input' ? '入力内容を確認する' : '注文を確定する'}</span>
+                                                <span className="whitespace-nowrap">{step === 'input' ? '入力内容を確認する' : '注文を確定する'}</span>
                                                 <ChevronRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                                             </>
                                         )}
