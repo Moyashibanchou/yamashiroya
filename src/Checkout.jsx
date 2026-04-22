@@ -874,7 +874,7 @@ export default function Checkout() {
                                             </div>
                                         </div>
                                         <div className="space-y-3">
-                                            <h3 className="text-xl font-bold tracking-widest">Apple Pay / Google Pay</h3>
+                                            <h3 className="text-xl font-bold tracking-widest">Apple Pay</h3>
                                             <p className="text-sm text-[#6e5e54] leading-relaxed max-w-sm mx-auto font-medium">
                                                 KOMOJUの安全な決済画面に移動します。デバイスに設定された支払い情報で、素早く安全にお支払いが可能です。
                                             </p>
