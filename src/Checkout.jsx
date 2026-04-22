@@ -615,7 +615,7 @@ export default function Checkout() {
                                 <div className="w-10 h-10 bg-[#4a3f35] rounded-full flex items-center justify-center text-white">
                                     <ShieldCheck size={20} />
                                 </div>
-                                <h2 className="text-xl font-bold tracking-widest">入力内容の確認</h2>
+                                <h2 className="text-xl font-bold tracking-widest whitespace-nowrap">入力内容の確認</h2>
                             </div>
 
                             <div className="space-y-8">
@@ -628,7 +628,7 @@ export default function Checkout() {
                                                     <img src={resolveImageUrl(item.imageUrl)} alt={item.name} className="w-full h-full object-cover mix-blend-multiply opacity-95" />
                                                 </div>
                                                 <div className="min-w-0 flex-1">
-                                                    <div className="font-bold tracking-wide break-words">{item.name}</div>
+                                                    <div className="font-bold tracking-wide break-keep">{item.name}</div>
                                                     <div className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-base font-bold text-[#2B5740]">
                                                         <div className="inline-flex items-center gap-2">
                                                             <span className="text-[#6e5e54] whitespace-nowrap">数量</span>
@@ -663,7 +663,10 @@ export default function Checkout() {
                                         </div>
                                         <div className="flex justify-between font-bold">
                                             <span>送料</span>
-                                            <span>¥0（小樽市内配達）</span>
+                                            <div className="text-right">
+                                                <span>¥0</span>
+                                                <div className="text-sm font-medium text-[#6e5e54] mt-1">小樽市内配達</div>
+                                            </div>
                                         </div>
                                         <div className="flex justify-between text-xl font-black pt-4 border-t border-[#ebdcd0]/70">
                                             <span>お支払い合計</span>
@@ -676,12 +679,14 @@ export default function Checkout() {
                                     <div className="text-base md:text-lg font-bold tracking-widest">お客様情報</div>
                                     <div className="mt-5 space-y-3 font-bold">
                                         <div className="flex flex-col sm:flex-row sm:gap-4">
-                                            <span className="text-[#6e5e54]">お名前</span>
+                                            <span className="text-[#6e5e54] whitespace-nowrap">お名前</span>
                                             <span className="text-[#1f1b16]">{form.name || '（未入力）'}</span>
                                         </div>
                                         <div className="flex flex-col sm:flex-row sm:gap-4">
-                                            <span className="text-[#6e5e54]">メール</span>
-                                            <span className="text-[#1f1b16] break-all">{form.email || '（未入力）'}</span>
+                                            <span className="text-[#6e5e54] whitespace-nowrap">メール</span>
+                                            <span className="text-[#1f1b16] break-all whitespace-pre-wrap">
+                                                {form.email ? form.email.replace('@', '\n@') : '（未入力）'}
+                                            </span>
                                         </div>
                                         <div className="flex flex-col sm:flex-row sm:gap-4">
                                             <span className="text-[#6e5e54]">電話</span>
@@ -696,7 +701,8 @@ export default function Checkout() {
                                         <div className="pt-3 border-t border-[#ebdcd0]/70">
                                             <div className="text-[#6e5e54]">ご住所</div>
                                             <div className="mt-2 text-[#1f1b16] break-words">
-                                                〒{form.zipcode} {form.prefectureCity} {form.addressLine}
+                                                〒{form.zipcode}<br />
+                                                {form.prefectureCity} {form.addressLine}
                                             </div>
                                         </div>
                                     </div>
@@ -705,19 +711,19 @@ export default function Checkout() {
                                 <div className="bg-white/70 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8">
                                     <div className="text-base md:text-lg font-bold tracking-widest">配送指定</div>
                                     <div className="mt-5 space-y-4 font-bold">
-                                        <div>
-                                            <div className="text-[#6e5e54]">配送方法</div>
-                                            <div className="mt-2 text-[#1f1b16]">小樽市内配達（送料無料）</div>
+                                        <div className="flex flex-col sm:flex-row sm:gap-4">
+                                            <span className="text-[#6e5e54] whitespace-nowrap w-20">配送方法</span>
+                                            <span className="text-[#1f1b16]">小樽市内配達（送料無料）</span>
                                         </div>
-                                        <div>
-                                            <div className="text-[#6e5e54]">配送日</div>
-                                            <div className="mt-2 text-[#1f1b16]">
+                                        <div className="flex flex-col sm:flex-row sm:gap-4">
+                                            <span className="text-[#6e5e54] whitespace-nowrap w-20">配送日</span>
+                                            <span className="text-[#1f1b16]">
                                                 {form.deliveryDateMode === 'specified' ? (form.deliveryDate ? formatDeliveryDate(form.deliveryDate) : '（日付未入力）') : '指定なし'}
-                                            </div>
+                                            </span>
                                         </div>
-                                        <div>
-                                            <div className="text-[#6e5e54]">時間帯</div>
-                                            <div className="mt-2 text-[#1f1b16]">{String(form.deliveryTimeNote || '').trim() ? form.deliveryTimeNote : '指定なし'}</div>
+                                        <div className="flex flex-col sm:flex-row sm:gap-4">
+                                            <span className="text-[#6e5e54] whitespace-nowrap w-20">時間帯</span>
+                                            <span className="text-[#1f1b16]">{String(form.deliveryTimeNote || '').trim() ? form.deliveryTimeNote : '指定なし'}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -729,18 +735,7 @@ export default function Checkout() {
                                     </div>
                                 </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            setStep('input');
-                                            window.scrollTo(0, 0);
-                                        }}
-                                        disabled={isProcessing}
-                                        className="w-full py-4 rounded-2xl bg-white/70 border-2 border-[#4a3f35] text-[#4a3f35] font-black tracking-widest hover:bg-white active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                                    >
-                                        入力画面へ戻る（修正する）
-                                    </button>
+                                <div className="flex flex-col gap-6 mt-12 w-full max-w-2xl mx-auto">
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -748,9 +743,20 @@ export default function Checkout() {
                                             return handlePlaceOrder();
                                         }}
                                         disabled={isProcessing || items.length === 0}
-                                        className="w-full py-4 rounded-2xl bg-[#4a3f35] text-white font-black tracking-widest shadow-xl hover:bg-[#322a23] active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                                        className="w-full py-5 md:py-6 rounded-2xl bg-[#4a3f35] text-white text-lg md:text-xl font-black tracking-widest shadow-xl hover:bg-[#322a23] active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                                     >
                                         注文を確定する
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setStep('input');
+                                            window.scrollTo(0, 0);
+                                        }}
+                                        disabled={isProcessing}
+                                        className="w-full py-4 md:py-5 rounded-2xl bg-white/70 border-2 border-[#4a3f35] text-[#4a3f35] text-base md:text-lg font-black tracking-widest hover:bg-white active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                                    >
+                                        入力画面へ戻る（修正する）
                                     </button>
                                 </div>
                             </div>
