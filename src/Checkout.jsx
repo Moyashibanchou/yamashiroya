@@ -569,7 +569,7 @@ export default function Checkout() {
                                                 value={form.deliveryDate}
                                                 onChange={(e) => setForm((prev) => ({ ...prev, deliveryDate: e.target.value }))}
                                                 disabled={form.deliveryDateMode !== 'specified'}
-                                                className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-3 pl-4 pr-0 sm:py-4 sm:pl-6 sm:pr-2 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                             />
                                         </div>
                                     </div>
