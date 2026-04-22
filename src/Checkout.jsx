@@ -527,7 +527,7 @@ export default function Checkout() {
                                 <h2 className="text-xl font-bold tracking-widest">配送指定</h2>
                             </div>
 
-                            <div className="bg-white/60 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8 max-w-[520px] mx-auto">
+                            <div className="bg-white/60 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8 max-w-[520px] mx-auto -translate-x-4 md:translate-x-0">
                                 <div className="text-sm md:text-base font-bold tracking-widest text-[#4a3f35]">
                                     ■小樽市内配達
                                 </div>
