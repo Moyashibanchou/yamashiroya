@@ -369,7 +369,7 @@ export default function Checkout() {
                 </div>
             </div>
 
-            <div className="max-w-6xl mx-auto px-6 py-6 md:py-8">
+            <div className="max-w-6xl mx-auto px-6 sm:px-8 md:px-6 py-6 md:py-8">
                 <header className="text-center mb-12 md:mb-20">
                     <h1 className="text-2xl md:text-4xl font-bold tracking-[0.16em] md:tracking-[0.3em] mb-4 whitespace-nowrap">お支払い</h1>
                     <p className="text-[#8a7a6c] text-sm md:text-base tracking-widest font-medium">ご注文を確定してください</p>
@@ -384,7 +384,7 @@ export default function Checkout() {
                         {/* セクション：お客様情報 */}
                         {step === 'input' ? (
                         <>
-                        <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
+                        <section className="bg-white/30 p-6 sm:p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header max-w-xl mx-auto md:max-w-none">
                             <div className="flex items-center gap-4 mb-10">
                                 <div className="w-10 h-10 bg-[#4a3f35] rounded-full flex items-center justify-center text-white">
                                     <User size={20} />
@@ -400,7 +400,7 @@ export default function Checkout() {
                                         value={form.name}
                                         onChange={(e) => setForm((prev) => ({ ...prev, name: e.target.value }))}
                                         placeholder="例：山城 太郎"
-                                        className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40"
+                                        className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40"
                                     />
                                 </div>
                                 <div>
@@ -413,8 +413,8 @@ export default function Checkout() {
                                             setForm((prev) => ({ ...prev, email: v }));
                                             if (errors.email) setErrors((prev) => ({ ...prev, email: '' }));
                                         }}
-                                        placeholder="example@mail.com"
-                                        className={`w-full bg-white/60 border ${errors.email ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40`}
+                                        placeholder="example@gmail.com"
+                                        className={`w-full bg-white/60 border ${errors.email ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40`}
                                     />
                                     {errors.email ? (
                                         <p className="mt-2 text-sm md:text-xs font-bold tracking-widest text-red-600">{errors.email}</p>
@@ -423,15 +423,15 @@ export default function Checkout() {
                                 <div>
                                     <label className="block text-sm md:text-xs font-bold text-[#8a7a6c] mb-3 tracking-[0.2em] uppercase">電話番号</label>
                                     <input
-                                        type="tel"
+                                        type="text"
                                         value={form.phone}
                                         onChange={(e) => {
-                                            const v = normalizeDigitsOnly(e.target.value);
+                                            const v = e.target.value;
                                             setForm((prev) => ({ ...prev, phone: v }));
                                             if (errors.phone) setErrors((prev) => ({ ...prev, phone: '' }));
                                         }}
-                                        placeholder="0134-00-0000 / 09012345678"
-                                        className={`w-full bg-white/60 border ${errors.phone ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40`}
+                                        placeholder="09012345678"
+                                        className={`w-full bg-white/60 border ${errors.phone ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40`}
                                     />
                                     {errors.phone ? (
                                         <p className="mt-2 text-sm md:text-xs font-bold tracking-widest text-red-600">{errors.phone}</p>
@@ -444,7 +444,7 @@ export default function Checkout() {
                                         value={form.fax}
                                         onChange={(e) => setForm((prev) => ({ ...prev, fax: e.target.value }))}
                                         placeholder="例：0134-00-0000"
-                                        className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40"
+                                        className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40"
                                     />
                                 </div>
                             </div>
@@ -467,8 +467,8 @@ export default function Checkout() {
                                                         lookupAddressByZipcode();
                                                     }
                                                 }}
-                                                placeholder="0470000"
-                                                className={`w-full bg-white/60 border ${errors.zipcode ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300`}
+                                                placeholder="0470034"
+                                                className={`w-full bg-white/60 border ${errors.zipcode ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300`}
                                             />
                                             <MapPin className="absolute right-6 top-1/2 -translate-y-1/2 text-[#a38f7d]/40" size={18} />
                                         </div>
@@ -496,7 +496,7 @@ export default function Checkout() {
                                             if (errors.address) setErrors((prev) => ({ ...prev, address: '' }));
                                         }}
                                         placeholder="北海道小樽市..."
-                                        className={`w-full bg-white/60 border ${errors.address ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300`}
+                                        className={`w-full bg-white/60 border ${errors.address ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300`}
                                     />
                                 </div>
                                 <div>
@@ -510,7 +510,7 @@ export default function Checkout() {
                                             if (errors.address) setErrors((prev) => ({ ...prev, address: '' }));
                                         }}
                                         placeholder="1-2-3 山城ビル 101"
-                                        className={`w-full bg-white/60 border ${errors.address ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300`}
+                                        className={`w-full bg-white/60 border ${errors.address ? 'border-red-400' : 'border-[#d8c8b6]'} text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300`}
                                     />
                                     {errors.address ? (
                                         <p className="mt-2 text-sm md:text-xs font-bold tracking-widest text-red-600">{errors.address}</p>
@@ -519,7 +519,7 @@ export default function Checkout() {
                             </div>
                         </section>
 
-                        <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
+                        <section className="bg-white/30 p-6 sm:p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header max-w-xl mx-auto md:max-w-none">
                             <div className="flex items-center gap-4 mb-10">
                                 <div className="w-10 h-10 bg-[#2B5740] rounded-full flex items-center justify-center text-white">
                                     <MapPin size={20} />
@@ -527,7 +527,7 @@ export default function Checkout() {
                                 <h2 className="text-xl font-bold tracking-widest">配送指定</h2>
                             </div>
 
-                            <div className="bg-white/60 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8 max-w-[520px] mr-auto md:mx-auto">
+                            <div className="bg-white/60 border border-[#ebdcd0] rounded-[2rem] p-6 sm:p-7 md:p-8 w-full max-w-lg mx-auto">
                                 <div className="text-sm md:text-base font-bold tracking-widest text-[#4a3f35]">
                                     ■小樽市内配達
                                 </div>
@@ -535,10 +535,10 @@ export default function Checkout() {
                                     通常、ご入金確認後翌々営業日以内、もしくはご指定の日時に配達いたします。本商品は小樽市内への配達に限定させていただいておりますので、配達料は無料です。
                                 </p>
 
-                                <div className="mt-8 space-y-6">
+                                <div className="mt-8 space-y-10">
                                     <div>
                                         <div className="text-sm md:text-xs font-bold text-[#8a7a6c] tracking-[0.2em] uppercase mb-3">配送日指定</div>
-                                        <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                                        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
                                             <label className="inline-flex items-center gap-2 cursor-pointer select-none">
                                                 <input
                                                     type="radio"
@@ -569,7 +569,7 @@ export default function Checkout() {
                                                 value={form.deliveryDate}
                                                 onChange={(e) => setForm((prev) => ({ ...prev, deliveryDate: e.target.value }))}
                                                 disabled={form.deliveryDateMode !== 'specified'}
-                                                className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                                                className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                                             />
                                         </div>
                                     </div>
@@ -581,14 +581,14 @@ export default function Checkout() {
                                             value={form.deliveryTimeNote}
                                             onChange={(e) => setForm((prev) => ({ ...prev, deliveryTimeNote: e.target.value }))}
                                             placeholder="例：午前中、18時以降...など"
-                                            className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40"
+                                            className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40"
                                         />
                                     </div>
                                 </div>
                             </div>
                         </section>
 
-                        <section className="bg-white/30 p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header">
+                        <section className="bg-white/30 p-6 sm:p-8 md:p-10 rounded-[2.5rem] border border-[#ebdcd0] soft-shadow-header max-w-xl mx-auto md:max-w-none">
                             <div className="flex items-center gap-4 mb-10">
                                 <div className="w-10 h-10 bg-[#bc8a7e] rounded-full flex items-center justify-center text-white">
                                     <Mail size={20} />
@@ -603,7 +603,7 @@ export default function Checkout() {
                                     onChange={(e) => setForm((prev) => ({ ...prev, requests: e.target.value }))}
                                     rows={5}
                                     placeholder="備考・ご要望などがありましたらご記入ください。"
-                                    className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-4 px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40 resize-none"
+                                    className="w-full bg-white/60 border border-[#d8c8b6] text-[#4a3f35] py-3 px-4 sm:py-4 sm:px-6 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#4a3f35]/20 focus:border-[#4a3f35] transition-all duration-300 placeholder:text-[#a38f7d]/40 resize-none"
                                 />
                             </div>
                         </section>

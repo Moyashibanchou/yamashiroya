@@ -26,7 +26,7 @@ export default function Cart() {
                 </button>
             </div>
 
-            <div className="max-w-6xl mx-auto px-5 md:px-6 pb-4">
+            <div className="max-w-6xl mx-auto px-6 sm:px-8 md:px-6 pb-4">
                 <div className="bg-[#fffdf7]/80 border border-[#ebdcd0] rounded-2xl px-4 md:px-6 py-4">
                     <div className="flex items-center gap-2 md:gap-3 text-sm md:text-base font-black tracking-widest text-[#4a3f35]">
                         <span className="text-[#2B5740]">カート</span>
@@ -44,7 +44,7 @@ export default function Cart() {
             </div>
 
             {/* 2. メインコンテンツ（PCは2カラム） */}
-            <div className="max-w-6xl mx-auto px-5 md:px-6 py-8 md:py-16 md:flex md:gap-14 lg:gap-20 md:items-start">
+            <div className="max-w-6xl mx-auto px-6 sm:px-8 md:px-6 py-8 md:py-16 md:flex md:gap-14 lg:gap-20 md:items-start">
 
                 {/* 左側：商品リスト */}
                 <section className="md:w-[60%] lg:w-[65%]">
