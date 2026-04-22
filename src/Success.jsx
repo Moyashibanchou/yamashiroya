@@ -195,7 +195,7 @@ export default function Success() {
 
                 {/* 4. サブメッセージ */}
                 <div className="bg-[#f0e9df] p-6 md:p-10 rounded-2xl md:rounded-3xl border border-[#d8c8b6] soft-shadow-sm mb-12 md:mb-16 w-full max-w-xl mx-auto">
-                    <p className="text-[0.95rem] md:text-[1.1rem] text-[#4a3f35] leading-loose text-center tracking-wide font-medium break-keep">
+                    <p className="text-[0.95rem] md:text-[1.1rem] text-[#4a3f35] leading-loose text-center tracking-wide font-medium">
                         ご入力いただいたメールアドレスに、<br />
                         自動配信の確認メールをお送りいたしました。<br /><br />
                         小樽の店舗より、心を込めて<br className="md:hidden" />発送準備に入らせていただきます。<br />

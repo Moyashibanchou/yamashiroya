@@ -237,6 +237,8 @@ export default function Checkout() {
             komojuPaymentType = "paypay";
         } else if (paymentMethod === "applepay") {
             komojuPaymentType = "apple_pay";
+        } else if (paymentMethod === "paidy") {
+            komojuPaymentType = "paidy";
         } else if (paymentMethod === "convenience") {
             komojuPaymentType = "konbini";
         }
@@ -354,17 +356,19 @@ export default function Checkout() {
                 </button>
             </div>
 
-            <div className="max-w-6xl mx-auto px-6 pb-4">
-                <div className="bg-[#fffdf7]/80 border border-[#ebdcd0] rounded-2xl px-4 md:px-6 py-4">
-                    <div className="flex items-center gap-2 md:gap-3 text-sm md:text-base font-black tracking-widest text-[#4a3f35]">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-4">
+                <div className="bg-[#fffdf7]/80 border border-[#ebdcd0] rounded-2xl px-3 sm:px-4 md:px-6 py-4 mx-auto">
+                    <div className="flex items-center justify-between sm:justify-start gap-1 sm:gap-2 md:gap-3 text-[0.65rem] sm:text-sm md:text-base font-black tracking-normal sm:tracking-widest text-[#4a3f35] whitespace-nowrap">
+                        <span className="text-[#a38f7d]">カート</span>
+                        <span className="text-[#a38f7d] scale-75 sm:scale-100">＞</span>
                         <span className={step === 'input' ? 'text-[#2B5740]' : 'text-[#a38f7d]'}>情報入力</span>
-                        <span className="text-[#a38f7d]">＞</span>
+                        <span className="text-[#a38f7d] scale-75 sm:scale-100">＞</span>
                         <span className={step === 'confirm' ? 'text-[#2B5740]' : 'text-[#a38f7d]'}>入力確認</span>
-                        <span className="text-[#a38f7d]">＞</span>
+                        <span className="text-[#a38f7d] scale-75 sm:scale-100">＞</span>
                         <span className="text-[#a38f7d]">完了</span>
                     </div>
                     <div className="mt-3 h-2 w-full bg-[#ebdcd0] rounded-full overflow-hidden">
-                        <div className={`h-full ${step === 'confirm' ? 'w-[66%]' : 'w-[33%]'} bg-[#2B5740]`}></div>
+                        <div className={`h-full ${step === 'confirm' ? 'w-[75%]' : 'w-[50%]'} bg-[#2B5740] transition-all duration-500`}></div>
                     </div>
                 </div>
             </div>
@@ -663,9 +667,12 @@ export default function Checkout() {
                                         </div>
                                         <div className="flex justify-between font-bold">
                                             <span>送料</span>
-                                            <div className="text-right">
-                                                <span>¥0</span>
-                                                <div className="text-sm font-medium text-[#6e5e54] mt-1">小樽市内配達</div>
+                                            <div className="text-right sm:text-left">
+                                                <span className="sm:hidden block text-right">
+                                                    <span>¥0</span>
+                                                    <div className="text-sm font-medium text-[#6e5e54] mt-1">小樽市内配達</div>
+                                                </span>
+                                                <span className="hidden sm:inline">¥0（小樽市内配達）</span>
                                             </div>
                                         </div>
                                         <div className="flex justify-between text-xl font-black pt-4 border-t border-[#ebdcd0]/70">
@@ -684,8 +691,11 @@ export default function Checkout() {
                                         </div>
                                         <div className="flex flex-col sm:flex-row sm:gap-4">
                                             <span className="text-[#6e5e54] whitespace-nowrap">メール</span>
-                                            <span className="text-[#1f1b16] break-all whitespace-pre-wrap">
+                                            <span className="text-[#1f1b16] break-all whitespace-pre-wrap sm:hidden">
                                                 {form.email ? form.email.replace('@', '\n@') : '（未入力）'}
+                                            </span>
+                                            <span className="text-[#1f1b16] break-all hidden sm:inline">
+                                                {form.email || '（未入力）'}
                                             </span>
                                         </div>
                                         <div className="flex flex-col sm:flex-row sm:gap-4">
@@ -701,7 +711,7 @@ export default function Checkout() {
                                         <div className="pt-3 border-t border-[#ebdcd0]/70">
                                             <div className="text-[#6e5e54]">ご住所</div>
                                             <div className="mt-2 text-[#1f1b16] break-words">
-                                                〒{form.zipcode}<br />
+                                                〒{form.zipcode}<br className="sm:hidden" /><span className="hidden sm:inline"> </span>
                                                 {form.prefectureCity} {form.addressLine}
                                             </div>
                                         </div>
@@ -711,19 +721,19 @@ export default function Checkout() {
                                 <div className="bg-white/70 border border-[#ebdcd0] rounded-[2rem] p-7 md:p-8">
                                     <div className="text-base md:text-lg font-bold tracking-widest">配送指定</div>
                                     <div className="mt-5 space-y-4 font-bold">
-                                        <div className="flex flex-col sm:flex-row sm:gap-4">
-                                            <span className="text-[#6e5e54] whitespace-nowrap w-20">配送方法</span>
-                                            <span className="text-[#1f1b16]">小樽市内配達（送料無料）</span>
+                                        <div className="flex flex-row justify-between items-center sm:block">
+                                            <div className="text-[#6e5e54] whitespace-nowrap w-20 sm:w-auto">配送方法</div>
+                                            <div className="mt-0 sm:mt-2 text-[#1f1b16] text-right sm:text-left">小樽市内配達（送料無料）</div>
                                         </div>
-                                        <div className="flex flex-col sm:flex-row sm:gap-4">
-                                            <span className="text-[#6e5e54] whitespace-nowrap w-20">配送日</span>
-                                            <span className="text-[#1f1b16]">
+                                        <div className="flex flex-row justify-between items-center sm:block">
+                                            <div className="text-[#6e5e54] whitespace-nowrap w-20 sm:w-auto">配送日</div>
+                                            <div className="mt-0 sm:mt-2 text-[#1f1b16] text-right sm:text-left">
                                                 {form.deliveryDateMode === 'specified' ? (form.deliveryDate ? formatDeliveryDate(form.deliveryDate) : '（日付未入力）') : '指定なし'}
-                                            </span>
+                                            </div>
                                         </div>
-                                        <div className="flex flex-col sm:flex-row sm:gap-4">
-                                            <span className="text-[#6e5e54] whitespace-nowrap w-20">時間帯</span>
-                                            <span className="text-[#1f1b16]">{String(form.deliveryTimeNote || '').trim() ? form.deliveryTimeNote : '指定なし'}</span>
+                                        <div className="flex flex-row justify-between items-center sm:block">
+                                            <div className="text-[#6e5e54] whitespace-nowrap w-20 sm:w-auto">時間帯</div>
+                                            <div className="mt-0 sm:mt-2 text-[#1f1b16] text-right sm:text-left">{String(form.deliveryTimeNote || '').trim() ? form.deliveryTimeNote : '指定なし'}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -735,18 +745,7 @@ export default function Checkout() {
                                     </div>
                                 </div>
 
-                                <div className="flex flex-col gap-6 mt-12 w-full max-w-2xl mx-auto">
-                                    <button
-                                        type="button"
-                                        onClick={() => {
-                                            console.log('注文を確定する クリック', { step, isProcessing, itemsCount: items.length });
-                                            return handlePlaceOrder();
-                                        }}
-                                        disabled={isProcessing || items.length === 0}
-                                        className="w-full py-5 md:py-6 rounded-2xl bg-[#4a3f35] text-white text-lg md:text-xl font-black tracking-widest shadow-xl hover:bg-[#322a23] active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                                    >
-                                        注文を確定する
-                                    </button>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-12 sm:mt-8 w-full max-w-2xl sm:max-w-none mx-auto">
                                     <button
                                         type="button"
                                         onClick={() => {
@@ -754,9 +753,21 @@ export default function Checkout() {
                                             window.scrollTo(0, 0);
                                         }}
                                         disabled={isProcessing}
-                                        className="w-full py-4 md:py-5 rounded-2xl bg-white/70 border-2 border-[#4a3f35] text-[#4a3f35] text-base md:text-lg font-black tracking-widest hover:bg-white active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                                        className="w-full py-4 rounded-2xl bg-white/70 border-2 border-[#4a3f35] text-[#4a3f35] font-black tracking-widest hover:bg-white active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed sm:order-1 order-2 flex flex-col sm:block justify-center items-center text-center leading-relaxed"
                                     >
-                                        入力画面へ戻る（修正する）
+                                        <span className="sm:hidden text-base">入力画面へ戻る<br />（修正する）</span>
+                                        <span className="hidden sm:inline text-base">入力画面へ戻る（修正する）</span>
+                                    </button>
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            console.log('注文を確定する クリック', { step, isProcessing, itemsCount: items.length });
+                                            return handlePlaceOrder();
+                                        }}
+                                        disabled={isProcessing || items.length === 0}
+                                        className="w-full py-4 rounded-2xl bg-[#4a3f35] text-white text-lg sm:text-base font-black tracking-widest shadow-xl hover:bg-[#322a23] active:scale-[0.99] transition-all disabled:opacity-60 disabled:cursor-not-allowed sm:order-2 order-1"
+                                    >
+                                        注文を確定する
                                     </button>
                                 </div>
                             </div>
@@ -777,7 +788,8 @@ export default function Checkout() {
                                 {[
                                     { id: 'credit', label: 'クレジットカード', icon: <CreditCard size={20} /> },
                                     { id: 'paypay', label: 'PayPay（スマホ決済）', icon: <Smartphone size={20} /> },
-                                    { id: 'applepay', label: 'Apple Pay / Google Pay', icon: <Apple size={20} /> },
+                                    { id: 'applepay', label: 'Apple Pay', icon: <Apple size={20} /> },
+                                    { id: 'paidy', label: 'Paidy（翌月払い）', icon: <Smartphone size={20} /> },
                                     { id: 'convenience', label: 'コンビニ決済', icon: <Store size={20} /> },
                                 ].map((method) => (
                                     <button

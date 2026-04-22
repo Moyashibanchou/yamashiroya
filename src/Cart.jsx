@@ -26,19 +26,19 @@ export default function Cart() {
                 </button>
             </div>
 
-            <div className="max-w-6xl mx-auto px-6 sm:px-8 md:px-6 pb-4">
-                <div className="bg-[#fffdf7]/80 border border-[#ebdcd0] rounded-2xl px-4 md:px-6 py-4">
-                    <div className="flex items-center gap-2 md:gap-3 text-sm md:text-base font-black tracking-widest text-[#4a3f35]">
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-4">
+                <div className="bg-[#fffdf7]/80 border border-[#ebdcd0] rounded-2xl px-3 sm:px-4 md:px-6 py-4 mx-auto">
+                    <div className="flex items-center justify-between sm:justify-start gap-1 sm:gap-2 md:gap-3 text-[0.65rem] sm:text-sm md:text-base font-black tracking-normal sm:tracking-widest text-[#4a3f35] whitespace-nowrap">
                         <span className="text-[#2B5740]">カート</span>
-                        <span className="text-[#a38f7d]">＞</span>
+                        <span className="text-[#a38f7d] scale-75 sm:scale-100">＞</span>
                         <span className="text-[#a38f7d]">情報入力</span>
-                        <span className="text-[#a38f7d]">＞</span>
+                        <span className="text-[#a38f7d] scale-75 sm:scale-100">＞</span>
                         <span className="text-[#a38f7d]">入力確認</span>
-                        <span className="text-[#a38f7d]">＞</span>
+                        <span className="text-[#a38f7d] scale-75 sm:scale-100">＞</span>
                         <span className="text-[#a38f7d]">完了</span>
                     </div>
                     <div className="mt-3 h-2 w-full bg-[#ebdcd0] rounded-full overflow-hidden">
-                        <div className="h-full w-[25%] bg-[#2B5740]"></div>
+                        <div className="h-full w-[25%] bg-[#2B5740] transition-all duration-500"></div>
                     </div>
                 </div>
             </div>
@@ -145,10 +145,10 @@ export default function Cart() {
 
             {/* モバイル用固定フッター（PCでは非表示） */}
             {items.length > 0 && (
-                <div className="md:hidden fixed bottom-0 w-full bg-[#fffdf7]/95 backdrop-blur-md border-t border-[#ebdcd0] px-5 py-5 soft-shadow-sm pb-[env(safe-area-inset-bottom,1.25rem)] z-50">
+                <div className="md:hidden fixed inset-x-0 bottom-0 bg-[#fffdf7]/95 backdrop-blur-md border-t border-[#ebdcd0] px-5 py-5 soft-shadow-sm pb-[env(safe-area-inset-bottom,1.25rem)] z-50 flex justify-center">
                     <button
                         onClick={() => navigate('/checkout')}
-                        className="w-full max-w-[420px] mx-auto py-4 bg-[#2B5740] text-white rounded-xl text-[1.1rem] font-bold shadow-[0_8px_24px_rgba(43,87,64,0.18)] hover:bg-[#234836] active:scale-95 transition-all duration-200 tracking-widest border border-white/10"
+                        className="w-full max-w-[420px] py-4 bg-[#2B5740] text-white rounded-xl text-[1.1rem] font-bold shadow-[0_8px_24px_rgba(43,87,64,0.18)] hover:bg-[#234836] active:scale-95 transition-all duration-200 tracking-widest border border-white/10"
                     >
                         レジへ進む
                     </button>
